@@ -1,1 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Alignment & Safety - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root {
+            --page-accent: #f97316;
+        }
+        .section-label {
+            background: rgba(249, 115, 22, 0.08);
+            border-color: rgba(249, 115, 22, 0.15);
+        }
+        .topic-number {
+            background: rgba(249, 115, 22, 0.1);
+            border-color: rgba(249, 115, 22, 0.2);
+        }
+        .analogy-box {
+            background: rgba(249, 115, 22, 0.05);
+            border-color: rgba(249, 115, 22, 0.15);
+        }
+        .analogy-box .analogy-title {
+            color: #f97316;
+        }
+        .key-points li .point-icon {
+            background: rgba(249, 115, 22, 0.1);
+        }
+        .flow-step .step-icon {
+            background: rgba(249, 115, 22, 0.1);
+            border-color: rgba(249, 115, 22, 0.2);
+        }
+        .flow-step:hover .step-icon {
+            background: rgba(249, 115, 22, 0.15);
+        }
+        .future-list li::before {
+            color: #f97316;
+        }
+    </style>
+</head>
+<body>
 
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #f97316, #ea580c);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #fb923c, #c2410c);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #fdba74, #f97316);"></div>
+    </div>
+
+    <div class="grain-overlay"></div>
+
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">LLM Alignment & Safety</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">Topic 09</span>
+            <h1>LLM Alignment<br>& Safety</h1>
+            <p class="subtitle">Ensuring large language models behave as intended — being helpful, harmless, and honest while navigating the complex landscape of human values and safety constraints.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <div class="section-label">📖 Definition</div>
+            <h2>What Is LLM Alignment & Safety?</h2>
+            <p>LLM Alignment & Safety is the field of research dedicated to ensuring that large language models behave as their creators and users intend. At its core, alignment asks a deceptively simple question: <strong>how do we make sure an AI system does what we actually want, not just what we literally asked for?</strong></p>
+            <p>A well-aligned model should exhibit three key properties, often called the <strong>HHH framework</strong>: it should be <strong>Helpful</strong> (providing accurate, useful responses), <strong>Harmless</strong> (refusing to generate dangerous, biased, or toxic content), and <strong>Honest</strong> (acknowledging uncertainty and avoiding fabrication). Achieving all three simultaneously is one of the central challenges — a model that's too cautious becomes unhelpful, while one that's too eager to please may produce harmful outputs.</p>
+            <p>Safety research extends beyond alignment to include robustness against adversarial attacks (jailbreaks), mitigation of biases embedded in training data, prevention of misuse for generating misinformation or malicious code, and the development of monitoring systems that detect harmful behavior in production. As LLMs become more capable and widely deployed, alignment and safety have shifted from academic curiosities to urgent engineering priorities.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <div class="section-label">🎯 Importance</div>
+            <h2>Why It Matters</h2>
+            <p>The stakes of alignment failure scale with capability. A misaligned calculator is annoying; a misaligned system that can write code, draft legal documents, and influence millions of people is genuinely dangerous. As LLMs are integrated into healthcare, finance, education, and governance, the consequences of getting alignment wrong grow exponentially.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">⚠️</span>
+                    <span><strong>Harm prevention at scale:</strong> A single misaligned model can reach millions of users simultaneously. Jailbroken models have been tricked into providing instructions for weapons, generating non-consensual content, and producing sophisticated phishing attacks.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔍</span>
+                    <span><strong>Bias amplification:</strong> LLMs trained on internet data inherit and can amplify societal biases related to race, gender, religion, and culture. Without alignment interventions, these biases can cause real-world discrimination in hiring tools, legal systems, and healthcare applications.</span>
+                </li>
+                <li>
+                    <span class="point-icon">📰</span>
+                    <span><strong>Misinformation risks:</strong> Unaligned models can confidently generate plausible-sounding but completely fabricated information — from fake scientific citations to convincing but false news articles — eroding trust in information ecosystems.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🤝</span>
+                    <span><strong>Trust and adoption:</strong> For AI to be widely and responsibly adopted, users, organizations, and regulators must trust that models behave predictably and safely. Alignment is the foundation of that trust.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔮</span>
+                    <span><strong>Future capability overhang:</strong> As models become more capable, the difficulty of alignment grows. Research done today lays the groundwork for safely managing AI systems that may eventually surpass human capabilities in many domains.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Analogy -->
+        <div class="topic-section">
+            <div class="analogy-box">
+                <div class="analogy-title">Real-World Analogy</div>
+                <p>Think of alignment like training a very intelligent dog. The dog has incredible capabilities — it can open doors, find hidden objects, and understand complex commands. But without proper training, that same intelligence could lead to chaos: raiding the kitchen, chasing cars, or biting visitors. Alignment is the careful, ongoing process of teaching the dog not just to respond to commands, but to understand boundaries, behave well even when unsupervised, and remain gentle even when provoked. The smarter the dog, the more sophisticated the training needs to be — and unlike a dog, an AI system might find clever "loopholes" in the rules you set.</p>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <div class="section-label">⚙️ Process</div>
+            <h2>How It Works</h2>
+            <p>Modern alignment is a multi-stage pipeline that progressively shapes a model's behavior from raw capability to responsible deployment. Each stage adds another layer of safety and alignment.</p>
+
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">📚</div>
+                        <div class="step-label">Pre-training</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">🎓</div>
+                        <div class="step-label">Supervised<br>Fine-Tuning</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">⚖️</div>
+                        <div class="step-label">Reward Model<br>Training</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">🔄</div>
+                        <div class="step-label">RLHF /<br>DPO</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">🛡️</div>
+                        <div class="step-label">Red-teaming<br>& Testing</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">📡</div>
+                        <div class="step-label">Deployment<br>Monitoring</div>
+                    </div>
+                </div>
+            </div>
+
+            <p><strong>Pre-training</strong> gives the model broad knowledge from internet-scale data, but also exposes it to toxic, biased, and harmful content. <strong>Supervised Fine-Tuning (SFT)</strong> then teaches the model to follow instructions using high-quality, human-written demonstrations of ideal responses.</p>
+            <p>A <strong>reward model</strong> is trained on human preference data — annotators compare pairs of responses and indicate which is better. This reward model learns to score responses on a quality spectrum. The language model is then optimized against this reward signal using <strong>RLHF (Reinforcement Learning from Human Feedback)</strong> or the simpler <strong>DPO (Direct Preference Optimization)</strong>, which skips the explicit reward model entirely.</p>
+            <p>Before deployment, <strong>red-teaming</strong> involves teams of adversarial testers systematically trying to make the model fail — generating harmful content, bypassing safety filters, or extracting private training data. After deployment, <strong>continuous monitoring</strong> systems track model outputs for emerging failure modes and adversarial attacks in the wild.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <div class="section-label">🔧 Techniques</div>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>RLHF</h4>
+                    <p>Reinforcement Learning from Human Feedback trains a reward model on human preferences, then optimizes the LLM to maximize that reward using PPO. The foundational method behind ChatGPT and InstructGPT.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>DPO</h4>
+                    <p>Direct Preference Optimization reformulates RLHF as a simple classification loss, eliminating the need for a separate reward model. Simpler to implement, more stable to train, with comparable results.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>KTO</h4>
+                    <p>Kahneman-Tversky Optimization uses prospect theory insights, requiring only binary good/bad labels instead of pairwise comparisons. Particularly useful when preference data is expensive to collect.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Constitutional AI</h4>
+                    <p>Anthropic's approach where the model critiques and revises its own outputs according to a written "constitution" of principles. Reduces reliance on human labelers by using AI self-supervision.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Red-teaming</h4>
+                    <p>Systematic adversarial testing where human experts (or automated systems) deliberately try to elicit harmful, biased, or incorrect model behavior to identify and patch vulnerabilities before deployment.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Guardrails & Filters</h4>
+                    <p>Input/output classifiers that detect and block harmful content at inference time. These serve as runtime safety nets independent of the model's training, catching edge cases the alignment pipeline missed.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Llama Guard</h4>
+                    <p>Meta's specialized safety classifier built on Llama, designed to categorize prompts and responses into safety taxonomies. Functions as a modular, pluggable safety layer for any LLM system.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Representation Engineering</h4>
+                    <p>Directly manipulating a model's internal representations to control behavior. Rather than training on preferences, this approach identifies and modifies the neural directions corresponding to concepts like honesty or harm.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <div class="section-label">🚧 Challenges</div>
+            <h2>Open Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">📊</div>
+                    <h4>Goodhart's Law</h4>
+                    <p>When a measure becomes a target, it ceases to be a good measure. Models learn to game reward signals rather than genuinely aligning with human intent, producing outputs that score well but feel wrong.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🤔</div>
+                    <h4>Defining "Harm"</h4>
+                    <p>What counts as harmful varies by context, culture, and individual. A medical query about drug interactions is helpful for a doctor but potentially dangerous for self-medication. Context-sensitivity is extremely hard to encode.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🌍</div>
+                    <h4>Cultural Differences</h4>
+                    <p>Values, norms, and acceptable speech vary enormously across cultures. A globally deployed model must navigate these differences without imposing one culture's values on another — an inherently political challenge.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🚫</div>
+                    <h4>Over-refusal</h4>
+                    <p>Overly cautious models refuse legitimate requests — declining to discuss historical violence, medical conditions, or creative fiction. This makes the model less useful and frustrates users, undermining the "helpful" part of HHH.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">⚔️</div>
+                    <h4>Adversarial Attacks</h4>
+                    <p>Creative jailbreaks (prompt injection, role-playing exploits, multi-turn attacks) continually evolve faster than defenses. It's an arms race where attackers have fundamental asymmetric advantages.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📈</div>
+                    <h4>Scalable Oversight</h4>
+                    <p>As models become superhuman in certain domains, humans may no longer be able to evaluate whether outputs are correct or aligned. How do you supervise a system smarter than you?</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <div class="section-label">📄 Research</div>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Training Language Models to Follow Instructions with Human Feedback</div>
+                        <div class="paper-meta">Ouyang et al., 2022 — InstructGPT: The foundational paper on RLHF for language models, showing how human feedback dramatically improves instruction following and safety.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Direct Preference Optimization: Your Language Model is Secretly a Reward Model</div>
+                        <div class="paper-meta">Rafailov et al., 2023 — Elegant reformulation of RLHF that eliminates the reward model, showing the policy itself can serve as an implicit reward function.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Constitutional AI: Harmlessness from AI Feedback</div>
+                        <div class="paper-meta">Bai et al., 2022 — Anthropic's approach to self-supervised alignment where models critique and revise their own outputs using a set of written principles.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Llama Guard: LLM-based Input-Output Safeguard Model</div>
+                        <div class="paper-meta">Meta, 2023 — A safety classifier that provides a modular, taxonomy-driven approach to content moderation for LLM-based conversational systems.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Representation Engineering: A Top-Down Approach to AI Transparency</div>
+                        <div class="paper-meta">Zou et al., 2023 — Introduces methods for reading and controlling LLM behavior by manipulating high-level representations, enabling direct behavioral steering.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <div class="section-label">🔮 Future</div>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Scalable oversight</strong> — Developing techniques like debate, recursive reward modeling, and market-making to supervise AI systems on tasks where humans can't directly evaluate correctness. This becomes critical as models surpass human expertise in specialized domains.</li>
+                <li><strong>Automated red-teaming</strong> — Using AI systems themselves to discover vulnerabilities in other AI systems, creating a continuous, scalable adversarial testing pipeline that evolves faster than manual testing teams ever could.</li>
+                <li><strong>Mechanistic safety</strong> — Combining interpretability research with safety to understand exactly why a model produces harmful outputs and intervene at the representation level. Moving from behavioral patches to genuine understanding of failure modes.</li>
+                <li><strong>Governance frameworks</strong> — Developing international standards, auditing protocols, and regulatory approaches for AI safety. The technical and policy sides of alignment are deeply intertwined — neither can succeed without the other.</li>
+                <li><strong>Alignment for superhuman AI</strong> — Preparing for the possibility of AI systems that are smarter than humans in all relevant domains. Current alignment techniques assume human supervisors can evaluate outputs — a fundamentally different approach will be needed when that assumption breaks down.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <div class="section-label">🔗 Related</div>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="#" class="related-link">
+                    <span>🔬</span> Mechanistic Interpretability
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>🏛️</span> AI Governance
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>🧠</span> Self-Improving AI
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>📊</span> LLM Evaluation
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to All Topics
+            </a>
+            <a href="10-multimodal-foundation-models.html">
+                Next: Multimodal Foundation Models
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.topic-section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+
+</body>
+</html>
