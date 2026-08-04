@@ -1,1 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continual Learning - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #3b82f6; }
+        .mesh-bg .blob:nth-child(1) { background: radial-gradient(circle, #3b82f6, #1d4ed8); }
+        .mesh-bg .blob:nth-child(2) { background: radial-gradient(circle, #60a5fa, #2563eb); }
+        .mesh-bg .blob:nth-child(3) { background: radial-gradient(circle, #93c5fd, #3b82f6); }
+        .section-label { color: var(--page-accent); background: rgba(59, 130, 246, 0.08); border-color: rgba(59, 130, 246, 0.15); }
+        .page-hero .topic-number { color: var(--page-accent); background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2); }
+        .analogy-box { background: rgba(59, 130, 246, 0.05); border-color: rgba(59, 130, 246, 0.15); }
+        .analogy-box .analogy-title { color: var(--page-accent); }
+        .key-points li .point-icon { background: rgba(59, 130, 246, 0.1); }
+        .flow-step .step-icon { background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2); }
+        .future-list li::before { color: var(--page-accent); }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg"><div class="blob"></div><div class="blob"></div><div class="blob"></div></div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Home</a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Continual Learning</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#05 — Lifelong Learning</span>
+            <h1>Continual Learning</h1>
+            <p class="subtitle">Enabling ML models to learn sequentially from a stream of tasks without catastrophically forgetting previous knowledge.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <div class="section-label">📘 Foundation</div>
+            <h2>What Is Continual Learning?</h2>
+            <p>Continual learning (also called lifelong learning or incremental learning) is the ability of a machine learning model to <strong>learn new tasks sequentially</strong> while retaining knowledge from previously learned tasks. Unlike traditional ML training where a model is trained once on a fixed dataset, continual learning operates on a <strong>stream of evolving data and tasks</strong> over time.</p>
+            <p>The central enemy here is <strong>catastrophic forgetting</strong> — the phenomenon where a neural network, upon learning new information, overwrites the weights that were important for old tasks. Imagine a student who learns French perfectly but completely forgets English when they start learning Spanish. That's catastrophic forgetting in a nutshell.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Think of it like…</div>
+                <p>Your brain is a continual learner. You learned to ride a bike as a child, then learned to drive a car as a teenager, and you didn't forget biking. Neural networks aren't so lucky — they tend to "overwrite" old skills when learning new ones. Continual learning research tries to give networks this brain-like ability to accumulate knowledge gracefully.</p>
+            </div>
+            <p>There are three main scenarios in the field: <strong>Task-Incremental</strong> (model knows which task it's solving), <strong>Domain-Incremental</strong> (same task, shifting data distribution), and <strong>Class-Incremental</strong> (new classes arrive over time without task IDs). Each poses progressively harder challenges.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <div class="section-label">🎯 Motivation</div>
+            <h2>Why It Matters</h2>
+            <p>In the real world, data is <strong>non-stationary</strong>. Customer behavior shifts, new diseases emerge, languages evolve, and new product categories appear. A model trained once becomes stale quickly.</p>
+            <ul class="key-points">
+                <li><span class="point-icon">💰</span> <strong>Retraining from scratch is expensive.</strong> Training a large language model can cost millions of dollars. If the model could learn incrementally, you'd save enormous compute resources and carbon emissions.</li>
+                <li><span class="point-icon">⏱️</span> <strong>Real-time adaptation is essential.</strong> Autonomous vehicles, medical diagnosis systems, and fraud detectors must adapt to new patterns without downtime for full retraining.</li>
+                <li><span class="point-icon">🧠</span> <strong>LLMs need to stay current.</strong> Today's large language models have knowledge cutoff dates. Continual learning could enable them to absorb new knowledge without forgetting their foundational capabilities.</li>
+                <li><span class="point-icon">🌍</span> <strong>Edge deployment demands it.</strong> Devices in remote locations or with limited connectivity can't always download a freshly trained model — they need to learn locally and incrementally.</li>
+                <li><span class="point-icon">🔒</span> <strong>Privacy constraints.</strong> When past data can't be stored (GDPR, HIPAA), the model must learn from current data without access to historical examples.</li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <div class="section-label">⚙️ Process</div>
+            <h2>How It Works</h2>
+            <p>The general continual learning pipeline follows a cycle: a new task or data batch arrives, the model trains on it using some anti-forgetting mechanism, then performance is evaluated across <strong>all</strong> previously seen tasks, and knowledge is consolidated before the next task arrives.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">📥</div>
+                        <span class="step-label">New Task<br>Arrives</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🛡️</div>
+                        <span class="step-label">Anti-Forgetting<br>Mechanism</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">📊</div>
+                        <span class="step-label">Evaluate<br>All Tasks</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔗</div>
+                        <span class="step-label">Consolidate<br>Knowledge</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔄</div>
+                        <span class="step-label">Repeat for<br>Next Task</span>
+                    </div>
+                </div>
+            </div>
+            <p>The "anti-forgetting mechanism" is where different approaches diverge. Some constrain weight updates, some store past examples, some grow the network, and some distill old knowledge into new models. The choice depends on your memory budget, task similarity, and performance requirements.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <div class="section-label">🔧 Techniques</div>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>🧮 Elastic Weight Consolidation (EWC)</h4>
+                    <p>Identifies which weights were most important for previous tasks using the Fisher Information Matrix, then penalizes changes to those weights. Like putting "locks" on the most critical knowledge.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>🏗️ Progressive Neural Networks</h4>
+                    <p>Adds a new neural network column for each task while freezing previous columns. New columns can connect laterally to old ones. Zero forgetting, but model size grows linearly with tasks.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>🔁 Experience Replay</h4>
+                    <p>Stores a small buffer of examples from previous tasks and mixes them into training on new tasks. Simple, effective, and biologically inspired — our hippocampus does something similar during sleep.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>📦 PackNet</h4>
+                    <p>Prunes the network after each task to free up unused capacity, then assigns those free weights to the next task. Like packing a suitcase efficiently — each task gets its own dedicated subset of parameters.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>🎓 Learning without Forgetting (LwF)</h4>
+                    <p>Uses knowledge distillation: when training on a new task, it also minimizes the divergence from the old model's predictions on new data. No stored data needed — only the old model's outputs.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>🔌 Adapter-Based CL</h4>
+                    <p>Adds lightweight adapter modules for each new task on top of a frozen backbone. Combines the parameter efficiency of PEFT methods with continual learning. Highly relevant for LLM continual adaptation.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <div class="section-label">⚠️ Challenges</div>
+            <h2>Open Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">🧨</div>
+                    <h4>Catastrophic Forgetting</h4>
+                    <p>The core problem. No method fully solves it without trade-offs. Reducing forgetting on old tasks often means reduced plasticity for new ones — the stability-plasticity dilemma.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">💥</div>
+                    <h4>Task Interference</h4>
+                    <p>Learning tasks with conflicting patterns can cause negative backward transfer, where new learning actively degrades old task performance beyond simple forgetting.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">💾</div>
+                    <h4>Memory Constraints</h4>
+                    <p>Replay-based methods need to store past data. In privacy-sensitive domains or resource-constrained environments, this buffer may be unavailable or severely limited.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📏</div>
+                    <h4>Evaluation Protocols</h4>
+                    <p>No consensus on how to benchmark. Metrics like Average Accuracy, Forgetting Measure, and Forward/Backward Transfer capture different aspects, making comparison difficult.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📈</div>
+                    <h4>Scalability to LLMs</h4>
+                    <p>Most continual learning research uses small models (ResNets, small MLPs). Adapting EWC or replay to billion-parameter transformers presents significant compute and memory challenges.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <div class="section-label">📄 Research</div>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Overcoming Catastrophic Forgetting in Neural Networks</div>
+                        <div class="paper-meta">Kirkpatrick et al. · 2017 · Introduced Elastic Weight Consolidation (EWC), using the Fisher Information Matrix to protect important weights. The foundational paper for regularization-based continual learning.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Progressive Neural Networks</div>
+                        <div class="paper-meta">Rusu et al. · 2016 · Proposed growing the architecture per task with lateral connections. Achieves zero forgetting but at the cost of linear model growth. Influential for architecture-based approaches.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Experience Replay for Continual Learning</div>
+                        <div class="paper-meta">Rolnick et al. · 2019 · Showed that storing and replaying a small subset of past examples is surprisingly effective. Bridges ideas from neuroscience's memory consolidation theory to deep learning.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Continual Learning for Large Language Models</div>
+                        <div class="paper-meta">Survey · 2024 · Comprehensive survey covering continual pre-training, instruction tuning, and alignment of LLMs. Explores how PEFT methods enable practical continual learning for foundation models.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <div class="section-label">🔮 Future</div>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Continual Pre-training of LLMs</strong> — Updating foundation models with new world knowledge without full retraining. This is critical for keeping LLMs factually current while preserving their core language abilities and reasoning capabilities.</li>
+                <li><strong>Continual RLHF</strong> — Aligning models to evolving human preferences over time. As societal values shift and new use cases emerge, alignment can't be a one-time process; models must be continuously re-aligned without forgetting prior alignment.</li>
+                <li><strong>Biologically-Inspired Approaches</strong> — Drawing deeper inspiration from how the brain handles continual learning through complementary learning systems, synaptic consolidation, and memory replay during sleep. Neuromorphic computing adds another dimension.</li>
+                <li><strong>Online Learning at Scale</strong> — Moving from the "sequence of discrete tasks" paradigm to truly streaming data scenarios where distribution shifts are gradual and continuous, more closely mirroring real-world deployment conditions.</li>
+                <li><strong>Continual Learning + Retrieval</strong> — Combining parametric continual learning with non-parametric memory (like RAG). Instead of forcing the model to remember everything in its weights, offload factual knowledge to an updateable retrieval store.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <div class="section-label">🔗 Related</div>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="#" class="related-link">🔌 PEFT & LoRA <span class="link-arrow">→</span></a>
+                <a href="#" class="related-link">🎓 Knowledge Distillation <span class="link-arrow">→</span></a>
+                <a href="#" class="related-link">🌐 Federated Learning <span class="link-arrow">→</span></a>
+                <a href="#" class="related-link">🤖 Self-Improving AI <span class="link-arrow">→</span></a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">← Back to Explorer</a>
+            <a href="06-prompt-engineering-efficiency.html">Next: Prompt Engineering →</a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
