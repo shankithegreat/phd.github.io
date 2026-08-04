@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Causal Inference & Causal Representation Learning - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #14b8a6; }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #14b8a6, #0f766e);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #2dd4bf, #0d9488);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #0f766e, #134e4a);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Causal Inference & Causal Representation Learning</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#43 — Advanced Frontier</span>
+            <h1>Causal Inference & Causal Representation Learning</h1>
+            <p class="subtitle">Moving machine learning from "what patterns co-occur in my data" to "what would happen if I intervened" — and learning representations that survive that shift.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>Causal inference is the study of questions that <strong>cannot be answered from the observed data distribution alone, no matter how much of it you collect</strong>. Judea Pearl organises these into a ladder of causation with three rungs. The first rung is association: what does seeing X tell me about Y, formally the conditional distribution. The second is intervention: what happens to Y if I set X to a particular value, written with the do-operator. The third is counterfactual: given that this patient took the drug and died, would they have survived had they not taken it? Each rung requires strictly more information than the one below, and the entire apparatus of supervised learning — however large the model — lives on the bottom rung.</p>
+            <p>Two formal languages dominate. Structural causal models represent the world as a set of assignment equations over variables plus exogenous noise, visualised as a directed acyclic graph in which an arrow means direct causation. Do-calculus then supplies sound and complete rules for rewriting interventional expressions into observational ones, telling you exactly when an effect is identifiable from data you can actually collect. The potential-outcomes framework, associated with Rubin and widely used in statistics, econometrics, and epidemiology, instead posits for every unit a pair of outcomes — one under treatment and one under control — and frames the problem as missing data, since you only ever observe one of them per unit. The frameworks are largely translatable; graphs make assumptions visible while potential outcomes make estimation and uncertainty natural.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Roosters crow before sunrise with almost perfect reliability, so a purely predictive model will happily use crowing to forecast dawn — and it will be right every day. But silencing the rooster does not delay the sun. A causal model knows which arrows in the world can be grabbed and pushed, and which ones merely light up together. Prediction tells you what to expect; causation tells you what to do.</p>
+            </div>
+            <p>The reason this matters for machine learning is that most decisions people want models to inform are interventional. A hospital does not want to know which patients are likely to deteriorate given current care; it wants to know which will benefit from a change in treatment. A marketing team does not want to identify people who will buy anyway. Fitting an accurate predictive model and then reading its coefficients as effects is one of the most common and consequential errors in applied machine learning, and it is exactly the error that this literature exists to prevent.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>Purely correlational learning breaks in specific, predictable ways: it latches onto spurious features, it fails under distribution shift, and it cannot answer the decision questions that motivated the project in the first place.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">🎛️</span>
+                    <span><strong>Decisions require interventions:</strong> Policy, medicine, pricing, and product changes are all do-operations. Estimating them from observational data demands explicit assumptions that a predictive pipeline never states.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🪤</span>
+                    <span><strong>Shortcut learning:</strong> Models exploit whatever correlates with the label in training — background texture, hospital-specific scanner artefacts, annotation quirks — and collapse when that correlation breaks in deployment.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔄</span>
+                    <span><strong>Robustness to distribution shift:</strong> Causal mechanisms are stabler than correlations. A representation built on invariant mechanisms should transfer across environments, which is the central bet of causal representation learning.</span>
+                </li>
+                <li>
+                    <span class="point-icon">⚖️</span>
+                    <span><strong>Fairness and explanation:</strong> Many fairness criteria and most useful explanations are counterfactual claims about what would have happened under a changed attribute, so they are simply not expressible without causal machinery.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔬</span>
+                    <span><strong>Scientific discovery:</strong> Science is in the business of mechanisms. Extracting candidate causal structure from large observational datasets — genomics, climate, economics — is where causal methods meet modern data scale.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>A causal analysis is a disciplined pipeline rather than a model class. You state the causal structure you are willing to assume, check whether your target quantity is identifiable under those assumptions, choose an estimator, and then attack your own conclusion with sensitivity analysis. The order matters, because identification is a question about assumptions and has no data-driven shortcut.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">🕸️</div>
+                        <span class="step-label">Encode<br>Assumptions</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔑</div>
+                        <span class="step-label">Check<br>Identifiability</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">📊</div>
+                        <span class="step-label">Estimate<br>Effects</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🧪</div>
+                        <span class="step-label">Refute &<br>Stress-Test</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Encoding assumptions:</strong> You draw a graph of what you believe causes what, which forces you to be explicit about the three structures that generate bias. A confounder is a common cause of treatment and outcome and must be adjusted for. A collider is a common effect of two variables, and adjusting for it manufactures spurious association — the reason "controlling for more variables" is not automatically safer. Selection bias arises when the sample itself was chosen in a way that depends on the variables of interest. Simpson's paradox, where an effect reverses sign after aggregating or disaggregating subgroups, is the classic illustration that the correct analysis cannot be chosen from the numbers alone.</p>
+            <p><strong>Identification:</strong> Given the graph, do-calculus or an equivalent criterion tells you whether the effect is recoverable. The backdoor criterion is the workhorse: find a set of variables blocking every non-causal path from treatment to outcome, and adjustment suffices. When unmeasured confounding remains, you need a design that supplies exogenous variation — an instrumental variable that affects treatment but not the outcome directly, a difference-in-differences comparison exploiting parallel trends before and after a policy change, or a regression discontinuity that treats a sharp eligibility threshold as quasi-random near the cut-off. If nothing identifies the effect, the honest result is that the question cannot be answered with these data.</p>
+            <p><strong>Estimation and stress-testing:</strong> Once identified, machine learning becomes genuinely useful as a flexible nuisance-function estimator. Double machine learning uses cross-fitting and orthogonalisation so that flexible models for the outcome and the propensity score do not contaminate the target parameter's rate of convergence or its confidence intervals. Causal forests adapt random forests to estimate conditional average treatment effects with valid asymptotic inference, letting you ask who benefits rather than only whether the average person does. On the discovery side, constraint-based algorithms in the PC and FCI tradition infer structure from conditional-independence tests, score-based methods search over graphs, and NOTEARS recast the combinatorial acyclicity constraint as a smooth algebraic condition on the adjacency matrix, turning structure learning into continuous optimisation. Every one of these steps ends with refutation: placebo outcomes, negative controls, and sensitivity analyses that quantify how much hidden confounding would be needed to overturn the conclusion.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Backdoor Adjustment & Propensity Scores</h4>
+                    <p>Block non-causal paths by conditioning on a sufficient adjustment set, implemented through matching, inverse-probability weighting, or regression. Simple and transparent, but only valid if every relevant confounder was actually measured.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Quasi-Experimental Designs</h4>
+                    <p>Instrumental variables, difference-in-differences, and regression discontinuity exploit external sources of variation to identify effects despite unmeasured confounding. Each rests on its own untestable assumption — exclusion, parallel trends, continuity at the threshold.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Double Machine Learning</h4>
+                    <p>Chernozhukov et al., 2018 combine orthogonalised moment conditions with cross-fitting so that arbitrary ML models can estimate nuisance functions while the treatment-effect estimate retains root-n convergence and valid confidence intervals.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Causal Forests</h4>
+                    <p>Wager & Athey, 2018 adapt honest random forests to heterogeneous treatment effects, producing pointwise asymptotically normal estimates of conditional average effects and enabling data-driven subgroup discovery.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Causal Discovery</h4>
+                    <p>Recover structure rather than assume it. Constraint-based methods chain conditional-independence tests to a Markov equivalence class; NOTEARS (Zheng et al., 2018) replaces discrete acyclicity search with a differentiable constraint amenable to gradient descent.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Invariance-Based Learning</h4>
+                    <p>Invariant risk minimisation (Arjovsky et al., 2019) seeks features whose relationship to the label is stable across training environments, aiming for out-of-distribution generalisation. Later work showed it often fails to beat plain empirical risk minimisation in practice.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">🚫</div>
+                    <h4>Untestable Assumptions</h4>
+                    <p>No-unmeasured-confounding, the exclusion restriction, and parallel trends cannot be validated from the data that use them. Conclusions are therefore conditional on beliefs, and small violations can move estimates enough to reverse a decision.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🧭</div>
+                    <h4>Limits of Identifiability</h4>
+                    <p>Observational data typically pins down only a Markov equivalence class, not a unique graph, so many causal directions remain undetermined without interventions or strong parametric and noise assumptions.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🖼️</div>
+                    <h4>From Variables to Pixels</h4>
+                    <p>Classical theory assumes well-defined causal variables. Real perception delivers pixels and tokens, and recovering disentangled causal factors from raw high-dimensional observations is provably impossible without inductive bias or interventional data.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🤖</div>
+                    <h4>Do LLMs Reason Causally?</h4>
+                    <p>Language models score well on causal benchmarks, but much of that may be recall of causal statements written in the training corpus. Distinguishing genuine inference from sophisticated retrieval of memorised knowledge remains contested.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Causality: Models, Reasoning, and Inference</div>
+                        <div class="paper-meta">Pearl, 2009 — The canonical treatment of structural causal models, the ladder of causation, and do-calculus as a complete algebra for interventional identification.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">DAGs with NO TEARS: Continuous Optimization for Structure Learning</div>
+                        <div class="paper-meta">Zheng et al., 2018 — Reformulates the combinatorial acyclicity constraint as a smooth algebraic condition, letting causal structure be learned by continuous optimisation.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Estimation and Inference of Heterogeneous Treatment Effects using Random Forests</div>
+                        <div class="paper-meta">Wager & Athey, 2018 — Establishes causal forests with pointwise consistency and asymptotic normality, making flexible subgroup-level effect estimation statistically respectable.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Double/Debiased Machine Learning for Treatment and Structural Parameters</div>
+                        <div class="paper-meta">Chernozhukov et al., 2018 — Shows how orthogonalisation plus cross-fitting lets arbitrary machine-learning nuisance estimators be used without breaking inference on the causal parameter.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Toward Causal Representation Learning</div>
+                        <div class="paper-meta">Schölkopf et al., 2021 — Programmatic review arguing that independent causal mechanisms and interventional data are the bridge between causality and deep representation learning.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Causal representation learning at scale:</strong> Learning latent variables that behave like causal factors — supporting intervention, composition, and transfer — from high-dimensional data. Identifiability results that specify exactly which auxiliary information or interventions make this possible are the key theoretical prize.</li>
+                <li><strong>Interventional data as a first-class resource:</strong> Perturbation biology, A/B test archives, and simulator interventions provide the exogenous variation that observational data lacks. Designing which interventions to run, under budget, is an active-learning problem with strong practical payoff.</li>
+                <li><strong>Grounding causal claims in language models:</strong> Rather than asking whether an LLM reasons causally in the abstract, using it as a proposer of candidate graphs and confounders that are then formally tested against data — combining broad world knowledge with rigorous identification.</li>
+                <li><strong>Shortcut-resistant training:</strong> Building on the shortcut-learning diagnosis of Geirhos et al., 2020 to develop objectives and data-collection strategies whose failures are diagnosable, since invariance penalties alone have proved fragile and often no better than careful empirical risk minimisation.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="19-neurosymbolic-ai.html" class="related-link">
+                    <span>Neurosymbolic AI</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="15-ai-scientific-discovery.html" class="related-link">
+                    <span>AI for Scientific Discovery</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="16-mechanistic-interpretability.html" class="related-link">
+                    <span>Mechanistic Interpretability</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="31-uncertainty-quantification.html" class="related-link">
+                    <span>Uncertainty Quantification</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="44-graph-neural-networks.html">
+                Next: Graph Neural Networks & Geometric DL
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
