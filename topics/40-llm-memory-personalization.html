@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Memory & Personalization - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #6366f1; }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #6366f1, #4338ca);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #818cf8, #4f46e5);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #4338ca, #312e81);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">LLM Memory & Personalization</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#40 — Advanced Frontier</span>
+            <h1>LLM Memory & Personalization</h1>
+            <p class="subtitle">Giving a stateless model a usable past — deciding what to remember about a user, where to store it, when to forget it, and how to let them delete it.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>A transformer is, by construction, <strong>stateless between calls</strong>. Everything it appears to know about you exists either in its frozen weights or in the tokens you just sent it. The moment a conversation ends, that context is gone. Memory research asks how to build a persistent, evolving representation of a user and their history on top of an architecture that has no native notion of yesterday — and personalization asks what to do with it once you have it.</p>
+            <p>It helps to be precise about where knowledge can live, because the three locations have completely different cost, latency, and governance properties. <strong>In-context</strong> memory is text in the prompt: instantly writable, perfectly inspectable, and bounded by the window and by attention cost. <strong>Parametric</strong> memory lives in the weights: free at inference time and deeply integrated with the model's other knowledge, but expensive to write, opaque, and difficult to selectively remove. <strong>External</strong> memory is a store — vector index, key-value database, or document set — queried at request time: cheap, unbounded, auditable, and deletable, but only as good as the retrieval step that decides what to surface.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Consider a good family doctor. Working memory is what you have told them in the last five minutes. Their case notes are an external store — searchable, correctable, and something you have the right to read and amend. And then there is what has become second nature after twenty years of practice, which no longer feels like recall at all; that is the parametric layer, powerful but nearly impossible to edit on request. A useful assistant needs all three, and most current failures come from putting information in the wrong one.</p>
+            </div>
+            <p>The naive strategy of appending the entire history to every prompt fails on all three axes: attention cost grows with sequence length, models attend unevenly to very long inputs, and irrelevant history actively distracts. So real systems build hierarchies. MemGPT (Packer et al., 2023) framed this explicitly as virtual context management, treating the window as RAM and an external store as disk, with the model itself issuing function calls to page information in and out. Generative Agents (Park et al., 2023) contributed the other influential design: a memory stream of timestamped natural-language observations, retrieved by a score combining recency, importance, and relevance, with periodic reflection steps that synthesise higher-level inferences from accumulated low-level records. Nearly every production memory feature is a descendant of one of these two designs.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>Memory is what separates a useful tool you re-brief every morning from a collaborator that accumulates context about your work — and it is simultaneously the feature with the sharpest privacy consequences.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">🧵</span>
+                    <span><strong>Continuity across sessions:</strong> Long-running work — a research project, a codebase, a course of treatment — depends on retaining decisions and constraints from weeks ago. Without memory, the user pays a re-briefing tax on every interaction.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🎯</span>
+                    <span><strong>Fewer tokens, better answers:</strong> A compact profile of stable preferences usually beats stuffing the whole transcript into the window, both on cost and on quality, because irrelevant history measurably degrades reasoning.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🧑‍🔬</span>
+                    <span><strong>Agents need state:</strong> Any agent that works over hours or days must record what it tried, what failed, and what it learned. Memory is the substrate for experience-based improvement without retraining.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔐</span>
+                    <span><strong>Privacy becomes a design problem:</strong> Once a system writes durably about people, questions of consent, retention, inspection, and deletion move from policy documents into the architecture. Data placed in weights is far harder to honour a deletion request for than data in a row of a database.</span>
+                </li>
+                <li>
+                    <span class="point-icon">⚖️</span>
+                    <span><strong>Personalization pulls against alignment:</strong> A model that adapts to a user's views can slide into flattery and reinforcement of what they already believe. Deciding which preferences to accommodate and which to hold constant is a value judgement embedded in a retrieval policy.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>A memory system is a loop with four decisions: what to write, how to organise and compress it, what to retrieve for the current turn, and how to reconcile retrieved memories with what the model already believes. The retrieval half is comparatively well understood — it borrows directly from retrieval-augmented generation — while the write and reconcile halves are where the open research is.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">✍️</div>
+                        <span class="step-label">Decide &<br>Write</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🗂️</div>
+                        <span class="step-label">Consolidate<br>& Index</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔎</div>
+                        <span class="step-label">Retrieve for<br>This Turn</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🤝</div>
+                        <span class="step-label">Reconcile &<br>Respond</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Write policies:</strong> The hardest question is what deserves to be remembered at all. Recording everything produces a store full of chatter that swamps retrieval; recording too little defeats the purpose. Practical approaches include letting the model itself call an explicit write tool when it judges something durable, running a lightweight classifier over each turn for candidate facts and preferences, and extracting structured slots after a session ends. The good signals are things that are stable and reusable — a dietary restriction, a preferred programming language, a project deadline — as opposed to transient state. Extraction is also where errors are silently injected: a preference misread once and written confidently will be retrieved for months, so writes need provenance, timestamps, and ideally a confidence level.</p>
+            <p><strong>Consolidation and forgetting:</strong> Because memory grows monotonically, every system needs a compaction strategy. Recursive summarisation collapses old episodes into shorter abstracts; reflection synthesises specific observations into general statements such as an inferred interest; deduplication merges near-identical entries; and supersession replaces stale facts when a newer one contradicts them, which requires knowing the difference between an update and a genuine conflict. Forgetting deserves to be treated as a first-class feature rather than an accident of eviction: time-to-live on facts that are inherently temporary, decay on entries never retrieved, and hard deletion on request. The parametric route works differently — targeted editing methods like ROME (Meng et al., 2022) locate a factual association in the mid-layer feed-forward weights and apply a rank-one update, and MEMIT extends this to thousands of edits at once. Both are elegant, and both are brittle: edits often fail to propagate to logically entailed facts, can be undone by paraphrasing the query, and degrade nearby unrelated knowledge as their number grows, which is why most deployed personalization stays out of the weights.</p>
+            <p><strong>Reconciliation at inference:</strong> When a memory is retrieved it enters a prompt that also contains fresh documents, the user's current message, and a system policy — and these sources disagree more often than one might expect. Studies of knowledge conflict find models can be stubbornly attached to a well-learned parametric fact even when the context contradicts it, and conversely can be over-credulous towards retrieved text that is wrong. Handling this well means encoding an explicit precedence — a user's stated correction should beat a stored memory, which should beat a parametric prior — and surfacing it to the user when the system acts on something remembered rather than something said. Interfaces that show which memory was used, and let the user edit or delete it in place, turn an opaque behaviour into a correctable one.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Virtual Context Management</h4>
+                    <p>Treat the window as a paged working set over a larger external store, with the model issuing its own read and write calls. Gives unbounded effective memory, but every page-in costs a model call and the policy is only as good as the model's judgement.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Memory Streams with Reflection</h4>
+                    <p>Store timestamped natural-language observations, retrieve by recency, importance, and relevance, and periodically synthesise higher-level inferences. Produces coherent long-horizon behaviour; the scoring weights are largely hand-tuned heuristics.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Structured User Profiles</h4>
+                    <p>Maintain a compact typed record of stable attributes and preferences that is always injected. Cheap, inspectable, and easy to expose in a settings interface, but rigid — anything not anticipated by the schema has nowhere to live.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Recursive Summarisation</h4>
+                    <p>Compress older history into progressively shorter abstracts to keep the store bounded. Controls growth well, at the cost of irreversible detail loss and drift, since each summarisation pass can amplify an earlier misreading.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Targeted Weight Editing</h4>
+                    <p>Locate and rewrite a specific factual association directly in the parameters, as in ROME and its batched successor MEMIT. Zero inference overhead, but brittle under paraphrase, poor at propagating implications, and hard to audit or undo.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Per-User Adapters</h4>
+                    <p>Train a small low-rank adapter per user or cohort so preferences live in dedicated parameters. Captures hard-to-verbalise style, but adds training and serving complexity and makes deletion a retraining problem rather than a row delete.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">🥊</div>
+                    <h4>Knowledge Conflicts</h4>
+                    <p>Stored memory, retrieved documents, and parametric priors routinely disagree, and models lack a principled precedence order. The result is answers that are confidently wrong in a way the user cannot trace to a source.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🕰️</div>
+                    <h4>Staleness & Forgetting</h4>
+                    <p>Facts about people expire — jobs, cities, goals, relationships. Distinguishing an update from a contradiction, and deciding what should decay on its own, is unsolved, so old memories resurface long after they stopped being true.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔒</div>
+                    <h4>Privacy & Deletion</h4>
+                    <p>Some things must never be persisted, and users need real inspection and erasure. Text stores can honour that; weights and derived summaries cannot easily, and memorisation of training data shows how leaky parameters already are.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📏</div>
+                    <h4>Evaluation Is Very Hard</h4>
+                    <p>Testing memory requires long, realistic, multi-session interactions with ground truth about what should have been retained. Synthetic probes are easy to game, and human studies at that horizon are slow and expensive to run.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">MemGPT: Towards LLMs as Operating Systems</div>
+                        <div class="paper-meta">Packer et al., 2023 — Introduces virtual context management, letting a model page information between a limited window and external storage via its own function calls.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Generative Agents: Interactive Simulacra of Human Behavior</div>
+                        <div class="paper-meta">Park et al., 2023 — Proposes the memory stream with recency, importance, and relevance retrieval plus reflection and planning, the template for most agent memory designs.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Locating and Editing Factual Associations in GPT (ROME)</div>
+                        <div class="paper-meta">Meng et al., 2022 — Traces factual recall to mid-layer feed-forward modules and edits a single association with a rank-one weight update.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Mass-Editing Memory in a Transformer (MEMIT)</div>
+                        <div class="paper-meta">Meng et al., 2023 — Scales direct weight editing to thousands of simultaneous factual updates, and exposes how accuracy and locality degrade as edit counts rise.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Extracting Training Data from Large Language Models</div>
+                        <div class="paper-meta">Carlini et al., 2021 — Demonstrates verbatim recovery of memorised sequences including personal information, framing why durable storage of user data needs care.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Learned write and forget policies:</strong> Replacing hand-tuned heuristics with policies trained end-to-end against downstream task success, so the system learns what is worth remembering and when a memory has stopped earning its place.</li>
+                <li><strong>Architectures with native state:</strong> Recurrent and state-space hybrids, or trainable memory modules updated online, that give a model persistent state without either an ever-growing prompt or a fragile weight edit.</li>
+                <li><strong>Privacy-preserving personalization:</strong> Keeping the user's memory on their own device or under their own key, combining local adapters with federated updates so a provider can improve the shared model without ever holding the personal store.</li>
+                <li><strong>Longitudinal benchmarks:</strong> Multi-session evaluation suites with explicit ground truth for retention, correct updating, principled forgetting, and honouring deletion — measuring memory as a capability rather than as a side effect of a long context window.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="08-retrieval-augmented-generation.html" class="related-link">
+                    <span>Retrieval-Augmented Generation</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="25-long-context-models.html" class="related-link">
+                    <span>Long-Context Models</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="05-continual-learning.html" class="related-link">
+                    <span>Continual Learning</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="03-federated-learning.html" class="related-link">
+                    <span>Federated Learning</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="41-multi-agent-systems.html">
+                Next: Multi-Agent Systems & Coordination
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
