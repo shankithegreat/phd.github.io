@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Neural Networks & Geometric Deep Learning - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #8b5cf6; }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #a78bfa, #7c3aed);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #6d28d9, #4c1d95);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Graph Neural Networks & Geometric Deep Learning</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#44 — Advanced Frontier</span>
+            <h1>Graph Neural Networks & Geometric Deep Learning</h1>
+            <p class="subtitle">Learning on molecules, social networks, and meshes — data whose structure is a graph rather than a grid or a sequence, and where symmetry dictates architecture.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>Convolutional networks work because images have a rigid grid structure with translation symmetry, and transformers work because text is an ordered sequence. An enormous amount of important data has <strong>neither a grid nor an ordering</strong>: molecules are atoms joined by bonds, a social network is people joined by relationships, a road system is intersections joined by segments, a program is an abstract syntax tree with data-flow edges. These objects have variable size, no canonical node ordering, and information that lives in the connectivity as much as in the node features. Graph neural networks are the architecture family designed for exactly this setting.</p>
+            <p>The unifying abstraction is message passing, formalised by Gilmer et al. in 2017 as a framework covering the many graph architectures proposed until then. Each node holds a vector. In one round, every node computes a message for each neighbour, aggregates incoming messages with a permutation-invariant operator such as sum, mean, or max, and updates its own vector using the aggregate and its previous state. Stacking K rounds lets information travel K hops. A readout function pools node vectors when a whole-graph prediction is needed. Permutation invariance in the aggregation is what makes the whole thing well defined: relabel the nodes and the output does not change.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Imagine a rumour spreading through a village where everyone can only talk to the people they know personally. After one round of conversations, each person knows what their immediate friends think. After three rounds, information from three social hops away has reached them — but heavily blended, because each person summarised everything they heard into one sentence before passing it on. That summarisation is the strength of message passing and also its central weakness: it scales beautifully, and it loses detail with every hop.</p>
+            </div>
+            <p>Geometric deep learning is the broader programme that places this in context. Bronstein et al. articulated a blueprint in 2021 in which architectures are derived from the symmetry group of the domain: translation invariance yields convolution on grids, permutation invariance yields message passing on graphs, and rotation invariance on point clouds yields equivariant networks. On this view CNNs, GNNs, transformers, and DeepSets are not separate inventions but instances of one principle — build in the symmetries the data genuinely has, and let learning handle the rest.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>Encoding relational structure as an architectural prior rather than hoping a generic model discovers it from data is a substantial sample-efficiency win, and in the physical sciences it is often the difference between a usable model and an unusable one.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">🧪</span>
+                    <span><strong>Molecules are graphs natively:</strong> Property prediction, reaction outcome, and binding affinity all depend on connectivity and 3D geometry, so graph and equivariant models dominate benchmarks in drug and materials discovery.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🧬</span>
+                    <span><strong>Symmetry as a prior:</strong> Guaranteeing that a prediction is invariant to node relabelling, or that a predicted force rotates with the molecule, removes a whole class of errors that a generic network must otherwise learn to avoid from data.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🕸️</span>
+                    <span><strong>Industrial-scale relational data:</strong> Recommendation, fraud detection, and search on graphs with billions of edges are among the largest deployed deep-learning systems, where structure carries most of the signal.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🚦</span>
+                    <span><strong>Spatio-temporal forecasting:</strong> Traffic estimation, power grids, and epidemic spread are dynamics on networks, and combining graph convolution with temporal models substantially outperforms treating each node as an independent series.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔗</span>
+                    <span><strong>Bridge to symbolic knowledge:</strong> Knowledge graphs give language models structured, verifiable, updatable facts, making graph learning a natural counterpart to purely parametric memory.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>Every message-passing GNN, from the simplest graph convolution to a full equivariant transformer, is the same four-stage loop repeated for a small number of layers. Understanding where each stage can go wrong explains most of the field's open problems.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">🔵</div>
+                        <span class="step-label">Embed<br>Nodes</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">✉️</div>
+                        <span class="step-label">Pass<br>Messages</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔀</div>
+                        <span class="step-label">Aggregate &<br>Update</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🎯</div>
+                        <span class="step-label">Readout &<br>Predict</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Node embedding:</strong> Raw attributes — atom type, user features, bag-of-words — are projected into a hidden space, optionally concatenated with structural descriptors such as degree, centrality, or random-walk statistics. This last detail matters more than it looks: message passing alone cannot see certain structural properties, so injecting positional and structural encodings is often what separates a mediocre model from a strong one.</p>
+            <p><strong>Message passing and aggregation:</strong> The choice of aggregator determines expressive power. Kipf & Welling's graph convolutional network uses a symmetrically normalised degree-weighted average, which is stable and cheap. GraphSAGE (Hamilton et al., 2017) samples a fixed number of neighbours and supports inductive prediction on unseen nodes, which is what made GNNs practical on huge graphs. Graph attention networks (Veličković et al., 2018) learn per-edge weights so a node can decide which neighbours matter. Xu et al. proved in 2019 that message passing is at most as discriminative as the one-dimensional Weisfeiler-Leman graph isomorphism test, and that a sum aggregator with an injective update — the Graph Isomorphism Network — reaches that bound while mean and max aggregators fall strictly short.</p>
+            <p><strong>Depth, readout, and prediction:</strong> Two failure modes constrain depth. Over-smoothing means repeated averaging drives node representations toward a common value, so accuracy typically peaks at two to four layers and degrades beyond. Over-squashing, characterised by Alon & Yahav in 2021, means information from an exponentially growing receptive field is compressed into a fixed-width vector, so tasks genuinely requiring long-range interaction fail regardless of how carefully you tune. Graph transformers respond by letting every node attend to every other, restoring long-range capacity at quadratic cost and relying entirely on positional and structural encodings to reintroduce the topology that global attention discards. Readout then pools to whatever granularity the task needs: node-level for classification, edge-level for link prediction, graph-level for molecular properties.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Graph Convolutional Networks</h4>
+                    <p>Kipf & Welling, 2017 simplify spectral graph convolution to a first-order, symmetrically normalised neighbourhood average. Two layers plus dropout remains a remarkably strong baseline on citation-network benchmarks and a sensible first thing to try.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Neighbour Sampling</h4>
+                    <p>GraphSAGE (Hamilton et al., 2017) samples a fixed-size neighbourhood per layer, bounding computation per node and enabling inductive inference on nodes never seen in training. The basis of most production-scale GNN training.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Graph Attention</h4>
+                    <p>GAT (Veličković et al., 2018) computes learned attention coefficients over neighbours, so aggregation is adaptive rather than degree-determined. Handles heterogeneous neighbourhoods better and provides a degree of interpretability through edge weights.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Graph Transformers</h4>
+                    <p>Replace local aggregation with global self-attention plus Laplacian eigenvector or random-walk positional encodings and structural bias terms. Sidesteps over-squashing and over-smoothing but costs quadratic attention and needs careful encoding design.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>E(3)-Equivariant Networks</h4>
+                    <p>For molecules and point clouds, build architectures whose outputs transform correctly under rotation, translation, and reflection using invariant scalars or higher-order geometric tensors. Dramatically improves data efficiency for force fields and conformer prediction.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Rewiring & Graph Coarsening</h4>
+                    <p>Modify the computation graph — add virtual global nodes, insert shortcut edges guided by curvature, or coarsen hierarchically — to shorten path lengths and relieve over-squashing without abandoning sparse message passing entirely.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">🌫️</div>
+                    <h4>Over-Smoothing</h4>
+                    <p>Repeated neighbourhood averaging makes node representations converge, so deep GNNs usually perform worse than shallow ones. Residual connections and normalisation help but do not fully restore the depth benefits seen elsewhere in deep learning.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🧴</div>
+                    <h4>Over-Squashing</h4>
+                    <p>Exponentially many distant nodes are compressed into a fixed-size vector, so long-range dependencies are effectively unlearnable through bottleneck edges. This is a structural limitation of sparse message passing, not a tuning problem.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📏</div>
+                    <h4>Expressiveness Ceiling</h4>
+                    <p>Bounded by the Weisfeiler-Leman test, standard GNNs cannot count triangles or distinguish certain regular graphs — properties that matter chemically. Higher-order variants regain power at steep computational cost.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🧨</div>
+                    <h4>Heterophily & Scale</h4>
+                    <p>When neighbours tend to have different labels, aggregation actively destroys signal and simple feature-only models can win. Meanwhile billion-edge graphs make sampling bias, partitioning, and memory movement the dominant engineering problems.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Neural Message Passing for Quantum Chemistry</div>
+                        <div class="paper-meta">Gilmer et al., 2017 — Introduces the message-passing neural network framework that unifies earlier graph architectures, demonstrated on molecular property prediction.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Semi-Supervised Classification with Graph Convolutional Networks</div>
+                        <div class="paper-meta">Kipf & Welling, 2017 — Derives a simple, scalable first-order approximation to spectral graph convolution that became the default GNN baseline.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Inductive Representation Learning on Large Graphs</div>
+                        <div class="paper-meta">Hamilton et al., 2017 — GraphSAGE introduces neighbour sampling and trainable aggregators, enabling inductive embedding of unseen nodes on graphs too large for full-batch training.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">How Powerful are Graph Neural Networks?</div>
+                        <div class="paper-meta">Xu et al., 2019 — Proves that message-passing GNNs are bounded by the 1-WL test and constructs the Graph Isomorphism Network, which attains that maximal discriminative power.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">On the Bottleneck of Graph Neural Networks and its Practical Implications</div>
+                        <div class="paper-meta">Alon & Yahav, 2021 — Identifies over-squashing, showing that GNNs cannot propagate information from exponentially large receptive fields through fixed-width representations.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Graph foundation models:</strong> Pre-training transferable representations across many graphs and domains, in the way language models transfer across text. The obstacle is that graphs lack a shared vocabulary — atoms, users, and intersections have nothing in common — so what exactly transfers is still an open question.</li>
+                <li><strong>Geometry-first scientific models:</strong> Equivariant architectures already sit at the heart of structure-prediction and force-field systems. Extending them to reaction dynamics, crystal structure prediction, and long-timescale simulation is the most consequential application area, and Bronstein et al.'s symmetry blueprint remains the organising theory.</li>
+                <li><strong>Graphs and language models together:</strong> Using knowledge graphs to ground and constrain generation, and using language models to construct, extend, and repair graphs from unstructured text. Retrieval over a typed graph rather than a flat vector index is an especially active practical thread.</li>
+                <li><strong>Beyond pairwise relations:</strong> Hypergraphs, simplicial complexes, and cellular sheaves model higher-order interactions that ordinary edges cannot express — three-way molecular interactions, group conversations, multi-party transactions — with topological deep learning supplying the mathematical apparatus.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="22-llms-for-biology.html" class="related-link">
+                    <span>LLMs for Biology</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="15-ai-scientific-discovery.html" class="related-link">
+                    <span>AI for Scientific Discovery</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="19-neurosymbolic-ai.html" class="related-link">
+                    <span>Neurosymbolic AI</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="43-causal-inference-ml.html" class="related-link">
+                    <span>Causal Inference & Representation Learning</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="45-scaling-laws-data-centric-ai.html">
+                Next: Scaling Laws & Data-Centric AI
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
