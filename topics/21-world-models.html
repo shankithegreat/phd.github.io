@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Models - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #8b5cf6; }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #a78bfa, #7c3aed);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #6d28d9, #4c1d95);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">World Models</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#21 — Emerging Frontier</span>
+            <h1>World Models</h1>
+            <p class="subtitle">AI systems that learn internal simulations of the world — enabling planning, prediction, and imagination without direct interaction.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>World models are AI systems that learn <strong>internal representations and simulations of their environment</strong>, enabling them to predict future states, plan ahead, and reason about consequences without physically acting. Rather than reacting purely to immediate observations, a world model builds a compressed, learnable "mental model" of how the world works — capturing physics, dynamics, and causal structure.</p>
+            <p>These models learn from observational data (video, sensor readings, interaction logs) and encode the regularities of the environment into a latent space. Once trained, they can "imagine" trajectories forward in time, allowing an agent to evaluate potential actions before committing to them in the real world.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Like a chess grandmaster who can "see" several moves ahead by simulating the game in their mind without actually moving pieces. The grandmaster doesn't need to physically try every move — their internal model of chess dynamics lets them imagine outcomes and choose the best path. World models give AI the same ability to mentally rehearse before acting.</p>
+            </div>
+            <p>The concept spans from simple dynamics models in robotics to large-scale generative video models like Sora that implicitly learn physical laws. Yann LeCun has argued that world models are the key missing piece for achieving human-level AI, since humans constantly predict and simulate the consequences of their actions.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>Model-free reinforcement learning requires millions of environment interactions to learn, making it impractical for real-world tasks. World models fundamentally change this equation by enabling learning in imagination.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">🧠</span>
+                    <span><strong>Sample efficiency:</strong> By planning in a learned simulation, agents can master tasks with 10-100x fewer real-world interactions, critical for robotics and safety-critical applications.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔮</span>
+                    <span><strong>Prediction and planning:</strong> World models enable look-ahead reasoning — evaluating the consequences of actions before executing them, much like how humans plan daily activities.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🎮</span>
+                    <span><strong>Generative simulation:</strong> Large world models can generate realistic, interactive environments on demand, potentially replacing hand-crafted simulators in robotics, gaming, and autonomous driving.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔗</span>
+                    <span><strong>Transfer and generalization:</strong> A good world model captures underlying dynamics that transfer across tasks — learning how objects move once enables planning in many different scenarios.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🧩</span>
+                    <span><strong>Path to AGI:</strong> Many researchers believe that building robust world models is a prerequisite for artificial general intelligence, as understanding cause and effect is fundamental to human cognition.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>A world model typically consists of three components: an encoder that compresses observations into a latent state, a dynamics model that predicts how the latent state evolves over time given actions, and a decoder that reconstructs predictions back into observation space.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">👁️</div>
+                        <span class="step-label">Observe &<br>Encode</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🌀</div>
+                        <span class="step-label">Latent<br>Dynamics</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔮</div>
+                        <span class="step-label">Predict<br>Future States</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🎯</div>
+                        <span class="step-label">Plan &<br>Act</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Observation Encoding:</strong> Raw inputs (images, sensor data) are compressed into a compact latent representation using learned encoders (CNNs, VAEs, or vision transformers). This dramatically reduces dimensionality while preserving task-relevant information.</p>
+            <p><strong>Latent Dynamics Prediction:</strong> A recurrent or transformer-based model learns transition functions in latent space: given the current state and an action, it predicts the next latent state. This is where the "simulation" happens — the model rolls forward in imagination without needing the real environment.</p>
+            <p><strong>Planning and Acting:</strong> With a learned dynamics model, the agent can evaluate thousands of imagined action sequences, score them by predicted reward, and select the best plan. Techniques range from simple random shooting to sophisticated tree search or gradient-based planning through the differentiable model.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Video Prediction Models</h4>
+                    <p>Learn to forecast future video frames from past observations. Modern approaches use diffusion models or autoregressive transformers to generate high-fidelity predictions, implicitly capturing physics and object permanence.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Latent Dynamics Models</h4>
+                    <p>Predict future states in a compressed latent space rather than pixel space. Models like Dreamer use RSSM (Recurrent State Space Models) combining deterministic and stochastic components for robust multi-step prediction.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Model-Based RL</h4>
+                    <p>Learns an environment model and uses it for planning or generating synthetic training data. The agent alternates between collecting real data, improving the model, and training a policy within the learned model's imagination.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>JEPA (Joint Embedding Predictive Architecture)</h4>
+                    <p>LeCun's proposed framework that predicts in abstract representation space rather than pixel space, avoiding the pitfall of modeling irrelevant details. Focuses on capturing high-level semantic structure and causal relationships.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Generative World Simulators</h4>
+                    <p>Large-scale models like Sora that learn to generate interactive, physically plausible video from text or action inputs. These represent a convergence of generative AI and world modeling at unprecedented scale.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Neural Radiance Fields / 3D Models</h4>
+                    <p>Build 3D-aware world representations that support novel viewpoint synthesis and spatial reasoning. Combined with dynamics models, they enable physically grounded simulation in three dimensions.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">📉</div>
+                    <h4>Compounding Errors</h4>
+                    <p>Small prediction errors accumulate over long rollouts, causing the imagined trajectory to diverge from reality. This "model drift" limits reliable planning horizons and requires careful error correction strategies.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🌊</div>
+                    <h4>Modeling Stochasticity</h4>
+                    <p>Real-world environments are inherently stochastic — other agents act unpredictably, and many outcomes are genuinely uncertain. Capturing this multimodal uncertainty without collapsing to blurry averages is an open problem.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🏗️</div>
+                    <h4>Scaling to Complex Worlds</h4>
+                    <p>Building accurate world models for open-ended, richly detailed environments (like the real world) requires enormous data, compute, and architectural innovation far beyond current capabilities.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🎯</div>
+                    <h4>What to Predict</h4>
+                    <p>Predicting raw pixels wastes capacity on irrelevant details (exact texture of clouds). Choosing the right level of abstraction for prediction — what matters and what doesn't — remains a fundamental design challenge.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">World Models</div>
+                        <div class="paper-meta">Ha & Schmidhuber, 2018 — Foundational work combining VAE + RNN + controller to learn compressed environment models for RL agents, enabling "dreaming" in latent space.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">DreamerV3: Mastering Diverse Domains through World Models</div>
+                        <div class="paper-meta">Hafner et al., 2023 — A general world model agent that achieves superhuman performance across 150+ diverse tasks using a single algorithm and hyperparameter set.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">A Path Towards Autonomous Machine Intelligence (JEPA)</div>
+                        <div class="paper-meta">LeCun, 2022 — Vision paper proposing Joint Embedding Predictive Architectures as the path to human-level AI through hierarchical world modeling.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Genie: Generative Interactive Environments</div>
+                        <div class="paper-meta">Bruce et al., 2024 — Learns to generate interactive 2D worlds from video, enabling playable environments from a single image prompt.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Sora: Video Generation Models as World Simulators</div>
+                        <div class="paper-meta">OpenAI, 2024 — Demonstrates that scaling video generation produces emergent physical understanding, positioning large video models as implicit world simulators.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Universal World Models:</strong> Building a single world model that understands diverse domains — from indoor navigation to molecular dynamics — through massive multi-domain pre-training, analogous to how LLMs generalize across language tasks.</li>
+                <li><strong>Interactive World Generation:</strong> Moving beyond passive prediction to fully interactive, controllable world simulators where users and agents can take actions and see physically consistent consequences in real time.</li>
+                <li><strong>Hierarchical World Models:</strong> Learning world representations at multiple levels of abstraction — from low-level physics to high-level goal planning — enabling both precise manipulation and long-horizon strategic reasoning.</li>
+                <li><strong>Grounded Language + World Models:</strong> Connecting language understanding with world simulation so that AI can reason about natural language instructions in the context of a physically grounded mental model.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="24-ai-game-environments.html" class="related-link">
+                    <span>AI in Game Environments</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="25-long-context-models.html" class="related-link">
+                    <span>Long-Context Models</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="09-llm-alignment-safety.html" class="related-link">
+                    <span>LLM Alignment & Safety</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="28-llm-evaluation-benchmarks.html" class="related-link">
+                    <span>LLM Evaluation & Benchmarks</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="22-llms-for-biology.html">
+                Next: LLMs for Biology
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
