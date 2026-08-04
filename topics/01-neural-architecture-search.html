@@ -1,1 +1,282 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Architecture Search (NAS) for Efficiency | PhD Kickstart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root {
+            --page-accent: #a855f7;
+        }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #a855f7, #6366f1);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #c084fc, #a855f7);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #7c3aed, #4f46e5);"></div>
+    </div>
+    <div class="grain-overlay"></div>
+
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Neural Architecture Search</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">TOPIC 01</span>
+            <h1>Neural Architecture Search for Efficiency</h1>
+            <p class="subtitle">Automating the discovery of optimal neural network architectures — letting machines design the machines that power modern AI.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>Neural Architecture Search (NAS) is a family of <strong>automated methods for discovering optimal neural network architectures</strong> without relying on human intuition or trial-and-error. Instead of a researcher manually stacking layers, choosing activation functions, and tweaking hyperparameters, NAS algorithms systematically explore a vast design space and identify architectures that maximize performance under given constraints.</p>
+            <p>Think of NAS as the difference between hand-crafting furniture one piece at a time versus using a CNC machine that can explore millions of possible designs and carve out the best one. The search process considers not just accuracy, but also model size, latency, and energy consumption — making it especially valuable for deploying AI on resource-constrained devices.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Imagine you're trying to find the best recipe for a cake. Instead of trying each variation yourself (which could take years), you hire a thousand chefs who each try different combinations of ingredients and baking times simultaneously, then report back what worked best. NAS does the same thing for neural network design — it's a massively parallel recipe search for the best model architecture.</p>
+            </div>
+            <p>NAS has produced architectures like EfficientNet, NASNet, and MobileNetV3 that outperform hand-designed models while using fewer parameters and less compute. The field has evolved from requiring thousands of GPU-hours to techniques that find competitive architectures in under a single GPU-day.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>The design of neural network architectures has traditionally been a bottleneck in deep learning research. Human designers bring bias, limited exploration capacity, and rely on incremental changes to existing architectures. NAS removes these limitations.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">🎯</span>
+                    <span><strong>Superhuman design:</strong> NAS discovers architectures humans never would — unusual skip connections, asymmetric layers, and novel combinations that defy conventional wisdom but outperform hand-designed models.</span>
+                </li>
+                <li>
+                    <span class="point-icon">⚡</span>
+                    <span><strong>Efficiency at scale:</strong> Hardware-aware NAS can find models that are 2-5x faster on specific hardware while maintaining the same accuracy, critical for edge deployment.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔄</span>
+                    <span><strong>Democratization:</strong> NAS automates expertise that previously required years of experience, enabling smaller teams to compete with large research labs in model design.</span>
+                </li>
+                <li>
+                    <span class="point-icon">📊</span>
+                    <span><strong>Multi-objective optimization:</strong> Unlike humans who struggle to balance competing objectives, NAS can simultaneously optimize for accuracy, latency, memory, and energy consumption.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🌍</span>
+                    <span><strong>Task-specific adaptation:</strong> NAS can tailor architectures for specific domains — medical imaging, speech recognition, or autonomous driving — without requiring domain-specific architectural expertise.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>NAS operates as a loop with four major components. The process begins by defining a search space of possible architectures, then uses a search strategy to explore this space, evaluates candidate architectures using performance estimation, and finally selects the best architecture for deployment.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">📐</div>
+                        <span class="step-label">Search Space<br>Definition</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔍</div>
+                        <span class="step-label">Search Strategy<br>(RL/Evo/Gradient)</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">📈</div>
+                        <span class="step-label">Performance<br>Estimation</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">✅</div>
+                        <span class="step-label">Architecture<br>Selection</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Search Space Definition</strong> determines what architectures are possible. This includes choices like which operations to use (convolutions, pooling, skip connections), how to connect them, and what constraints exist (max depth, max width). A well-designed search space is crucial — too small and you miss the optimal architecture; too large and the search becomes intractable.</p>
+            <p><strong>Search Strategy</strong> is the algorithm that navigates the search space. Early approaches used reinforcement learning (training a controller to generate architectures), then evolutionary methods (mutating and recombining promising candidates), and more recently gradient-based methods (relaxing the discrete search into a continuous optimization problem).</p>
+            <p><strong>Performance Estimation</strong> evaluates how good each candidate architecture is. Full training is prohibitively expensive, so techniques like weight sharing (training a single supernet), early stopping, learning curve extrapolation, and zero-cost proxies provide cheaper approximations.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Reinforcement Learning NAS</h4>
+                    <p>A controller RNN generates architecture descriptions as sequences of tokens. The controller is trained with REINFORCE, using the child network's validation accuracy as reward. Pioneered by Zoph & Le (2017), though computationally expensive (800 GPUs for days).</p>
+                </div>
+                <div class="technique-card">
+                    <h4>DARTS (Differentiable)</h4>
+                    <p>Relaxes the discrete search space into a continuous one by placing a mixture of all operations on each edge, weighted by architecture parameters. These weights are optimized via gradient descent jointly with network weights, reducing search cost to a single GPU-day.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>One-Shot NAS</h4>
+                    <p>Trains a single supernet that contains all possible architectures as subnetworks. After training, individual architectures are extracted and evaluated. Dramatically reduces cost by amortizing training across all candidates simultaneously.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Evolutionary NAS</h4>
+                    <p>Maintains a population of architectures that evolve through mutation (changing operations, connections) and crossover (combining parts of two architectures). Natural selection keeps the fittest candidates. More exploration-friendly than gradient methods.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Hardware-Aware NAS</h4>
+                    <p>Incorporates hardware latency, memory usage, or energy consumption directly into the search objective. Uses lookup tables or predictive models to estimate on-device performance without deploying each candidate to real hardware.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Zero-Cost Proxies</h4>
+                    <p>Estimates architecture quality at initialization, before any training. Metrics like gradient flow, Jacobian properties, or Fisher information can rank architectures in seconds rather than hours, enabling massive pre-screening.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">💰</div>
+                    <h4>Computational Cost</h4>
+                    <p>Even efficient NAS methods require significant GPU time. The original NAS paper used 800 GPUs for weeks — and while costs have dropped, they remain a barrier for many researchers.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔀</div>
+                    <h4>Transferability</h4>
+                    <p>Architectures found on proxy tasks (small datasets, fewer epochs) may not transfer well to the full target task. The gap between search and deployment conditions remains a concern.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🏗️</div>
+                    <h4>Search Space Design</h4>
+                    <p>The search space itself requires human expertise to define. A poorly designed space can exclude the optimal architecture or include too many poor candidates, wasting search budget.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔁</div>
+                    <h4>Reproducibility</h4>
+                    <p>Many NAS papers report results that are difficult to reproduce. Variance from random seeds, training hyperparameters, and evaluation protocols make fair comparison challenging.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Neural Architecture Search with Reinforcement Learning</div>
+                        <div class="paper-meta">Zoph & Le, 2017 — The foundational paper that launched the NAS field, using an RNN controller trained with REINFORCE.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">DARTS: Differentiable Architecture Search</div>
+                        <div class="paper-meta">Liu et al., 2019 — Made NAS practical by relaxing the search into a continuous optimization, reducing cost by 1000x.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">EfficientNet: Rethinking Model Scaling</div>
+                        <div class="paper-meta">Tan & Le, 2019 — Used NAS to find a baseline network and proposed compound scaling, achieving SOTA with fewer parameters.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Once-for-All: Train One Network and Specialize it for Efficient Deployment</div>
+                        <div class="paper-meta">Cai et al., 2020 — Trains a single model that supports diverse hardware platforms without retraining.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Zero-Cost Proxies for Lightweight NAS</div>
+                        <div class="paper-meta">Abdelfattah et al., 2021 — Evaluates architectures at initialization, enabling ranking without any training.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>NAS for Large Language Models:</strong> Applying architecture search to transformer designs at scale — finding optimal attention patterns, layer compositions, and scaling configurations for billion-parameter models that maximize performance per FLOP.</li>
+                <li><strong>NAS for Multimodal Architectures:</strong> Designing unified architectures that handle text, images, audio, and video simultaneously, with NAS determining how modalities should interact and fuse within the network.</li>
+                <li><strong>Green NAS (Minimal Compute):</strong> Developing search methods that require negligible computational overhead — using zero-cost proxies, training-free metrics, and transfer learning to find architectures in minutes rather than hours.</li>
+                <li><strong>NAS with Real-World Constraints:</strong> Incorporating deployment constraints like privacy (federated NAS), fairness, robustness to adversarial attacks, and regulatory requirements directly into the search objective.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="02-hardware-aware-training.html" class="related-link">
+                    <span>Hardware-Aware Training</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="04-mixture-of-experts.html" class="related-link">
+                    <span>Mixture of Experts</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>PEFT Methods</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>Small Language Models</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="02-hardware-aware-training.html">
+                Next: Hardware-Aware Training
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.topic-section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
