@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human-AI Interaction & Collaboration - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #ec4899; }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #ec4899, #be185d);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #f472b6, #db2777);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #be185d, #831843);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Human-AI Interaction & Collaboration</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#34 — Emerging Frontier</span>
+            <h1>Human-AI Interaction & Collaboration</h1>
+            <p class="subtitle">Designing and empirically studying the interfaces through which people delegate to, oversee, and disagree with AI systems — where the unit of evaluation is the human-AI team, not the model.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>Human-AI Interaction studies what happens at the <strong>seam between a model and the person using it</strong>. Its central claim is that model quality and system quality are different things: a highly accurate classifier embedded in a badly designed workflow can produce worse decisions than a weaker model presented well, because the human's ability to notice and correct errors depends entirely on how the output is framed, timed, and explained.</p>
+            <p>The field predates modern deep learning. Horvitz's work on mixed-initiative user interfaces (1999) set out principles for systems that act on their own initiative while leaving the user in control, and the human-factors literature on automation — Parasuraman & Riley's taxonomy of use, misuse, disuse and abuse (1997), and Lee & See's account of trust and appropriate reliance (2004) — supplies concepts that transfer almost directly to LLM assistants. What has changed is that the automation is now fluent, general-purpose, and confidently wrong in ways that are hard to detect from the surface form of its output.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Think of a junior colleague who is brilliant, fast, unfailingly confident, and wrong perhaps one time in ten without ever signalling which time it is. Your productivity with them depends far less on their raw ability than on the working practices you build around them: what you delegate, what you check, and how easily you can undo their work. Interaction design is the discipline of building those practices into the interface itself.</p>
+            </div>
+            <p>Methodologically this places the field in HCI rather than ML. The evidence that counts is controlled human-subject experiments, field deployments, and longitudinal studies — not benchmark scores. That distinction is the whole point: benchmarks measure the model alone, while the quantity that matters in deployment is the performance of the human and the model together, which is not deducible from either in isolation.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>AI assistance has moved into consequential settings — clinical triage, credit decisions, content moderation, software engineering — on the assumption that a human reviewer catches the model's mistakes. A substantial body of empirical work suggests that assumption is often unwarranted, which makes interaction design a safety concern rather than a polish concern.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">🤝</span>
+                    <span><strong>Complementarity rarely happens by default:</strong> Studies including Bansal et al. (2021) repeatedly find human-AI teams performing no better than the stronger member alone. Getting genuine complementarity — where the team beats both — requires deliberate design and is still not reliably achieved.</span>
+                </li>
+                <li>
+                    <span class="point-icon">⚠️</span>
+                    <span><strong>Over-reliance is the dominant failure mode:</strong> People accept confident incorrect suggestions, especially under time pressure or when the task is hard. Automation bias means the reviewer intended as a safeguard can instead become a rubber stamp that launders model errors as human decisions.</span>
+                </li>
+                <li>
+                    <span class="point-icon">📈</span>
+                    <span><strong>Real productivity effects are measurable:</strong> Peng et al. (2023) found developers using GitHub Copilot completed a standardised programming task substantially faster than a control group. Effects of that size justify serious study of how such tools should be designed and where they mislead.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🎛️</span>
+                    <span><strong>Agents raise the stakes of control:</strong> Once a system takes multi-step actions with real side effects, the interface must support delegation boundaries, interruption, inspection, and rollback. These are interaction problems that no amount of model capability removes.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🧠</span>
+                    <span><strong>Long-run effects on human skill:</strong> Cognitive offloading may erode the expertise needed to supervise the system, a deskilling dynamic long documented in aviation automation and now plausibly recurring wherever assistants handle routine reasoning.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>Research in this area follows an empirical loop rather than a training loop. The object being optimised is an interaction design, and the objective function is measured on people — which constrains sample sizes, demands ethics review, and makes every result harder won than a benchmark number.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">🔍</div>
+                        <span class="step-label">Understand<br>the Task</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">✏️</div>
+                        <span class="step-label">Design the<br>Interaction</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🧪</div>
+                        <span class="step-label">Run Human<br>Studies</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔁</div>
+                        <span class="step-label">Measure &<br>Iterate</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Task and error analysis:</strong> The design starts from where the human and the model each have an edge. Contextual inquiry and error analysis establish which cases the model handles reliably, which it fails on, and — most importantly — whether those failures are detectable by the human from the information available at decision time. If the failures are invisible, no amount of interface polish will produce complementarity.</p>
+            <p><strong>Interaction design:</strong> Designers then choose the mechanics: whether suggestions appear proactively or on request, how uncertainty is communicated, whether the human commits to a judgement before seeing the AI's, and what affordances exist for editing, rejecting, or undoing. Cognitive forcing interventions — deliberately slowing the user down or withholding the recommendation until they have formed their own view — have been shown to reduce over-reliance, typically at a cost in speed and user satisfaction.</p>
+            <p><strong>Evaluation:</strong> The design is tested with randomised human-subject experiments measuring team accuracy, appropriate reliance (agreement when the AI is right, disagreement when it is wrong), time on task, and subjective trust. Amershi et al. (2019) distilled the accumulated design knowledge into eighteen validated Guidelines for Human-AI Interaction organised around when the system should act, what it should communicate, how it should respond to being wrong, and how it should change over time.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Mixed-Initiative Interfaces</h4>
+                    <p>Systems that decide when to intervene based on expected utility, weighing the value of a correct suggestion against the cost of interrupting. Getting this timing right is the difference between an assistant that feels helpful and one users switch off.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Uncertainty Communication</h4>
+                    <p>Surfacing calibrated confidence, abstention, or ranked alternatives so the user knows when to look harder. Effectiveness depends heavily on presentation — numeric probabilities, verbal hedges, and visual encodings produce measurably different reliance behaviour.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Explanation Interfaces</h4>
+                    <p>Feature attributions, counterfactuals, examples, and natural-language rationales. A recurring and uncomfortable finding is that explanations often increase trust and acceptance without improving decision accuracy, sometimes making over-reliance worse rather than better.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Cognitive Forcing & Friction</h4>
+                    <p>Deliberate design friction — asking for the human's own answer first, delaying the recommendation, or requiring an explicit justification — that interrupts automatic acceptance. Reduces blind reliance but trades away the speed that made the tool attractive.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Agent Oversight Controls</h4>
+                    <p>Delegation scopes, dry runs and previews, checkpoints requiring approval, live interruption, and reliable undo. As systems take real-world actions, these controls become the primary mechanism through which a human retains meaningful authority.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Participatory & Value-Sensitive Design</h4>
+                    <p>Involving affected stakeholders in defining what the system should optimise, following the value-sensitive design tradition associated with Batya Friedman and colleagues. Especially relevant where the people subject to a decision are not the people using the tool.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">⚖️</div>
+                    <h4>Calibrating Trust</h4>
+                    <p>The goal is reliance that tracks actual reliability, but people's trust responds to fluency and confidence rather than correctness. Building interfaces that raise trust exactly where the model is dependable, and lower it elsewhere, remains largely unsolved.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🧪</div>
+                    <h4>Study Validity</h4>
+                    <p>Short lab tasks with crowdworkers rarely predict how domain experts behave over months of real use. Recruiting genuine experts is expensive, and effects like habituation and skill decay only appear on timescales most studies never reach.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🎯</div>
+                    <h4>Explanations That Don't Help</h4>
+                    <p>Post-hoc explanations may be unfaithful to the model's actual computation while still being persuasive. A plausible-sounding rationale attached to a wrong answer is arguably worse than no rationale at all.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📉</div>
+                    <h4>Deskilling</h4>
+                    <p>If the assistant handles the routine cases, the human loses the practice that builds judgement for the hard ones — while remaining formally accountable for outcomes they are progressively less equipped to evaluate.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Guidelines for Human-AI Interaction</div>
+                        <div class="paper-meta">Amershi et al., 2019 — Synthesises decades of design guidance into eighteen validated guidelines, evaluated against real AI products; the standard starting reference for the field.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Does the Whole Exceed its Parts? The Effect of AI Explanations on Complementary Team Performance</div>
+                        <div class="paper-meta">Bansal et al., 2021 — Finds that explanations increase acceptance of AI suggestions whether or not they are correct, so teams often fail to outperform the AI alone.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">The Impact of AI on Developer Productivity: Evidence from GitHub Copilot</div>
+                        <div class="paper-meta">Peng et al., 2023 — A randomised controlled trial showing developers with an AI coding assistant completed a standard task markedly faster than the control group.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Principles of Mixed-Initiative User Interfaces</div>
+                        <div class="paper-meta">Horvitz, 1999 — The foundational statement of how automated services and direct manipulation should be interleaved, framing intervention as a decision under uncertainty.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Trust in Automation: Designing for Appropriate Reliance</div>
+                        <div class="paper-meta">Lee & See, 2004 — The human-factors account of how trust forms and miscalibrates, supplying the vocabulary of over-reliance and disuse that current AI work builds on.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Reliance-Aware Systems:</strong> Models that reason about the human in the loop — deciding when to advise, when to abstain, and when to defer entirely — so that the system optimises team performance rather than its own standalone accuracy.</li>
+                <li><strong>Interfaces for Long-Horizon Agents:</strong> Interaction patterns for supervising systems that work for hours across many tools, including progress legibility, meaningful checkpoints, cheap interruption, and reliable rollback of side effects.</li>
+                <li><strong>Longitudinal Field Evidence:</strong> Multi-month studies of expert practitioners that can detect habituation, skill decay, and shifts in professional norms — effects invisible in the short crowdsourced experiments that dominate the literature today.</li>
+                <li><strong>Human-Centred Evaluation Standards:</strong> Establishing team-level metrics and study protocols as a routine reporting requirement for deployed AI, so that claims about assistance are backed by human evidence rather than benchmark improvements.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="18-llm-code-generation.html" class="related-link">
+                    <span>LLM Code Generation</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="23-ai-governance-ethics.html" class="related-link">
+                    <span>AI Governance & Ethics</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="09-llm-alignment-safety.html" class="related-link">
+                    <span>LLM Alignment & Safety</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="28-llm-evaluation-benchmarks.html" class="related-link">
+                    <span>LLM Evaluation & Benchmarks</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="35-diffusion-generative-vision.html">
+                Next: Diffusion Models & Generative Vision
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
