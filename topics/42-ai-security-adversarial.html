@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Security & Adversarial Robustness - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #f43f5e; }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #f43f5e, #be123c);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #fb7185, #e11d48);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #be123c, #881337);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">AI Security & Adversarial Robustness</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#42 — Advanced Frontier</span>
+            <h1>AI Security & Adversarial Robustness</h1>
+            <p class="subtitle">Studying how machine learning systems fail under deliberate attack — from imperceptible pixel perturbations to prompt injection that hijacks a tool-using agent.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>AI security studies what happens when someone <strong>actively tries to make a model fail</strong>. Standard machine learning evaluates average-case performance on data drawn from the same distribution as training. Security asks the worst-case question: given an adversary with some budget, some access, and some goal, how badly can they break the system? That shift from average to worst case is the whole discipline, and it changes the mathematics, the evaluation methodology, and the engineering conclusions.</p>
+            <p>The field's founding observation is that deep networks are startlingly brittle. Szegedy et al. showed in 2014 that adding a perturbation invisible to a human could flip a classifier's prediction with high confidence, and that these adversarial examples transferred across models trained on different data. Goodfellow et al. followed in 2015 with the Fast Gradient Sign Method, a one-step attack that made the phenomenon cheap to reproduce and argued it stemmed from the essentially linear behaviour of networks in high dimensions rather than from overfitting. What began as a curiosity became a decade-long arms race in which most proposed defences were broken within months, usually because they obscured gradients rather than genuinely increasing robustness.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>A bank vault rated for a strong door tells you nothing about the ventilation duct. Traditional model evaluation is like testing whether the door holds under normal use; security evaluation is hiring someone whose entire job is finding the duct. And with language agents the situation is stranger still — it is as though the vault reads instructions written on any envelope posted through the letterbox, cannot tell an owner's note from a burglar's, and holds the keys to every other door in the building.</p>
+            </div>
+            <p>Large language models have not replaced this agenda so much as widened it dramatically. The attack surface now includes the training corpus, the instruction-following interface, the retrieved documents an agent reads, the tools it can call, and the credentials it holds. Crucially, an LLM has no reliable channel separation between trusted instructions and untrusted data: everything arrives as tokens in one stream. That single architectural fact underlies most of the practical vulnerabilities discussed below.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>Models are being wired into systems that read untrusted content and take consequential actions — sending email, executing code, moving money, filing tickets. The gap between what these systems assume about their inputs and what an adversary can actually supply is where the risk lives.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">🎯</span>
+                    <span><strong>Deployment in adversarial settings:</strong> Content moderation, fraud detection, malware classification and biometric authentication all operate against opponents who are paid to evade them, so average-case accuracy is close to meaningless as a safety metric.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔓</span>
+                    <span><strong>Agents hold real privileges:</strong> Once a model has an API key, a shell, or a browser session, a successful injection is no longer a bad paragraph — it is unauthorised action with the user's own authority.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🗃️</span>
+                    <span><strong>Training data is a supply chain:</strong> Web-scale corpora are assembled from sources that anyone can write to, which turns dataset construction into a trust boundary that almost no pipeline explicitly defends.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🕵️</span>
+                    <span><strong>Privacy leakage is measurable:</strong> Models memorise and can be induced to regurgitate training examples, so security failures translate directly into disclosure of personal or proprietary data.</span>
+                </li>
+                <li>
+                    <span class="point-icon">⚖️</span>
+                    <span><strong>Regulation is arriving:</strong> Emerging AI regulation and sectoral rules increasingly expect documented adversarial testing, which makes red-teaming methodology a compliance artefact as well as a research question.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>Security work follows a fairly standard loop regardless of whether the target is an image classifier or an agentic assistant: state the threat model precisely, search for inputs that violate the desired property, harden the system against what you found, then re-attack with knowledge of the defence. Skipping the last step is how the field accumulated a decade of defences that looked strong and were not.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">📐</div>
+                        <span class="step-label">Define<br>Threat Model</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔍</div>
+                        <span class="step-label">Search for<br>Attacks</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🛡️</div>
+                        <span class="step-label">Harden &<br>Constrain</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">♻️</div>
+                        <span class="step-label">Re-Attack &<br>Certify</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Threat modelling:</strong> You specify the adversary's access (white-box gradients, query-only, or poisoning the corpus), their perturbation budget (an L-infinity ball of radius eight out of 255 is the conventional image benchmark; for text there is no comparable natural constraint), and their objective (any misclassification, a specific target, or extraction of a secret). Robustness claims are meaningless without this specification, and much of the field's confusion comes from comparing results computed under incompatible threat models.</p>
+            <p><strong>Attack search:</strong> With gradients, projected gradient descent inside the allowed perturbation set is the standard strong attack, and Madry et al. framed adversarial training as a saddle-point problem in which the inner maximisation is exactly this search. For language models, the analogous search happens over discrete tokens: the GCG method of Zou et al. optimises an adversarial suffix using gradients over one-hot token selections and produced suffixes that transferred to models it was never optimised against. Injection attacks need no optimisation at all — a plausible-looking instruction hidden in a web page or PDF often suffices.</p>
+            <p><strong>Hardening and certification:</strong> Adversarial training remains the most reliable empirical defence, at real cost: robust models typically show noticeably lower clean accuracy and take several times longer to train, which is the well-documented robustness-accuracy trade-off. Certified approaches trade tightness for guarantees; randomised smoothing, developed by Cohen et al., convolves the classifier with Gaussian noise and yields a provable radius under the L2 norm, but the certified radii remain small and the technique does not extend naturally to discrete text. For agents, hardening looks less like a loss function and more like conventional systems security: least privilege, sandboxed execution, allow-listed tools, human confirmation before irreversible actions, and guardrail classifiers on both inputs and outputs.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Adversarial Training</h4>
+                    <p>Generate worst-case perturbations during training and minimise loss on them. The PGD formulation of Madry et al. is still the benchmark defence, though it costs clean accuracy and multiplies training compute by the number of inner attack steps.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Randomised Smoothing</h4>
+                    <p>Average predictions over Gaussian-perturbed copies of an input to obtain a classifier with a provable L2 robustness radius. Scales to large models, unlike exact verification, but yields modest certified radii and requires many forward passes per prediction.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Prompt Injection Attacks</h4>
+                    <p>Direct injection overrides the system prompt through user input; indirect injection plants instructions in content the model will later retrieve — a web page, an email, a code comment — so that ordinary tool use hijacks the agent without the user doing anything wrong.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Automated Jailbreak Search</h4>
+                    <p>Gradient-guided or search-based optimisation over token sequences to find universal suffixes that defeat refusal training. GCG demonstrated that such suffixes transfer across model families, undermining the assumption that closed weights confer protection.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Poisoning & Backdoors</h4>
+                    <p>Insert triggered examples so the model behaves normally except on inputs containing the trigger. BadNets (Gu et al., 2017) established the threat for vision; Carlini et al., 2023 showed that buying expired domains in web-scale crawls makes poisoning practically feasible at low cost.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Extraction & Inference Attacks</h4>
+                    <p>Membership inference tests whether a record was in training data; training-data extraction recovers memorised sequences verbatim, as Carlini et al., 2021 demonstrated against GPT-2; model stealing reconstructs a functional copy from query access alone.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">🚧</div>
+                    <h4>No General Injection Defence</h4>
+                    <p>Because instructions and data share one token stream, there is no principled way to make a model ignore embedded commands. Every published mitigation — delimiters, spotlighting, classifiers, instruction hierarchies — reduces attack success without eliminating it.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">⚖️</div>
+                    <h4>Robustness-Accuracy Trade-off</h4>
+                    <p>Robust training reliably costs clean performance and compute, and robustness to one threat model transfers poorly to others. A model hardened against L-infinity perturbations may remain fragile to rotations, colour shifts, or natural distribution shift.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🎭</div>
+                    <h4>Evaluation Is Hard to Trust</h4>
+                    <p>A defence only looks strong until someone attacks it adaptively. Obfuscated or vanishing gradients have repeatedly produced illusory robustness, so any claim needs re-evaluation by attackers who know exactly how the defence works.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🌐</div>
+                    <h4>Expanding Attack Surface</h4>
+                    <p>Agents that hold credentials, call tools, and read the open web combine every classical vulnerability class with new ones. Confused-deputy problems and data exfiltration through tool calls now sit alongside model-level attacks.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Intriguing Properties of Neural Networks</div>
+                        <div class="paper-meta">Szegedy et al., 2014 — First systematic demonstration that imperceptible perturbations reliably fool deep classifiers and that such adversarial examples transfer between independently trained models.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Towards Deep Learning Models Resistant to Adversarial Attacks</div>
+                        <div class="paper-meta">Madry et al., 2018 — Frames robustness as a saddle-point optimisation and establishes PGD adversarial training as the reference empirical defence, along with the accompanying cost in clean accuracy.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Certified Adversarial Robustness via Randomized Smoothing</div>
+                        <div class="paper-meta">Cohen et al., 2019 — Shows that smoothing a base classifier with Gaussian noise yields a tight, scalable certificate of robustness under the L2 norm rather than a merely empirical defence.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Not What You've Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection</div>
+                        <div class="paper-meta">Greshake et al., 2023 — Introduces indirect prompt injection, showing that untrusted retrieved content can hijack an integrated LLM application without any direct interaction from the attacker.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Universal and Transferable Adversarial Attacks on Aligned Language Models</div>
+                        <div class="paper-meta">Zou et al., 2023 — Presents the GCG attack, an automated gradient-based search for adversarial suffixes that defeat refusal training and transfer across model families.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Architectural channel separation:</strong> The most promising line of attack on prompt injection is not better filtering but building models that genuinely distinguish privileged instructions from untrusted data — through separate embeddings, trained instruction hierarchies, or dual-model designs where a privileged planner never sees raw untrusted text.</li>
+                <li><strong>Provable guarantees for agents:</strong> Borrowing from formal methods and capability-based security to prove properties of the system surrounding the model, such as "this agent cannot issue a network request to a domain outside the allow-list", so that safety no longer depends on the model behaving well.</li>
+                <li><strong>Poisoning defence at corpus scale:</strong> Provenance tracking, cryptographic dataset manifests, and influence-based auditing to detect and remove poisoned or backdoored examples from billion-document corpora, since the work of Carlini et al. showed that poisoning such datasets is cheap enough to be a real threat rather than a theoretical one.</li>
+                <li><strong>Unified worst-case evaluation:</strong> Standardised, adaptive, continuously updated benchmarks for agent security — analogous to what robustness leaderboards did for image classifiers — combined with practitioner taxonomies such as the OWASP Top 10 for LLM applications so that reported numbers become comparable across papers and products.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="09-llm-alignment-safety.html" class="related-link">
+                    <span>LLM Alignment & Safety</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="07-agentic-ai.html" class="related-link">
+                    <span>Agentic AI</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="08-retrieval-augmented-generation.html" class="related-link">
+                    <span>Retrieval-Augmented Generation</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="23-ai-governance-ethics.html" class="related-link">
+                    <span>AI Governance & Ethics</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="43-causal-inference-ml.html">
+                Next: Causal Inference & Representation Learning
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
