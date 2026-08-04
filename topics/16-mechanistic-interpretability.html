@@ -1,1 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mechanistic Interpretability - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root {
+            --page-accent: #8b5cf6;
+        }
+        .section-label {
+            background: rgba(139, 92, 246, 0.08);
+            border-color: rgba(139, 92, 246, 0.15);
+        }
+        .topic-number {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: rgba(139, 92, 246, 0.2);
+        }
+        .analogy-box {
+            background: rgba(139, 92, 246, 0.05);
+            border-color: rgba(139, 92, 246, 0.15);
+        }
+        .analogy-box .analogy-title {
+            color: #8b5cf6;
+        }
+        .key-points li .point-icon {
+            background: rgba(139, 92, 246, 0.1);
+        }
+        .flow-step .step-icon {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: rgba(139, 92, 246, 0.2);
+        }
+        .flow-step:hover .step-icon {
+            background: rgba(139, 92, 246, 0.15);
+        }
+        .future-list li::before {
+            color: #8b5cf6;
+        }
+    </style>
+</head>
+<body>
 
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #a78bfa, #6d28d9);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #c4b5fd, #8b5cf6);"></div>
+    </div>
+
+    <div class="grain-overlay"></div>
+
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Mechanistic Interpretability</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">Topic 16</span>
+            <h1>Mechanistic<br>Interpretability</h1>
+            <p class="subtitle">Reverse-engineering neural networks to understand the specific algorithms, circuits, and features they learn — opening the black box to see how intelligence actually works inside.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <div class="section-label">📖 Definition</div>
+            <h2>What Is Mechanistic Interpretability?</h2>
+            <p>Mechanistic Interpretability (MI) is the field of <strong>reverse-engineering trained neural networks to understand the specific computational mechanisms — algorithms, circuits, and features — they use to process information and produce outputs</strong>. Rather than treating models as black boxes and merely observing their behavior, MI researchers peer inside to understand <em>how</em> the model arrives at its answers, much like a biologist studying the neural circuits of a brain rather than just observing behavior.</p>
+            <p>The field is built on a foundational hypothesis: <strong>neural networks learn interpretable algorithms</strong>. Despite being trained through gradient descent on vast data without explicit programming, networks develop internal structures that implement meaningful computations — detecting syntactic patterns, tracking factual associations, performing arithmetic, and executing logical reasoning through identifiable circuits of neurons working together.</p>
+            <p>Modern MI has made remarkable progress. Researchers have identified <strong>individual features</strong> (directions in activation space that correspond to meaningful concepts like "Golden Gate Bridge" or "deception"), <strong>circuits</strong> (groups of features and attention heads that work together to perform specific tasks like indirect object identification), and <strong>algorithms</strong> (complete computational procedures like induction heads that implement in-context learning). The landmark "Scaling Monosemanticity" work at Anthropic used sparse autoencoders to extract millions of interpretable features from Claude, showing that even frontier models organize knowledge in surprisingly structured ways.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <div class="section-label">🎯 Importance</div>
+            <h2>Why It Matters</h2>
+            <p>As AI systems become more powerful and are deployed in high-stakes settings, understanding their internal mechanisms transitions from academic curiosity to existential necessity.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">🛡️</span>
+                    <span><strong>AI Safety:</strong> If we can't understand what a model is doing internally, we can't reliably predict when it will behave dangerously. MI offers the only path to genuine safety guarantees — not just behavioral testing (which can miss rare failure modes) but verified understanding of what a model will and won't do.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔧</span>
+                    <span><strong>Debugging and fixing models:</strong> When a model produces incorrect or harmful outputs, MI lets us identify the specific circuit responsible and intervene surgically. Rather than retraining on more data and hoping the problem disappears, we can locate the broken mechanism and fix or remove it directly.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔬</span>
+                    <span><strong>Scientific understanding of intelligence:</strong> Neural networks are the first artificial systems that exhibit intelligence-like behaviors. Understanding how they work provides insights into the nature of intelligence itself — potentially informing neuroscience, cognitive science, and philosophy of mind.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🤝</span>
+                    <span><strong>Trust through transparency:</strong> Deploying AI in medicine, law, or governance requires justifiable trust. MI can provide this by demonstrating exactly how a model arrives at its conclusions — not through post-hoc explanations but through verified mechanistic understanding of the actual computation.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🎛️</span>
+                    <span><strong>Precise model editing:</strong> Understanding model internals enables targeted modifications — removing specific biases, adding new knowledge, or adjusting behavior — without retraining. This makes models more controllable, customizable, and aligned with human values at a granular level.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Analogy -->
+        <div class="topic-section">
+            <div class="analogy-box">
+                <div class="analogy-title">Real-World Analogy</div>
+                <p>Mechanistic interpretability is like a neuroscientist studying the brain. Imagine you observe a person who can flawlessly identify any bird species on sight. A behaviorist would just test them with photos and record their accuracy — treating the brain as a black box. But a neuroscientist wants to understand <em>how</em>: Which neurons fire when processing wing shapes? Which circuits distinguish a hawk from a falcon? How does visual information flow from the retina through processing layers to the "bird identification" region? Understanding the mechanism lets you predict behavior in new situations, identify what could go wrong (a specific lesion might impair color-based identification while preserving shape-based), and ultimately understand what "knowing a bird" actually means computationally. MI does exactly this for neural networks — mapping the circuits, identifying the features, and building a complete mechanistic story of how computation flows from input to output.</p>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <div class="section-label">⚙️ Process</div>
+            <h2>How It Works</h2>
+            <p>Mechanistic interpretability follows a systematic pipeline that moves from observed behavior to verified causal understanding of internal mechanisms.</p>
+
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">🎯</div>
+                        <div class="step-label">Identify<br>Behavior</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">📍</div>
+                        <div class="step-label">Locate<br>Components</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">🗺️</div>
+                        <div class="step-label">Map<br>Circuits</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">⚗️</div>
+                        <div class="step-label">Validate<br>Causally</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">📐</div>
+                        <div class="step-label">Build<br>Model</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">✅</div>
+                        <div class="step-label">Verify<br>Predictions</div>
+                    </div>
+                </div>
+            </div>
+
+            <p>The process begins by <strong>identifying a specific behavior</strong> to investigate — for example, how a model knows that "The Eiffel Tower is in Paris" or how it performs addition. Choosing a well-defined, testable behavior is crucial because interpretability claims must be grounded in observable, measurable phenomena.</p>
+            <p>Next, researchers <strong>locate the responsible components</strong> — which attention heads, MLP layers, or individual neurons are causally involved in producing the behavior. Techniques like activation patching (systematically replacing activations to see what breaks the behavior) and ablation studies (removing components) identify the minimal set of components needed.</p>
+            <p>With components identified, the next step is <strong>mapping the circuit</strong> — understanding how information flows between components to produce the behavior. This involves tracing how attention heads read from and write to the residual stream, how MLP layers transform representations, and how features compose across layers to build up complex computations from simpler ones.</p>
+            <p>Critically, circuit hypotheses must be <strong>validated causally</strong> — not just correlated with behavior but proven to be the mechanism that produces it. Activation patching, causal interventions, and ablation experiments verify that the proposed circuit is necessary and sufficient. Finally, the validated mechanism is formalized into a <strong>predictive model</strong> that generates testable predictions about model behavior in novel situations, closing the scientific loop.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <div class="section-label">🔧 Techniques</div>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Sparse Autoencoders (SAEs)</h4>
+                    <p>Train auxiliary networks to decompose model activations into sparse, interpretable features. By enforcing sparsity, SAEs untangle the "superposition" problem — separating the many concepts packed into each neuron into individually meaningful directions in activation space.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Activation Patching</h4>
+                    <p>Systematically replacing activations at specific model components with activations from a different input, measuring the effect on output. Identifies which components are causally responsible for specific behaviors — the MI equivalent of a controlled experiment.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Logit Lens & Tuned Lens</h4>
+                    <p>Projecting intermediate layer representations directly into vocabulary space to see what the model is "thinking" at each layer. Reveals how predictions evolve through the network — from vague semantic categories in early layers to precise token predictions in later ones.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Attention Pattern Analysis</h4>
+                    <p>Studying which tokens attend to which other tokens and why. Identifies specific attention heads that perform interpretable operations — induction heads that copy previous patterns, name-mover heads that transport subject information, and inhibition heads that suppress alternatives.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Probing Classifiers</h4>
+                    <p>Training simple linear classifiers on model activations to detect whether specific information (part-of-speech, sentiment, factual knowledge) is linearly represented. Reveals what information is available at each layer and how it's encoded geometrically in activation space.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Circuit Discovery</h4>
+                    <p>Identifying minimal subnetworks (circuits) responsible for specific behaviors. Combines ablation, patching, and causal analysis to find the smallest set of components that jointly produce a behavior — separating the mechanism from the rest of the network.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Feature Visualization</h4>
+                    <p>Generating synthetic inputs that maximally activate specific features or neurons to understand what they detect. Originally developed for vision models (visualizing what a neuron "sees"), adapted for language models by finding text patterns that maximally activate specific directions.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Causal Tracing</h4>
+                    <p>Corrupting inputs, running the model, then surgically restoring clean activations at individual components to identify where factual knowledge is stored and retrieved. Popularized by the ROME paper for localizing factual associations to specific MLP layers.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <div class="section-label">🚧 Challenges</div>
+            <h2>Open Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">📈</div>
+                    <h4>Scale</h4>
+                    <p>Frontier models have hundreds of billions of parameters organized into thousands of layers and attention heads. Manually analyzing circuits in GPT-4 or Claude is like mapping every synapse in a human brain — the sheer scale makes comprehensive interpretation appear intractable with current methods.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🎭</div>
+                    <h4>Polysemanticity</h4>
+                    <p>Individual neurons typically respond to multiple unrelated concepts — a single neuron might activate for both "academic citations" and "legal references." This polysemanticity makes individual neurons uninterpretable and forces researchers to work with directions in activation space rather than individual units.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📦</div>
+                    <h4>Superposition</h4>
+                    <p>Models represent far more concepts than they have neurons — packing thousands of features into a lower-dimensional space using sparse, overlapping representations. Disentangling superposition (separating these packed features) is one of MI's central technical challenges.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">❓</div>
+                    <h4>Validation of Interpretations</h4>
+                    <p>How do you verify that a proposed interpretation is correct rather than a plausible-sounding story? Interpretations can be unfalsifiable or over-simplified. Developing rigorous standards for what counts as a valid mechanistic explanation remains an open methodological question.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔨</div>
+                    <h4>Tooling Limitations</h4>
+                    <p>MI requires specialized infrastructure for storing and analyzing activations, running interventions at scale, and visualizing high-dimensional structures. Current tools are largely custom-built by individual research groups, lacking standardization and scalability.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🌊</div>
+                    <h4>Feature Completeness</h4>
+                    <p>Even with SAEs extracting millions of features, how do we know we've found all the important ones? Models might use representations that current methods cannot detect — cryptographic or highly distributed computations that resist decomposition into interpretable parts.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <div class="section-label">📄 Research</div>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">A Mathematical Framework for Transformer Circuits</div>
+                        <div class="paper-meta">Elhage et al., 2021 — Anthropic's foundational work that established the theoretical framework for understanding transformers mechanistically. Introduced the residual stream view and identified induction heads as a fundamental circuit.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Toy Models of Superposition</div>
+                        <div class="paper-meta">Elhage et al., 2022 — Demonstrated that neural networks represent more features than they have dimensions by exploiting sparsity — features are packed into superposition. Established the theoretical foundation for why interpretability is hard and how SAEs might help.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Scaling Monosemanticity: Extracting Interpretable Features from Claude 3 Sonnet</div>
+                        <div class="paper-meta">Anthropic, 2024 — Applied sparse autoencoders to a production-scale model, extracting millions of interpretable features including abstract concepts like "deception," "bias," and "Golden Gate Bridge." Demonstrated MI scales to frontier models.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">The Logit Lens</div>
+                        <div class="paper-meta">nostalgebraist, 2020 — Introduced the simple but powerful technique of projecting intermediate representations into vocabulary space. Revealed that transformer layers progressively refine predictions, providing intuition about the layered nature of computation.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Locating and Editing Factual Associations in GPT (ROME)</div>
+                        <div class="paper-meta">Meng et al., 2022 — Used causal tracing to locate where factual knowledge is stored in GPT models, then demonstrated surgical editing of individual facts. Showed that specific MLP layers serve as key-value memory stores for factual associations.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <div class="section-label">🔮 Future</div>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Automated interpretability</strong> — Using AI systems to interpret other AI systems at scale. Training models that can automatically identify features, map circuits, and generate human-readable explanations of model components — making MI scalable to frontier models with billions of parameters.</li>
+                <li><strong>Interpretability for safety</strong> — Building monitoring systems that detect dangerous internal computations (deception, power-seeking, goal misalignment) before they manifest in behavior. Moving safety from behavioral testing to mechanistic guarantees about what a model can and cannot do.</li>
+                <li><strong>Editing model knowledge</strong> — Using mechanistic understanding to surgically modify model behavior — removing toxic knowledge, correcting factual errors, adjusting values — without retraining. Making models updatable and controllable at the level of individual concepts and circuits.</li>
+                <li><strong>Understanding emergent abilities</strong> — Using MI to explain why certain capabilities emerge abruptly at specific scales. What circuits form during training that enable in-context learning, chain-of-thought reasoning, or theory of mind? Understanding emergence mechanistically could predict what capabilities will appear next.</li>
+                <li><strong>Interpretability-guided training</strong> — Using interpretability insights to design better training procedures. If we understand what circuits are useful and how they form, we can design training objectives that encourage clean, interpretable internal structure — making future models interpretable by design rather than requiring post-hoc analysis.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <div class="section-label">🔗 Related</div>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="09-llm-alignment-safety.html" class="related-link">
+                    <span>🛡️</span> LLM Alignment & Safety
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="23-ai-governance-ethics.html" class="related-link">
+                    <span>⚖️</span> AI Governance
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="20-self-improving-ai.html" class="related-link">
+                    <span>🧠</span> Self-Improving AI
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>📊</span> LLM Evaluation
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="15-ai-scientific-discovery.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Previous Topic
+            </a>
+            <a href="17-small-language-models.html">
+                Next Topic
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.topic-section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+
+</body>
+</html>
