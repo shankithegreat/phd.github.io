@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Long-Context Models - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #0ea5e9; }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #0ea5e9, #0284c7);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #38bdf8, #0ea5e9);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #0284c7, #0369a1);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Long-Context Models</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#25 — Emerging Frontier</span>
+            <h1>Long-Context Models</h1>
+            <p class="subtitle">Architectures enabling LLMs to process extremely long inputs — from 100K to millions of tokens — holding entire books, codebases, and conversations in memory.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>Long-context models are <strong>architectures and techniques that extend the input window</strong> of large language models from thousands of tokens to hundreds of thousands or even millions. Standard transformers have quadratic attention complexity, making long sequences prohibitively expensive. Long-context research overcomes this barrier through architectural innovations, efficient attention patterns, and memory-augmented approaches.</p>
+            <p>The context window defines how much information a model can "see" simultaneously. Early GPT models were limited to 2K-4K tokens (a few pages). Modern long-context models handle 128K tokens (a short novel), with some research systems processing over 1M tokens (multiple textbooks simultaneously).</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Like upgrading from a sticky note to a library — instead of remembering a few sentences at a time, the model can hold and reason over entire encyclopedias simultaneously. A short-context model reading a mystery novel forgets the clues from chapter one by chapter ten; a long-context model keeps every detail accessible for the final deduction.</p>
+            </div>
+            <p>This capability unlocks transformative applications: analyzing entire codebases in a single pass, having multi-day conversations without losing context, summarizing books, processing complete legal documents, and reasoning across vast knowledge bases. The race to extend context windows is one of the most active areas in LLM research.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>Many real-world tasks require reasoning over far more information than short-context models can handle. The context window has been one of the most limiting constraints on LLM utility.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">📚</span>
+                    <span><strong>Document-scale understanding:</strong> Analyzing entire legal contracts, research papers, or financial reports in a single pass enables holistic comprehension that chunking and summarization approaches inevitably lose.</span>
+                </li>
+                <li>
+                    <span class="point-icon">💻</span>
+                    <span><strong>Repository-level coding:</strong> Processing entire codebases allows models to understand cross-file dependencies, architectural patterns, and system-wide impacts of code changes.</span>
+                </li>
+                <li>
+                    <span class="point-icon">💬</span>
+                    <span><strong>Persistent conversations:</strong> Long context enables multi-session dialogues where the model remembers everything discussed over days or weeks, enabling true AI assistants.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔍</span>
+                    <span><strong>In-context learning at scale:</strong> More context means more examples, instructions, and reference material can be provided at inference time — improving task performance without fine-tuning.</span>
+                </li>
+                <li>
+                    <span class="point-icon">⚡</span>
+                    <span><strong>RAG simplification:</strong> Sufficiently long context windows may reduce the need for complex retrieval-augmented generation pipelines — simply paste all relevant documents into the prompt.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>Extending context length requires solving three interrelated problems: making attention computationally feasible at scale, enabling position encodings to generalize beyond training lengths, and managing the growing KV-cache memory during inference.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">📏</div>
+                        <span class="step-label">Position<br>Encoding</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">⚡</div>
+                        <span class="step-label">Efficient<br>Attention</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">💾</div>
+                        <span class="step-label">Memory<br>Management</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔄</div>
+                        <span class="step-label">Long-Range<br>Reasoning</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Position Encoding Extension:</strong> Rotary Position Embeddings (RoPE) can be scaled to longer sequences through techniques like NTK-aware interpolation and YaRN. These modify the frequency basis of position encodings to gracefully handle lengths far beyond the training distribution.</p>
+            <p><strong>Efficient Attention:</strong> Ring Attention distributes long sequences across multiple devices, with each device computing attention on its local chunk while passing KV-cache in a ring pattern. FlashAttention provides memory-efficient exact attention through tiling. Sparse and linear attention variants reduce the quadratic cost.</p>
+            <p><strong>Alternative Architectures:</strong> State-space models like Mamba achieve linear-time sequence processing by replacing attention with selective state-space dynamics. These models can theoretically handle unlimited context length with constant memory per token, though whether they match transformer quality at scale remains an active debate.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>RoPE Scaling & YaRN</h4>
+                    <p>Extends Rotary Position Embeddings to unseen sequence lengths through frequency interpolation. YaRN (Yet another RoPE extensioN) enables 64x-128x context length extension with minimal fine-tuning by modifying the NTK interpolation scheme.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Ring Attention</h4>
+                    <p>Distributes long sequences across multiple GPUs in a ring topology, where each device computes attention on its local block while streaming KV-cache to neighbors. Enables near-linear scaling of context length with device count.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Landmark / Landmark Attention</h4>
+                    <p>Inserts special landmark tokens at regular intervals in the sequence. Attention first retrieves relevant landmarks, then attends only to tokens near selected landmarks — enabling selective long-range access without full quadratic cost.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Mamba & State-Space Models (SSMs)</h4>
+                    <p>Replace attention entirely with selective state-space layers that process sequences in linear time. Mamba introduces input-dependent selection mechanisms that let the model dynamically decide what information to remember or forget.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Context Compression</h4>
+                    <p>Compresses earlier parts of the context into compact summary representations, keeping recent tokens at full resolution. AutoCompressors and gist tokens learn to distill thousands of tokens into a handful of compressed vectors.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Infinite Context via Retrieval</h4>
+                    <p>Combines a finite-context model with an external retrieval system — storing past context in a vector database and retrieving relevant chunks on demand. Practically unbounded context at the cost of retrieval accuracy.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">🧠</div>
+                    <h4>Effective Utilization</h4>
+                    <p>Models often struggle to actually use information placed in the middle of very long contexts ("lost in the middle" problem). Having a large context window doesn't guarantee that the model attends to all of it equally.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">💰</div>
+                    <h4>Inference Cost</h4>
+                    <p>Longer contexts mean larger KV-caches, more computation per token, and higher memory requirements. A 1M-token context can require hundreds of gigabytes of GPU memory just for the cached key-value pairs.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📊</div>
+                    <h4>Evaluation Difficulty</h4>
+                    <p>Measuring whether a model truly reasons over long contexts — rather than relying on shortcuts or local patterns — requires carefully designed benchmarks like RULER and needle-in-a-haystack tests at various depths.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🏋️</div>
+                    <h4>Training Data & Compute</h4>
+                    <p>Training on genuinely long sequences is expensive and requires specialized distributed training setups. Most training data is relatively short, creating a data scarcity problem for very long-context learning.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Extending Context Window of Large Language Models via Positional Interpolation</div>
+                        <div class="paper-meta">Chen et al., 2023 — Demonstrated that RoPE-based models can extend to much longer contexts through simple position interpolation with minimal fine-tuning.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Ring Attention with Blockwise Transformers</div>
+                        <div class="paper-meta">Liu et al., 2023 — Enables near-infinite context by distributing attention across devices in a ring pattern, scaling context linearly with hardware.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Mamba: Linear-Time Sequence Modeling with Selective State Spaces</div>
+                        <div class="paper-meta">Gu & Dao, 2023 — Introduced selective state-space models as an attention-free alternative achieving transformer-quality results with linear complexity.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Gemini 1.5: 1M Token Context Window</div>
+                        <div class="paper-meta">Google, 2024 — Demonstrated a production model handling 1 million tokens with strong retrieval and reasoning performance across the full context.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">InfLLM: Revealing the Intrinsic Capacity of LLMs for Understanding Extremely Long Sequences</div>
+                        <div class="paper-meta">2024 — Explores methods for processing extremely long sequences by leveraging the inherent capabilities of pre-trained LLMs with efficient memory management.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Truly Infinite Context:</strong> Moving beyond fixed windows to architectures that can continuously process and integrate information streams indefinitely — enabling AI systems that learn from lifelong experience.</li>
+                <li><strong>Selective Attention at Scale:</strong> Learning to dynamically allocate attention budget — spending more computation on relevant passages and less on irrelevant ones — rather than treating all tokens equally.</li>
+                <li><strong>Long-Context Reasoning:</strong> Advancing from simple retrieval ("find the needle") to genuine multi-hop reasoning across very long documents — synthesizing information scattered throughout a million-token context.</li>
+                <li><strong>Hybrid Architectures:</strong> Combining the strengths of attention (precise retrieval) with SSMs (efficient streaming) and retrieval (unbounded memory) into unified architectures optimized for different context regimes.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="27-llm-infrastructure-serving.html" class="related-link">
+                    <span>LLM Infrastructure & Serving</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="28-llm-evaluation-benchmarks.html" class="related-link">
+                    <span>LLM Evaluation & Benchmarks</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="21-world-models.html" class="related-link">
+                    <span>World Models</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="05-continual-learning.html" class="related-link">
+                    <span>Continual Learning</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="26-generative-audio-music.html">
+                Next: Generative Audio & Music
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
