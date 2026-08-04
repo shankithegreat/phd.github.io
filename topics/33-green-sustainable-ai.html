@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green AI & Sustainable Computing - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #10b981; }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #10b981, #047857);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #34d399, #059669);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #047857, #064e3b);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Green AI & Sustainable Computing</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#33 — Emerging Frontier</span>
+            <h1>Green AI & Sustainable Computing</h1>
+            <p class="subtitle">Measuring and reducing the energy, carbon, water, and hardware footprint of machine learning — and treating efficiency as a first-class research result rather than an afterthought.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>Green AI is the study of the <strong>environmental cost of machine learning</strong> and the methods that reduce it. It asks a question that accuracy-driven benchmarks ignore: what resources did this result consume? Those resources include electricity drawn by accelerators, the carbon intensity of the grid supplying that electricity, water evaporated by datacenter cooling, and the emissions locked into manufacturing the chips themselves.</p>
+            <p>The field crystallised around two papers. Strubell et al. (2019) estimated the energy and carbon cost of training and tuning NLP models, and their headline finding — that a full neural architecture search pipeline could emit on the order of hundreds of tonnes of CO₂-equivalent — put numbers on an intuition the community had been avoiding. Schwartz et al. (2019) then coined the Red AI / Green AI distinction, arguing that a research culture rewarding accuracy at any compute cost systematically excludes labs without large clusters and hides the real price of progress.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Think of publishing a model's accuracy without its energy cost like advertising a car's top speed without its fuel economy. Both cars reach 200 km/h; one drinks three times the petrol getting there. Until the sticker shows both numbers, buyers cannot make a sensible choice — and manufacturers have no reason to compete on the second one.</p>
+            </div>
+            <p>Crucially, Green AI is not a synonym for "small models". It is an accounting-and-optimisation discipline: you need a credible measurement methodology before you can claim an improvement, and the target of that optimisation shifts depending on whether you are a researcher training once, a company serving billions of requests, or a policymaker regulating an industry. The research questions span systems, statistics, hardware, and governance simultaneously, which is exactly what makes it an attractive area for interdisciplinary doctoral work.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>Compute used for frontier training runs has grown by orders of magnitude in a decade, far outpacing improvements in hardware efficiency per FLOP. That gap has turned an academic curiosity into an infrastructure, economics, and policy problem that datacenter operators and national grid planners now argue about publicly.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">🌍</span>
+                    <span><strong>Climate accountability:</strong> AI workloads are a fast-growing share of datacenter electricity demand, and organisations with net-zero commitments increasingly need defensible per-model emissions numbers rather than vague assurances.</span>
+                </li>
+                <li>
+                    <span class="point-icon">💰</span>
+                    <span><strong>Cost alignment:</strong> Energy is a direct operating expense, so efficiency research is one of the rare areas where the environmental incentive and the commercial incentive point the same way — a halved inference cost is both cheaper and greener.</span>
+                </li>
+                <li>
+                    <span class="point-icon">⚖️</span>
+                    <span><strong>Research equity:</strong> When state-of-the-art results require budgets only a handful of labs possess, the field's agenda narrows. Reporting efficiency alongside accuracy lets smaller groups compete on a dimension they can actually win.</span>
+                </li>
+                <li>
+                    <span class="point-icon">📜</span>
+                    <span><strong>Emerging regulation:</strong> Disclosure regimes — including energy and resource reporting expectations in recent EU AI rules — are moving carbon accounting from voluntary good practice toward compliance work with real deadlines.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔬</span>
+                    <span><strong>Better science:</strong> Efficiency constraints force honest baselines. A method that only wins when given ten times the compute of its comparison is not a better method, and joint accuracy-cost reporting exposes that.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>Carbon accounting for ML follows a chain from hardware counters to an emissions figure. Each link introduces uncertainty, and most disagreements between published estimates trace to a different choice at one specific link rather than to any deep methodological dispute.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">⚡</div>
+                        <span class="step-label">Measure<br>Power Draw</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🏭</div>
+                        <span class="step-label">Apply<br>Datacenter PUE</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔌</div>
+                        <span class="step-label">Weight by<br>Grid Mix</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">📊</div>
+                        <span class="step-label">Report &<br>Optimise</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Energy measurement:</strong> The starting point is accelerator power, read from on-device telemetry such as NVIDIA's NVML interface, plus host CPU and memory draw. Sampling rate matters — coarse polling smooths over the power spikes that dominate a training step — and rack-level or facility meters give a more trustworthy total than summing device counters, since they capture networking and storage that device telemetry misses entirely.</p>
+            <p><strong>Facility and grid factors:</strong> Raw compute energy is scaled by Power Usage Effectiveness, the ratio of total facility energy to IT energy. Hyperscale sites report PUE close to 1.1 while older on-premise server rooms sit far higher, so the same job can carry very different overhead. The resulting kilowatt-hours are then multiplied by the carbon intensity of the local grid, which varies by roughly an order of magnitude between a hydro- or nuclear-heavy region and a coal-dominated one, and varies again by hour of day.</p>
+            <p><strong>Reporting and optimisation:</strong> Patterson et al. (2021) laid out this methodology carefully and identified four levers that jointly account for most of the variance: model architecture, accelerator efficiency, datacenter PUE, and grid mix. Their argument is practical — choosing where and when to run a job can matter more than shaving parameters off the model, because the datacenter and grid terms are multiplicative and often the largest.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Measurement Tooling</h4>
+                    <p>Libraries such as CodeCarbon and experiment-impact trackers wrap a training script, sample device power, and combine it with regional carbon-intensity data. Web-based ML CO₂ estimators give rough a-priori figures from hardware type, runtime, and cloud region before a job is even launched.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Carbon-Aware Scheduling</h4>
+                    <p>Shift flexible workloads in time toward hours of low grid carbon intensity, or in space toward cleaner regions. Because intensity can swing severalfold within a day, deferring a batch job by a few hours is often a larger win than any model-level change and requires no accuracy trade-off.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Inference-Side Efficiency</h4>
+                    <p>Quantisation, distillation, pruning, batching, and KV-cache reuse attack the term that dominates lifetime footprint for deployed systems. Serving-level choices — request routing, dynamic batching, cascades that escalate to a large model only when needed — often beat architectural cleverness.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Training-Cost Reduction</h4>
+                    <p>Mixed-precision and low-precision training, better learning-rate schedules, data pruning and deduplication, and scaling-law-guided budget allocation reduce the compute needed to reach a target loss. Avoiding a redundant full retrain by fine-tuning an existing checkpoint is the cheapest win of all.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Hardware & Lifecycle Choices</h4>
+                    <p>Newer accelerators deliver substantially more useful work per joule, so hardware refresh is itself an efficiency lever — but only if the embodied carbon of manufacturing is amortised over enough utilisation. Extending server lifetime and improving utilisation both reduce the embodied share per job.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Efficiency Disclosure Norms</h4>
+                    <p>Model cards, datasheets, and journal-level reporting checklists ask authors to publish hardware used, wall-clock training time, region, and estimated emissions. Efficiency-aware leaderboards and shared-task tracks with fixed compute budgets turn the norm into an enforced constraint.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔄</div>
+                    <h4>The Jevons Paradox</h4>
+                    <p>Making inference cheaper tends to increase how much of it people do. Per-query efficiency gains have repeatedly been absorbed — and overtaken — by growth in query volume, so total consumption rises even as every individual number improves.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🕳️</div>
+                    <h4>Opaque Data</h4>
+                    <p>Providers rarely publish per-model energy figures, real-time regional carbon intensity, or water withdrawal. Researchers are left estimating from public averages, and the resulting error bars are wide enough to make cross-paper comparison unreliable.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🏗️</div>
+                    <h4>Embodied Carbon</h4>
+                    <p>Semiconductor fabrication is energy- and chemical-intensive, and for well-utilised efficient hardware the manufacturing share of lifecycle emissions is far from negligible. Yet almost no ML paper accounts for it, because the supply-chain data simply is not available.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">💧</div>
+                    <h4>Water & Local Impact</h4>
+                    <p>Evaporative cooling consumes freshwater, and siting decisions concentrate that draw in specific — sometimes water-stressed — communities. Carbon-only accounting can actively mislead by rewarding a move that trades emissions for local water scarcity.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Energy and Policy Considerations for Deep Learning in NLP</div>
+                        <div class="paper-meta">Strubell, Ganesh & McCallum, 2019 — The paper that started the conversation, quantifying training and tuning emissions for NLP models and arguing for cost reporting plus equitable access to compute.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Green AI</div>
+                        <div class="paper-meta">Schwartz, Dodge, Smith & Etzioni, 2019 — Introduces the Red AI / Green AI framing and proposes reporting floating-point operations as an efficiency measure alongside accuracy.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Carbon Emissions and Large Neural Network Training</div>
+                        <div class="paper-meta">Patterson et al., 2021 — Establishes a careful accounting methodology and shows how model choice, accelerator, datacenter PUE, and grid mix multiply together to determine total emissions.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Quantifying the Carbon Emissions of Machine Learning</div>
+                        <div class="paper-meta">Lacoste, Luccioni, Schmidt & Dandres, 2019 — Introduces the widely used ML CO₂ impact estimator, making region- and hardware-aware emissions estimates accessible before a run starts.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">CodeCarbon and the empirical carbon-tracking toolchain</div>
+                        <div class="paper-meta">Open-source project with associated reports, ongoing — The de facto instrumentation library for logging energy and estimated emissions during training; pair it with a recent survey of ML environmental-impact measurement for methodological context.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Full Lifecycle Accounting:</strong> Extending measurement beyond operational electricity to embodied chip carbon, water withdrawal and consumption, and end-of-life e-waste, producing a single defensible lifecycle figure per deployed model rather than a training-only estimate.</li>
+                <li><strong>Inference-Dominated Optimisation:</strong> Treating the serving phase as the primary target, since a model queried billions of times over its lifetime accumulates a footprint that dwarfs its one-off training cost — and co-designing model, runtime, and hardware around that reality.</li>
+                <li><strong>Carbon-Aware Systems by Default:</strong> Building temporal and geographic carbon signals directly into schedulers, training frameworks, and autoscalers so that low-carbon placement is the automatic behaviour rather than a manual research exercise.</li>
+                <li><strong>Standardised, Audited Disclosure:</strong> Converging on shared reporting schemas with third-party verification, so that efficiency claims become comparable across papers and vendors — the prerequisite for regulation, procurement rules, and honest leaderboards to function at all.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="02-hardware-aware-training.html" class="related-link">
+                    <span>Hardware-Aware Training</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="17-small-language-models.html" class="related-link">
+                    <span>Small Language Models</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="27-llm-infrastructure-serving.html" class="related-link">
+                    <span>LLM Infrastructure & Serving</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="38-quantization-low-bit-inference.html" class="related-link">
+                    <span>Quantization & Low-Bit Inference</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="34-human-ai-interaction.html">
+                Next: Human-AI Interaction
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
