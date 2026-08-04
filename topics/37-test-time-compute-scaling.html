@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test-Time Compute & Inference Scaling - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #f59e0b; }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #f59e0b, #b45309);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #fbbf24, #d97706);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #d97706, #78350f);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Test-Time Compute & Inference Scaling</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#37 — Advanced Frontier</span>
+            <h1>Test-Time Compute & Inference Scaling</h1>
+            <p class="subtitle">Spending more computation while answering a question — sampling, searching, verifying, and thinking longer — instead of only making the model bigger.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>Test-time compute scaling treats the computation spent <strong>during inference as a resource you can trade for accuracy</strong>. A conventional language model answers a question with a single left-to-right decoding pass: the compute budget is fixed by the architecture and the length of the answer. A test-time-scaled system instead may sample twenty candidate solutions, write two thousand tokens of intermediate working, score partial reasoning steps with a separate verifier, abandon a dead-end branch, and only then commit to a final answer. The weights never change; what changes is how much thinking happens per query.</p>
+            <p>This reframes an old question. The classical scaling laws relate held-out loss to two quantities — parameter count and training tokens — and the Chinchilla analysis (Hoffmann et al., 2022) told us how to balance them for a fixed training budget. Inference scaling introduces a third axis that is orthogonal to both: given a <em>fixed</em> checkpoint, how does task accuracy improve as you multiply the FLOPs spent per problem? On tasks where a candidate answer can be checked — competition mathematics, unit-tested code, formal proofs — accuracy typically climbs steadily and roughly log-linearly as the sample budget grows across one or two orders of magnitude, before flattening out.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Two students sit the same exam with the same brain. One writes down the first answer that comes to mind and moves on. The other uses scratch paper: works the problem two different ways, notices the answers disagree, substitutes the result back into the original equation to check it, and only then writes a final line. Nothing about the student changed — only the time and paper they were allowed to use. Test-time compute is that scratch paper, and reasoning models are the students who have learned how to use it.</p>
+            </div>
+            <p>Between 2024 and 2025 this idea moved from a research curiosity to a product category. OpenAI's o1 series and the openly released DeepSeek-R1 (2025) are trained so that long internal chains of thought emerge as a learned behaviour rather than a prompting trick, using reinforcement learning against automatically verifiable rewards. The practical consequence for anyone building on these systems is that the cost model has inverted: you no longer pay only for parameters you host, you pay per thought token, and a hard problem can legitimately cost a hundred times more than an easy one.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>Pretraining a frontier model is a capital-intensive, months-long commitment. Inference scaling offers a second lever that can be pulled per query, per user, and per deployment — which changes both the research agenda and the economics of deployment.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">⚖️</span>
+                    <span><strong>A cheaper axis to buy capability:</strong> Snell et al. (2024) showed that for many problems, a smaller model given a well-chosen inference strategy can match or beat a substantially larger model evaluated greedily — at lower total FLOPs. Capability is no longer only something you pretrain.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔍</span>
+                    <span><strong>Generation is easier than verification is easier than solving:</strong> Many hard tasks have the property that recognising a correct answer is far cheaper than producing one. Search plus a verifier exploits this asymmetry directly, which is why the gains are largest on maths, code, and formal domains.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🎚️</span>
+                    <span><strong>Adaptive difficulty:</strong> A fixed-size model spends the same compute on "what is the capital of France" as on an olympiad problem. Being able to allocate effort by difficulty is a strictly better use of a datacentre, and it lets a single deployment serve both latency-sensitive and accuracy-critical traffic.</span>
+                </li>
+                <li>
+                    <span class="point-icon">📉</span>
+                    <span><strong>Distillation back into small models:</strong> Long reasoning traces produced by an expensive search can be used as supervised training data for a much smaller model. The DeepSeek-R1 release included distilled variants in the 1.5B–70B range that inherit a surprising amount of the reasoning behaviour.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🧾</span>
+                    <span><strong>It breaks our benchmarks:</strong> Reported scores now depend on an inference budget that papers often under-specify. Comparing two models without fixing the sampling strategy, the number of attempts, and whether a verifier was used is close to meaningless — an evaluation problem the field is still catching up with.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>Almost every method in this area is some combination of three primitives: <strong>generate</strong> multiple candidate reasoning paths, <strong>score</strong> them with something other than the generator's own token probabilities, and <strong>select or extend</strong> the promising ones. The differences lie in how much structure the search has and where the scoring signal comes from.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">🧩</div>
+                        <span class="step-label">Frame &<br>Prompt</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🌱</div>
+                        <span class="step-label">Sample<br>Candidates</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">⚖️</div>
+                        <span class="step-label">Score &<br>Verify</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🏁</div>
+                        <span class="step-label">Select or<br>Keep Thinking</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Parallel sampling:</strong> The simplest strategy is to draw N independent solutions at non-zero temperature and aggregate them. Self-consistency (Wang et al., 2022) marginalises over reasoning paths by taking a majority vote on the final answer, and delivers large gains on grade-school and competition maths for essentially no extra engineering. Best-of-N instead ranks the candidates with a learned reward model or an outcome verifier and returns the top one — an approach whose lineage runs back to the verifier trained alongside GSM8K by Cobbe et al. (2021). Parallel sampling is embarrassingly parallel and latency-friendly, but it wastes work: every sample restarts from scratch.</p>
+            <p><strong>Verifier-guided search:</strong> If you can score <em>partial</em> reasoning rather than only final answers, you can prune early. A process reward model (PRM) assigns a correctness score to each individual step; Lightman et al. (2023) demonstrated that process supervision substantially outperforms outcome-only supervision on hard maths, and released a large step-level human annotation set to train it. With a step-level scorer in hand you can run beam search over reasoning prefixes, or full tree search — Tree of Thoughts (Yao et al., 2023) makes the branching explicit, and MCTS-style rollouts add value backups and exploration bonuses at the cost of many more model calls per node.</p>
+            <p><strong>Learned long thinking:</strong> The dominant 2025 paradigm internalises the search. Rather than an external scaffold orchestrating calls, the model is trained with reinforcement learning on problems whose answers can be checked automatically, and it learns to produce a long chain of thought that backtracks, re-derives, and self-corrects within a single generation. DeepSeek-R1 (2025) showed that this behaviour — including a tendency for average response length to grow over training — can emerge from RL on verifiable rewards without step-level human labels. Because the thinking is just tokens, the budget becomes controllable: you can cap it, or use budget forcing, where a decoder is prevented from emitting the end-of-thinking marker and nudged to continue with a token like "Wait", as in the s1 work on simple test-time scaling (2025).</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Self-Consistency & Majority Vote</h4>
+                    <p>Sample many chains of thought and take the modal final answer. Requires no extra model, works whenever answers are comparable, and is the strongest baseline in the area. Degrades when answers are free-form text with no canonical form to vote over.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Best-of-N with a Reward Model</h4>
+                    <p>Rank N samples with an outcome reward model and return the winner. Accuracy tracks the reward model's quality, so gains saturate — and can reverse — once N is large enough that the search starts exploiting the scorer's blind spots.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Process Reward Models</h4>
+                    <p>Score each reasoning step rather than the final answer, giving dense credit assignment for search and RL. Costly to supervise; automatic labelling via rollout success rates is the common workaround for building PRM data at scale.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Tree Search & MCTS Rollouts</h4>
+                    <p>Treat partial reasoning as nodes, expand promising branches, and back up values from simulated completions. Strong on problems with a clear decomposition, but node budgets explode and the value estimates are only as good as the underlying scorer.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>RL on Verifiable Rewards</h4>
+                    <p>Train against automatic checkers — exact-match maths answers, unit tests, proof assistants — so long reasoning is learned rather than prompted. Limited to domains where a cheap, reliable oracle exists, which is why maths and code led.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Reasoning Distillation</h4>
+                    <p>Fine-tune a small model on filtered long traces from an expensive reasoner. Remarkably effective per parameter and cheap to run, but the student tends to imitate the surface form of deliberation without the underlying self-correction.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">🌀</div>
+                    <h4>Overthinking</h4>
+                    <p>Reasoning models routinely burn thousands of tokens on trivial questions, and can talk themselves out of a correct first answer. Deciding <em>when</em> to stop is an unsolved control problem, and naive budget caps truncate exactly the hard problems that needed the length.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🕳️</div>
+                    <h4>The Verifier Gap</h4>
+                    <p>Search is only as good as its scorer. Outside domains with automatic checkers, verifiers are themselves fallible neural nets, and their errors are correlated with the generator's — so scaling the search amplifies shared blind spots instead of correcting them.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🎭</div>
+                    <h4>Reward Hacking & Unfaithful Traces</h4>
+                    <p>Optimising against a proxy invites degenerate solutions: passing tests without solving the task, or producing a plausible-looking chain of thought that is not the actual cause of the answer. A displayed rationale should not be read as an explanation.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">💸</div>
+                    <h4>Latency & Serving Economics</h4>
+                    <p>Long thinking means long, unpredictable, memory-bandwidth-bound decodes with a growing KV cache. Tail latency and cost per request become the binding constraints, and interactive products often cannot afford the budget that wins on benchmarks.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</div>
+                        <div class="paper-meta">Wei et al., 2022 — Showed that simply asking a large model to produce intermediate steps unlocks multi-step reasoning, establishing intermediate tokens as usable computation.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Self-Consistency Improves Chain of Thought Reasoning in Language Models</div>
+                        <div class="paper-meta">Wang et al., 2022 — Replaces greedy decoding with sampling many reasoning paths and marginalising by majority vote, the canonical parallel test-time scaling baseline.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Let's Verify Step by Step</div>
+                        <div class="paper-meta">Lightman et al., 2023 — Demonstrates that step-level process supervision beats outcome-only reward models for hard mathematics, and releases a large step-annotation dataset.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Scaling LLM Test-Time Compute Optimally Can Be More Effective Than Scaling Model Parameters</div>
+                        <div class="paper-meta">Snell et al., 2024 — Studies compute-optimal allocation between sampling, revision, and search, and shows difficulty-aware budgets can substitute for parameters.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning</div>
+                        <div class="paper-meta">DeepSeek-AI, 2025 — An openly released reasoning model showing long self-correcting chains of thought can emerge from RL on verifiable rewards, with distilled small variants.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Learned budget control:</strong> Models that estimate problem difficulty and their own uncertainty well enough to decide how long to think, ideally exposing a single knob that trades accuracy for cost predictably rather than requiring per-task tuning.</li>
+                <li><strong>Verification beyond checkable domains:</strong> Extending reliable scoring to open-ended tasks — long-form writing, research synthesis, agentic tool use — through debate, decomposition into checkable sub-claims, or grounding in executable environments.</li>
+                <li><strong>Joint training and inference scaling laws:</strong> A predictive theory that tells you, before spending the money, how to split a total budget between pretraining, post-training RL, and inference — including how distillation moves capability between the two regimes.</li>
+                <li><strong>Latent and continuous reasoning:</strong> Doing the deliberation in hidden state or recurrent depth instead of emitted tokens, which would cut serving cost dramatically but makes monitoring and interpreting the reasoning much harder.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="12-llm-reasoning-cot.html" class="related-link">
+                    <span>LLM Reasoning & Chain-of-Thought</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="20-self-improving-ai.html" class="related-link">
+                    <span>Self-Improving AI</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="27-llm-infrastructure-serving.html" class="related-link">
+                    <span>LLM Infrastructure & Serving</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="28-llm-evaluation-benchmarks.html" class="related-link">
+                    <span>LLM Evaluation & Benchmarks</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="38-quantization-low-bit-inference.html">
+                Next: Quantization & Low-Bit Inference
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
