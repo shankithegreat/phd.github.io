@@ -1,1 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parameter-Efficient Fine-Tuning (PEFT) - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root {
+            --page-accent: #14b8a6;
+        }
+        .section-label {
+            background: rgba(20, 184, 166, 0.08);
+            border-color: rgba(20, 184, 166, 0.15);
+        }
+        .topic-number {
+            background: rgba(20, 184, 166, 0.1);
+            border-color: rgba(20, 184, 166, 0.2);
+        }
+        .analogy-box {
+            background: rgba(20, 184, 166, 0.05);
+            border-color: rgba(20, 184, 166, 0.15);
+        }
+        .analogy-box .analogy-title {
+            color: #14b8a6;
+        }
+        .key-points li .point-icon {
+            background: rgba(20, 184, 166, 0.1);
+        }
+        .flow-step .step-icon {
+            background: rgba(20, 184, 166, 0.1);
+            border-color: rgba(20, 184, 166, 0.2);
+        }
+        .flow-step:hover .step-icon {
+            background: rgba(20, 184, 166, 0.15);
+        }
+        .future-list li::before {
+            color: #14b8a6;
+        }
+    </style>
+</head>
+<body>
 
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #14b8a6, #0d9488);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #2dd4bf, #0891b2);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #5eead4, #14b8a6);"></div>
+    </div>
+
+    <div class="grain-overlay"></div>
+
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Parameter-Efficient Fine-Tuning (PEFT)</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">Topic 11</span>
+            <h1>Parameter-Efficient<br>Fine-Tuning</h1>
+            <p class="subtitle">Adapting massive pre-trained models to specific tasks by training only a tiny fraction of parameters — democratizing AI customization for everyone with a single GPU.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <div class="section-label">📖 Definition</div>
+            <h2>What Is Parameter-Efficient Fine-Tuning?</h2>
+            <p>Parameter-Efficient Fine-Tuning (PEFT) is a family of methods that <strong>adapt large pre-trained models to specific downstream tasks by modifying only a small fraction of the model's total parameters</strong>. Instead of updating all billions of weights during fine-tuning (which requires enormous GPU memory and compute), PEFT methods freeze the original model and inject or modify a tiny set of trainable parameters — typically 0.1% to 1% of the total — that capture task-specific knowledge.</p>
+            <p>The fundamental insight behind PEFT is that <strong>pre-trained models already contain most of the knowledge needed for downstream tasks</strong>. The vast majority of their parameters encode general language understanding, world knowledge, and reasoning capabilities that transfer across tasks. Fine-tuning really only needs to steer this existing knowledge toward a specific application — a process that doesn't require modifying every single weight.</p>
+            <p>PEFT has become one of the most practically impactful areas in modern AI because it solves a critical bottleneck: <strong>the gap between model capability and model accessibility</strong>. A 70-billion parameter model might achieve state-of-the-art performance, but full fine-tuning requires 8+ high-end GPUs with 80GB each. PEFT methods let you achieve 90-99% of that performance while training on a single consumer GPU. This has democratized access to powerful, customized AI systems for researchers, startups, and individual developers worldwide.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <div class="section-label">🎯 Importance</div>
+            <h2>Why It Matters</h2>
+            <p>PEFT sits at the intersection of capability and practicality. It transforms the economics of AI customization and makes personalized, domain-specific models accessible to organizations that could never afford full fine-tuning.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">💰</span>
+                    <span><strong>Dramatic cost reduction:</strong> Full fine-tuning of Llama 70B requires ~$10,000+ in compute and 640GB+ of GPU memory. With QLoRA, the same model can be fine-tuned on a single 24GB GPU for under $50. This 200x cost reduction is transformative for accessibility.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🧩</span>
+                    <span><strong>Modular specialization:</strong> PEFT adapters are small files (typically 10-100MB) that can be swapped in and out of a base model. A single foundation model can serve dozens of specialized applications — one adapter for medical questions, another for legal analysis, another for code generation — with negligible storage overhead.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔒</span>
+                    <span><strong>Catastrophic forgetting prevention:</strong> Full fine-tuning on specialized data often destroys a model's general capabilities. Because PEFT freezes most parameters, the original model's knowledge is preserved while new capabilities are layered on top — getting the best of both worlds.</span>
+                </li>
+                <li>
+                    <span class="point-icon">⚡</span>
+                    <span><strong>Faster iteration:</strong> Training only 0.1% of parameters means experiments complete in hours instead of days. Researchers can test hypotheses rapidly, try different data mixtures, and iterate on model behavior with tight feedback loops.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🌍</span>
+                    <span><strong>Global democratization:</strong> PEFT has enabled the open-source fine-tuning revolution. Thousands of domain-specific models on Hugging Face exist because PEFT made it possible for anyone with a decent GPU to customize a foundation model for their use case.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Analogy -->
+        <div class="topic-section">
+            <div class="analogy-box">
+                <div class="analogy-title">Real-World Analogy</div>
+                <p>Think of PEFT like adding a small, specialized attachment to a Swiss Army knife. The Swiss Army knife already has incredible built-in capabilities — blades, screwdrivers, scissors, corkscrews. Instead of melting down the entire knife and reforging it every time you need a new function (full fine-tuning), you simply snap on a tiny adapter that gives it exactly the new capability you need — a laser pointer, a USB drive, a magnifying glass. The adapter is lightweight (a fraction of the knife's weight), easy to swap out, and doesn't interfere with any existing tools. You can even carry multiple adapters in your pocket and switch between them as needed. That's exactly what LoRA adapters do for language models — small, swappable modules that add specific capabilities without rebuilding the entire model.</p>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <div class="section-label">⚙️ Process</div>
+            <h2>How It Works</h2>
+            <p>The PEFT workflow keeps the expensive pre-trained model frozen and trains only lightweight, newly-introduced parameters that steer the model's behavior toward your specific task.</p>
+
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">🧊</div>
+                        <div class="step-label">Freeze<br>Pre-trained</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">💉</div>
+                        <div class="step-label">Inject<br>Modules</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">🎯</div>
+                        <div class="step-label">Train 0.1-1%<br>Parameters</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">🔀</div>
+                        <div class="step-label">Merge or<br>Keep Separate</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">🚀</div>
+                        <div class="step-label">Deploy</div>
+                    </div>
+                </div>
+            </div>
+
+            <p>The process begins by <strong>freezing all pre-trained weights</strong>, making them non-trainable. The model's original knowledge is locked in place — every parameter that encodes language understanding, world knowledge, and reasoning remains exactly as it was after pre-training. This dramatically reduces memory requirements because frozen parameters don't need gradient storage.</p>
+            <p>Next, <strong>small trainable modules are injected</strong> into the architecture. In LoRA, this means adding pairs of low-rank matrices (A and B) alongside existing weight matrices. Instead of updating a 4096×4096 weight matrix (16.7M parameters), LoRA adds two matrices of sizes 4096×16 and 16×4096 (131K parameters combined) — a 128x reduction. The key mathematical insight is that fine-tuning weight changes are typically <strong>low-rank</strong>: the modifications needed to adapt a model to a new task can be well-approximated by low-dimensional transformations.</p>
+            <p>During training, only these injected parameters receive gradient updates. Because they're so small, training is fast and memory-efficient. After training, the adapter weights can either be <strong>merged</strong> back into the base model (adding no inference latency) or <strong>kept separate</strong> (enabling easy swapping between tasks). Serving is then identical to a standard model — no special infrastructure required.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <div class="section-label">🔧 Techniques</div>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>LoRA</h4>
+                    <p>Low-Rank Adaptation injects trainable low-rank decomposition matrices alongside frozen weight matrices. The most widely adopted PEFT method, offering excellent performance with typically 0.1-0.5% of total parameters trainable.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>QLoRA</h4>
+                    <p>Combines LoRA with 4-bit quantization of the base model, enabling fine-tuning of 65B+ models on a single 48GB GPU. Uses NormalFloat4 quantization and double quantization to minimize information loss.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>DoRA</h4>
+                    <p>Weight-Decomposed Low-Rank Adaptation separates weight updates into magnitude and direction components. Achieves closer-to-full-fine-tuning performance by better capturing the learning dynamics of weight changes.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Prefix Tuning</h4>
+                    <p>Prepends learnable continuous vectors (soft prompts) to the key and value matrices at each transformer layer. These learned prefixes steer the model's attention patterns without modifying any original weights.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Prompt Tuning</h4>
+                    <p>Adds trainable soft tokens to the input embedding layer only. Simpler than prefix tuning but increasingly effective as model size grows. Google showed it matches full fine-tuning at 10B+ scale.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>IA3</h4>
+                    <p>Infused Adapter by Inhibiting and Amplifying Inner Activations. Rescales key, value, and feedforward activations with learned vectors. Even more parameter-efficient than LoRA with only ~0.01% trainable parameters.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Adapters</h4>
+                    <p>Small bottleneck layers inserted between transformer sub-layers. The original PEFT approach, adding a down-projection, non-linearity, and up-projection. Still relevant for sequential task learning and composition.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>BitFit</h4>
+                    <p>Trains only the bias terms of the model — an extremely simple approach that modifies less than 0.1% of parameters. Surprisingly effective for smaller models and demonstrates how much task-specific information bias terms encode.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <div class="section-label">🚧 Challenges</div>
+            <h2>Open Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">📉</div>
+                    <h4>Performance Gap</h4>
+                    <p>PEFT methods still lag behind full fine-tuning on some complex tasks, especially those requiring significant knowledge injection or fundamental behavioral changes rather than style adaptation.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🎛️</div>
+                    <h4>Hyperparameter Sensitivity</h4>
+                    <p>LoRA rank, alpha, target modules, and learning rate interact in complex ways. Small changes can dramatically affect results, and optimal settings vary across tasks, making automated tuning crucial.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔗</div>
+                    <h4>Adapter Composition</h4>
+                    <p>Combining multiple LoRA adapters (e.g., one for style, one for domain knowledge) often produces degraded results. How to merge or route between adapters for multi-capability models remains unsolved.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔢</div>
+                    <h4>Rank Selection</h4>
+                    <p>Choosing the optimal LoRA rank is task-dependent and not well understood theoretically. Too low a rank loses task-specific information; too high wastes parameters and can overfit. Most practitioners rely on trial and error.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">⚡</div>
+                    <h4>Task Interference</h4>
+                    <p>When training adapters for multiple tasks simultaneously or sequentially, performance on earlier tasks can degrade. Continual PEFT — learning new tasks without forgetting old ones — is an active research area.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🧪</div>
+                    <h4>Theoretical Understanding</h4>
+                    <p>Why low-rank updates work so well is not fully understood. The empirical success of LoRA outpaces theoretical explanations, making it hard to predict when it will succeed or fail on new tasks.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <div class="section-label">📄 Research</div>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">LoRA: Low-Rank Adaptation of Large Language Models</div>
+                        <div class="paper-meta">Hu et al., 2021 — The foundational paper that introduced low-rank decomposition for efficient fine-tuning, demonstrating that weight updates during adaptation have inherently low intrinsic rank.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">QLoRA: Efficient Finetuning of Quantized Language Models</div>
+                        <div class="paper-meta">Dettmers et al., 2023 — Combined 4-bit quantization with LoRA to enable fine-tuning 65B models on a single 48GB GPU. Introduced NormalFloat4 and double quantization techniques.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Prefix-Tuning: Optimizing Continuous Prompts for Generation</div>
+                        <div class="paper-meta">Li & Liang, 2021 — Proposed prepending learnable continuous vectors to transformer attention, achieving comparable performance to fine-tuning with only 0.1% of parameters on generation tasks.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">LLaMA-Adapter: Efficient Fine-tuning of Language Models with Zero-init Attention</div>
+                        <div class="paper-meta">Zhang et al., 2023 — Introduced zero-initialized attention gates for stable adapter training, enabling adaptation of LLaMA to follow instructions with only 1.2M learnable parameters.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">DoRA: Weight-Decomposed Low-Rank Adaptation</div>
+                        <div class="paper-meta">Liu et al., 2024 — Decomposed weight updates into magnitude and direction, closing the gap between LoRA and full fine-tuning across a range of benchmarks while maintaining parameter efficiency.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <div class="section-label">🔮 Future</div>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Automated rank selection</strong> — Developing methods that automatically determine the optimal LoRA rank for each layer and each task, potentially using different ranks in different parts of the model. Adaptive approaches like AdaLoRA already show promise, but a unified theory of optimal rank allocation remains elusive.</li>
+                <li><strong>Composition of adapters</strong> — Learning to reliably combine multiple specialized adapters — blending a medical adapter with a formal-writing adapter and a French-language adapter — through arithmetic, routing, or learned merging strategies. This would enable building complex, multi-capability models from a library of simple, composable parts.</li>
+                <li><strong>Continual PEFT</strong> — Developing adapter architectures and training strategies that support ongoing learning without forgetting previous tasks. As models need to continuously absorb new knowledge (new medical research, updated regulations, recent events), continual PEFT becomes essential for keeping deployed models current.</li>
+                <li><strong>PEFT for multimodal models</strong> — Extending efficient fine-tuning techniques to multimodal foundation models, where different modality encoders and cross-modal attention layers may require different adaptation strategies. Early work on visual adapters shows promise, but the space is largely unexplored.</li>
+                <li><strong>Hardware-optimized adapters</strong> — Designing PEFT methods that align with specific hardware architectures (sparse adapters for sparse accelerators, quantization-aware adapters for integer-only hardware), enabling efficient adaptation and serving on edge devices, mobile phones, and embedded systems.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <div class="section-label">🔗 Related</div>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="#" class="related-link">
+                    <span>🗜️</span> Knowledge Distillation
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>🔄</span> Continual Learning
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>📱</span> Small Language Models
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>⚡</span> Hardware-Aware Training
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to All Topics
+            </a>
+            <a href="12-llm-reasoning-cot.html">
+                Next: LLM Reasoning & Chain-of-Thought
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.topic-section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+
+</body>
+</html>
