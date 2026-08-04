@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Unlearning & Data Privacy - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #d946ef; }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #d946ef, #a21caf);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #e879f9, #c026d3);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #a21caf, #701a75);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Machine Unlearning & Data Privacy</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#29 — Emerging Frontier</span>
+            <h1>Machine Unlearning & Data Privacy</h1>
+            <p class="subtitle">Removing the influence of specific training data from a model after the fact — so that a deletion request means something more than deleting a row in a database.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>Machine unlearning asks a deceptively simple question: given a trained model and a subset of its training data, can we produce a model that behaves <strong>as if that data had never been seen</strong>? Deleting the records from storage is trivial. Removing their influence from millions or billions of weights, which were shaped by thousands of gradient updates that mixed every example together, is not. The information does not sit in one place — it is smeared across parameters, and it demonstrably leaks: models memorise phone numbers, medical notes, and verbatim passages from their corpora.</p>
+            <p>The field splits into two camps. <strong>Exact unlearning</strong> guarantees the resulting model is statistically indistinguishable from one retrained from scratch on the remaining data. <strong>Approximate unlearning</strong> settles for a model that is close enough under some formal or empirical criterion, trading certainty for tractability. Retraining from scratch is the gold standard by definition, and it is also the reason the field exists: for a large model, honouring a single deletion request by retraining could mean weeks of GPU time and a seven-figure bill, and requests arrive continuously rather than in convenient batches.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Imagine a soup you have been simmering for days, into which hundreds of ingredients have dissolved. A diner tells you they are allergic to one of them and asks you to remove it. You cannot pick it out — it has diffused through the whole pot. Your options are to start the soup over from scratch, or to add something that neutralises the flavour and hope nobody can taste the difference. Machine unlearning is the science of making that second option trustworthy.</p>
+            </div>
+            <p>The urgency is legal as much as technical. The GDPR's right to erasure, along with similar provisions in CCPA and India's DPDP Act, gives individuals the right to have their personal data deleted. Regulators have not settled whether a trained model counts as personal data, but the direction of travel is clear: the US FTC has ordered companies to delete models and algorithms derived from improperly collected data, a remedy sometimes called algorithmic disgorgement. A research field that can offer something cheaper than "throw the model away" is therefore valuable to industry and to anyone who cares whether privacy rights are enforceable in practice.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>Unlearning sits at the junction of law, security, and model maintenance. It is one of the few areas where a regulatory deadline is actively driving a machine learning research agenda, and where the gap between what the law assumes is possible and what is technically achievable is uncomfortably wide.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">⚖️</span>
+                    <span><strong>Legal compliance:</strong> The right to erasure was written with databases in mind. Applying it to model weights raises a question nobody has answered cleanly, and unlearning is the leading candidate for a technical answer that is cheaper than full retraining.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔐</span>
+                    <span><strong>Real leakage, not hypothetical:</strong> Training data extraction attacks have recovered verbatim personal information from deployed language models, so "the model only learned statistics" is not a defence that survives contact with evidence.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🧹</span>
+                    <span><strong>Model repair:</strong> The same machinery removes poisoned samples, mislabelled data, copyrighted material, and outdated facts. Unlearning is as much a maintenance tool as a privacy tool.</span>
+                </li>
+                <li>
+                    <span class="point-icon">💰</span>
+                    <span><strong>Cost asymmetry:</strong> One deletion request should not cost a full pre-training run. Building models that support cheap, incremental forgetting changes the economics of operating them responsibly.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔬</span>
+                    <span><strong>It probes how models store knowledge:</strong> Asking where a fact lives, and whether it can be surgically excised, is a privacy question and an interpretability question wearing the same coat.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>Most unlearning pipelines share a common shape. A deletion request identifies a forget set; the method estimates or bounds that set's contribution to the current parameters; it applies a correction; and then — the part the field is worst at — it tries to verify that the correction actually worked without simply retraining to compare.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">📥</div>
+                        <span class="step-label">Deletion<br>Request</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔍</div>
+                        <span class="step-label">Locate<br>Influence</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">✂️</div>
+                        <span class="step-label">Update or<br>Retrain Shard</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🛡️</div>
+                        <span class="step-label">Audit &<br>Certify</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Locating influence:</strong> Influence functions, brought into modern deep learning by Koh & Liang (2017), approximate how the optimum would shift if a training point were removed, using a Hessian-vector product rather than actual retraining. The approximation assumes a convex, converged model — assumptions that deep networks violate — so in practice the estimates are noisy, and computing them at scale requires aggressive approximations to the Hessian such as K-FAC.</p>
+            <p><strong>Applying the correction:</strong> The architectural approach is SISA (Bourtoule et al., 2021), which shards the training data, trains a constituent model per shard with checkpoints per slice, and aggregates predictions. A deletion then requires retraining only the affected shard from the nearest checkpoint, typically cutting cost by an order of magnitude. The optimisation approach instead nudges the existing weights: gradient ascent on the forget set, fine-tuning on the retain set, teacher-student schemes where a student is taught to match the original model everywhere except the forget set, or targeted weight edits in the style of ROME (Meng et al., 2022), which localises a factual association to specific MLP layers and rewrites it.</p>
+            <p><strong>Auditing the result:</strong> Verification usually borrows the attacker's toolkit. A membership inference attack (Shokri et al., 2017) trains a classifier to decide whether a given record was in the training set, typically by exploiting the loss gap between seen and unseen examples. If an attacker can no longer distinguish forgotten records from never-seen ones, that is evidence — though not proof — of successful forgetting. The separate and stronger guarantee comes from differential privacy: training with DP-SGD (Abadi et al., 2016), which clips per-example gradients and adds calibrated Gaussian noise, bounds any single example's influence in advance, making approximate unlearning almost free at the cost of accuracy and a substantially slower training loop.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>SISA Sharded Training</h4>
+                    <p>Sharded, Isolated, Sliced, Aggregated training splits data across independently trained constituent models with incremental checkpoints. Deletion touches one shard, giving exact unlearning at a fraction of retraining cost — but weaker accuracy, since each model sees less data.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Influence Functions</h4>
+                    <p>Estimate a training point's effect on the learned parameters through a second-order Taylor expansion, then subtract it. Elegant and gradient-based, but the convexity assumption and expensive Hessian inversion make it fragile for deep, non-converged networks.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Gradient Ascent Forgetting</h4>
+                    <p>Run the optimiser backwards on the forget set to raise its loss. Cheap and general, but unconstrained ascent quickly destroys unrelated capability, so it is usually paired with a retain-set regulariser or a KL penalty against the original model.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Differential Privacy & DP-SGD</h4>
+                    <p>Bound each example's contribution during training via gradient clipping plus noise, yielding a formal (ε, δ) guarantee. Prevention rather than cure: nothing needs unlearning if nothing was memorised, though tight budgets cost accuracy and training throughput.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Targeted Model Editing</h4>
+                    <p>Locate a specific association in a small set of weights and overwrite it directly, as in ROME and MEMIT-style methods. Fast and surgical for discrete facts, but the edited knowledge often survives in paraphrases or multi-hop queries.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Teacher-Student Distillation</h4>
+                    <p>Distil the original model into a fresh student on the retain set only, or steer the student toward a randomly initialised teacher on the forget set. Produces clean weights without a full pre-training run, at the cost of one distillation pass.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">❓</div>
+                    <h4>Verification Is Unsolved</h4>
+                    <p>There is no efficient way to certify that a model has truly forgotten. Empirical audits show only that a particular attack failed, and the only definitive check — retraining and comparing — is exactly the cost the method was meant to avoid.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔄</div>
+                    <h4>Relearning & Extraction</h4>
+                    <p>Supposedly forgotten knowledge often reappears. A few fine-tuning steps on adjacent data, an in-context prompt, or a jailbreak can resurface content, suggesting many methods suppress the output rather than remove the underlying representation.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📉</div>
+                    <h4>Utility Cost of Forgetting</h4>
+                    <p>Aggressive forgetting degrades unrelated performance, a form of catastrophic collapse. The forget-utility frontier is real: every method trades some general capability for the strength of its deletion guarantee.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🕸️</div>
+                    <h4>Entangled Knowledge</h4>
+                    <p>Facts are not stored atomically. Removing one person's data may require removing correlated records, and information duplicated across a web-scale corpus can be reconstructed from sources that were never part of the deletion request.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Towards Making Systems Forget with Machine Unlearning</div>
+                        <div class="paper-meta">Cao & Yang, 2015 — Introduced the term and the summation-form framework, showing that statistical query learning admits efficient exact deletion.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Machine Unlearning (SISA)</div>
+                        <div class="paper-meta">Bourtoule et al., 2021 — Proposed sharded, isolated, sliced and aggregated training so that a deletion request retrains only one shard from a checkpoint instead of the whole model.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Deep Learning with Differential Privacy</div>
+                        <div class="paper-meta">Abadi et al., 2016 — Introduced DP-SGD with per-example gradient clipping, noise addition, and the moments accountant, making formal privacy budgets practical for deep networks.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Membership Inference Attacks Against Machine Learning Models</div>
+                        <div class="paper-meta">Shokri et al., 2017 — Showed that black-box access is enough to infer whether a record was in the training set, establishing the attack that is now the field's default unlearning audit.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Extracting Training Data from Large Language Models</div>
+                        <div class="paper-meta">Carlini et al., 2021 — Demonstrated verbatim recovery of memorised personal information from a deployed language model, turning memorisation from a theoretical worry into a measured risk.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Certified unlearning at scale:</strong> Extending the formal guarantees that exist for convex models and simple deletion settings to billion-parameter transformers, ideally with certificates cheap enough for an auditor to check independently.</li>
+                <li><strong>Unlearning-native architectures:</strong> Designing models where provenance is structural — modular experts, retrieval-backed knowledge, or parameter-efficient adapters per data source — so that forgetting means detaching a component rather than reshaping a monolith.</li>
+                <li><strong>Adversarially robust evaluation:</strong> Standardising benchmarks in the spirit of the NeurIPS 2023 machine unlearning competition, but scored against relearning attacks, paraphrase probes, and adaptive adversaries rather than a single membership inference score.</li>
+                <li><strong>Regulatory-technical translation:</strong> Working with legal scholars to define what "erasure" should mean for a statistical model, so that compliance is measured against an operational standard rather than an untested legal analogy.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="03-federated-learning.html" class="related-link">
+                    <span>Federated Learning</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="09-llm-alignment-safety.html" class="related-link">
+                    <span>LLM Alignment & Safety</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="23-ai-governance-ethics.html" class="related-link">
+                    <span>AI Governance & Ethics</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="05-continual-learning.html" class="related-link">
+                    <span>Continual Learning</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="30-time-series-foundation-models.html">
+                Next: Time-Series Foundation Models
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
