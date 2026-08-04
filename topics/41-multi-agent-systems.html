@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent Systems & Coordination - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #eab308; }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #eab308, #a16207);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #facc15, #ca8a04);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #ca8a04, #713f12);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Multi-Agent Systems & Coordination</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#41 — Advanced Frontier</span>
+            <h1>Multi-Agent Systems & Coordination</h1>
+            <p class="subtitle">Decomposing hard problems across several specialised AI agents that debate, delegate, and negotiate — and figuring out when that actually helps.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>A multi-agent system replaces the single monolithic model with <strong>several interacting agents, each with its own role, tools, context window, and sometimes its own underlying model</strong>. Instead of asking one language model to research, write, critique, and verify in a single pass, you instantiate a researcher, a writer, a critic, and a verifier, and you design the protocol by which they exchange messages. The research question is no longer just "how good is the model?" but "what communication topology, role assignment, and termination rule produce the best joint outcome?"</p>
+            <p>The immediate engineering motivation is that a single agent's context and attention are finite. A long-horizon task — refactor a repository, produce a literature review, run a data analysis end to end — generates far more intermediate state than fits comfortably in one prompt, and everything competes for the same attention budget. Splitting the work means each agent sees only what it needs. An orchestrator holds the plan and the task list; workers receive narrow, self-contained subtasks and return condensed results. This is the orchestrator-worker pattern, and it is the dominant architecture in deployed agent systems today because it maps cleanly onto how the context bottleneck actually bites.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Think of a newsroom. One extremely talented journalist can write a story, but they cannot simultaneously work six sources, fact-check, edit for style, and check legal risk — not because they lack the skill, but because attention and working memory do not divide that finely. An editor assigns beats, reporters go deep on narrow territory, a fact-checker challenges claims, and a copy editor polishes. The output is better than any one person could produce alone, but the newsroom also costs far more, and every handoff is an opportunity to lose or garble information.</p>
+            </div>
+            <p>Beneath the engineering story sits a much older research tradition. Distributed artificial intelligence and multi-agent reinforcement learning have studied cooperative and competitive objectives, credit assignment, communication protocols, and equilibrium behaviour for decades. Self-play — where an agent improves by playing against copies of itself — drove the strongest results in Go, chess, poker, and StarCraft. That literature supplies the vocabulary and the hard theorems that the current wave of LLM-agent work is, in many cases, rediscovering empirically.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>Multi-agent structure buys you things that are genuinely hard to obtain from a single forward pass: parallelism, independent perspectives, and an auditable division of labour. It also buys you cost and fragility, which is why the honest version of this topic is as much about negative results as positive ones.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">🧩</span>
+                    <span><strong>Context decomposition:</strong> Each worker gets a clean, narrow window instead of competing for attention inside one enormous prompt, which mitigates the degradation models show when relevant facts are buried in long inputs.</span>
+                </li>
+                <li>
+                    <span class="point-icon">💬</span>
+                    <span><strong>Debate improves factuality:</strong> Having several model instances propose answers, read each other's reasoning, and revise over a few rounds measurably reduces hallucination and arithmetic errors compared with a single chain of thought.</span>
+                </li>
+                <li>
+                    <span class="point-icon">⚡</span>
+                    <span><strong>Genuine parallelism:</strong> Independent subtasks — searching ten sources, testing five hypotheses — run concurrently, cutting wall-clock latency even though total token spend rises.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🛡️</span>
+                    <span><strong>Scalable oversight:</strong> If two agents argue and a weaker judge only has to decide which argument is stronger, supervision may scale to tasks a human could not verify directly — a central proposal in the AI safety literature.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🏗️</span>
+                    <span><strong>Modularity and specialisation:</strong> A cheap small model can handle retrieval and formatting while an expensive frontier model handles the reasoning step, letting you tune the cost-quality curve per role rather than globally.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>Almost every multi-agent design can be described by four choices: how the task is decomposed, how roles are assigned, how messages flow between agents, and how the system decides it is finished. Getting any one of these wrong tends to dominate whatever gains the architecture was supposed to deliver.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">🗺️</div>
+                        <span class="step-label">Decompose &<br>Plan</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🎭</div>
+                        <span class="step-label">Assign<br>Roles</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔁</div>
+                        <span class="step-label">Exchange &<br>Critique</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">✅</div>
+                        <span class="step-label">Aggregate &<br>Commit</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Decomposition and planning:</strong> An orchestrator turns the user's goal into a dependency graph of subtasks with explicit inputs and outputs. Quality here is decisive: vague subtask descriptions ("look into the pricing question") produce workers that duplicate effort or silently drift, while over-specified plans lose the flexibility that made agents attractive in the first place. Good orchestrators re-plan after each round rather than committing to a static tree up front.</p>
+            <p><strong>Role assignment and communication topology:</strong> Roles can be inception-prompted, as in the CAMEL framework where an assistant and a user agent are seeded into a role-play conversation and left to cooperate, or defined programmatically, as in conversational-programming frameworks like AutoGen where agents are objects with tools, termination conditions, and human-in-the-loop hooks. Topology matters enormously: fully connected all-to-all chat scales quadratically in tokens and encourages groupthink, while a star topology through an orchestrator is cheaper but creates a single point of failure and information loss.</p>
+            <p><strong>Aggregation and termination:</strong> Debate protocols run a fixed small number of rounds — typically two to four, since gains flatten quickly and cost does not — then aggregate by majority vote, by orchestrator synthesis, or by a dedicated judge. Termination is where systems most often fail in practice: without a hard round cap and a tie-breaking rule, agents either converge prematurely on a confident wrong answer or ping-pong politely forever. In the reinforcement-learning framing, the same problem appears as credit assignment: when a team succeeds, which agent's contribution deserves the reward, and how do you estimate that counterfactual without exponentially many rollouts?</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Multi-Agent Debate</h4>
+                    <p>Several model instances answer independently, then read each other's reasoning and revise over a few rounds. Improves factuality and arithmetic reasoning over single-pass chain of thought, at roughly a linear multiple of the token cost in the number of agents and rounds.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Orchestrator-Worker Delegation</h4>
+                    <p>A lead agent decomposes the goal, spawns subagents with narrow briefs, and synthesises their condensed returns. The workhorse pattern for deep research and coding agents because it directly attacks the context bottleneck.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Role-Play Prompting</h4>
+                    <p>Assigning distinct personas and objectives — architect, sceptic, red-teamer — so that agents produce genuinely different candidate solutions rather than five paraphrases of the same output. CAMEL formalised this as inception prompting between paired agents.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Generator-Critic Loops</h4>
+                    <p>One agent proposes, a second attacks the proposal against an explicit rubric or by executing tests, and the first revises. Works best when the critic has an external ground-truth signal such as a compiler, unit test, or retrieved source.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Self-Play & MARL Training</h4>
+                    <p>Rather than prompting fixed agents, train them against each other. Centralised training with decentralised execution, counterfactual credit assignment, and population-based self-play are the standard tools for cooperative and competitive objectives.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Interoperability Protocols</h4>
+                    <p>Standard interfaces so agents and tools compose across vendors. The Model Context Protocol, introduced by Anthropic in 2024, standardises how models discover and call external tools and data sources; emerging agent-to-agent interfaces aim to do the same for delegation between independently built agents.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">💸</div>
+                    <h4>Token-Cost Explosion</h4>
+                    <p>Every agent re-reads shared context and every round multiplies spend. Multi-agent runs routinely consume an order of magnitude more tokens than a single well-prompted call, so the quality gain has to be large to justify the bill and the latency.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🌊</div>
+                    <h4>Cascading Errors</h4>
+                    <p>A wrong intermediate result gets summarised confidently, stripped of its uncertainty, and consumed downstream as fact. Long chains have no natural error-correction mechanism, so early mistakes are amplified rather than caught.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🐑</div>
+                    <h4>Groupthink & Premature Consensus</h4>
+                    <p>Agents built on the same base model share the same priors and biases, so they agree quickly and for the wrong reasons. Instruction-tuned sycophancy makes it worse: agents defer to whatever was asserted most confidently rather than defending a correct minority view.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔒</div>
+                    <h4>Deadlock & Non-Termination</h4>
+                    <p>Without hard round caps, agents wait on each other, loop on politeness, or bounce a task back and forth. Debugging is painful because failures are distributed across transcripts rather than localised in one stack trace.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Improving Factuality and Reasoning in Language Models through Multiagent Debate</div>
+                        <div class="paper-meta">Du et al., 2023 — Shows that several LLM instances proposing and critiquing answers over a few rounds reduces hallucination and improves mathematical and factual reasoning relative to single-agent decoding.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">AI Safety via Debate</div>
+                        <div class="paper-meta">Irving et al., 2018 — Proposes debate between two agents judged by a weaker human as a mechanism for scalable oversight of systems too capable to supervise directly.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">CAMEL: Communicative Agents for "Mind" Exploration of Large Language Model Society</div>
+                        <div class="paper-meta">Li et al., 2023 — Introduces inception prompting to steer paired role-playing agents toward autonomous cooperation, and uses the setup to generate conversational data at scale.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation</div>
+                        <div class="paper-meta">Wu et al., 2023 — A framework that treats conversation between configurable, tool-using, optionally human-supervised agents as the programming abstraction for building applications.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Generative Agents: Interactive Simulacra of Human Behavior</div>
+                        <div class="paper-meta">Park et al., 2023 — Populates a sandbox town with memory-and-reflection agents and observes emergent social behaviour such as information diffusion and coordinated party planning.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Honest ablations:</strong> The most valuable near-term contribution is rigorous evidence about when multi-agent setups beat a single well-prompted agent with the same total token budget. Several careful studies suggest that on many benchmarks a strong single agent with a good scratchpad matches or exceeds an elaborate agent society once cost is held constant, and the field badly needs the boundary mapped rather than asserted.</li>
+                <li><strong>Learned coordination:</strong> Moving from hand-written prompts and topologies to protocols optimised end to end — learning who to ask, when to stop, and how much context to pass, with the communication graph itself treated as a parameter rather than a design decision.</li>
+                <li><strong>Economics of agent markets:</strong> As agents transact, delegate, and pay each other for services, mechanism design and auction theory become directly relevant. Preventing collusion, ensuring truthful reporting, and pricing compute across competing agents are open problems with immediate practical stakes.</li>
+                <li><strong>Safety of emergent collective behaviour:</strong> Systems of agents can exhibit behaviour no individual agent was aligned for — implicit collusion in pricing, coordinated deception of an overseer, or steganographic communication that hides reasoning from monitors. Detecting and interrupting this at the population level, rather than auditing agents one at a time, is a distinct and largely unsolved research agenda.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="07-agentic-ai.html" class="related-link">
+                    <span>Agentic AI</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="20-self-improving-ai.html" class="related-link">
+                    <span>Self-Improving AI</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="24-ai-game-environments.html" class="related-link">
+                    <span>AI in Game Environments</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="19-neurosymbolic-ai.html" class="related-link">
+                    <span>Neurosymbolic AI</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="42-ai-security-adversarial.html">
+                Next: AI Security & Adversarial Robustness
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
