@@ -1,1 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retrieval-Augmented Generation (RAG) - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #10b981; }
+        .mesh-bg .blob:nth-child(1) { background: radial-gradient(circle, #10b981, #059669); }
+        .mesh-bg .blob:nth-child(2) { background: radial-gradient(circle, #34d399, #10b981); }
+        .mesh-bg .blob:nth-child(3) { background: radial-gradient(circle, #6ee7b7, #34d399); }
+        .section-label { color: var(--page-accent); background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.15); }
+        .page-hero .topic-number { color: var(--page-accent); background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); }
+        .analogy-box { background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.15); }
+        .analogy-box .analogy-title { color: var(--page-accent); }
+        .key-points li .point-icon { background: rgba(16, 185, 129, 0.1); }
+        .flow-step .step-icon { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); }
+        .future-list li::before { color: var(--page-accent); }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg"><div class="blob"></div><div class="blob"></div><div class="blob"></div></div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Home</a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Retrieval-Augmented Generation</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#08 — Knowledge Systems</span>
+            <h1>Retrieval-Augmented<br>Generation (RAG)</h1>
+            <p class="subtitle">A paradigm that combines LLM generation with external knowledge retrieval to produce more accurate, grounded, and up-to-date responses.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <div class="section-label">📘 Foundation</div>
+            <h2>What Is RAG?</h2>
+            <p>Retrieval-Augmented Generation (RAG) is an architecture pattern that <strong>enhances LLM responses by first retrieving relevant documents from an external knowledge base</strong>, then providing those documents as context for the model to generate its answer. Instead of relying solely on what the model memorized during training, RAG gives it "open book" access to a curated library of up-to-date information.</p>
+            <p>The core insight is simple but powerful: <strong>separate what the model knows (parametric knowledge in its weights) from what it can look up (non-parametric knowledge in a retrieval store)</strong>. This division of labor lets you update the knowledge base without retraining the model, ground responses in verifiable sources, and give the model access to private or domain-specific data it was never trained on.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Think of it like…</div>
+                <p>Imagine a brilliant expert taking an exam. Without RAG, they must answer every question from memory alone — and their textbooks are two years out of date. With RAG, they get to bring a curated folder of reference materials to the exam. They still use their expertise to interpret and synthesize, but now they can look up specific facts, verify their recollections, and cite their sources. The expert's reasoning ability hasn't changed, but their accuracy skyrockets.</p>
+            </div>
+            <p>RAG has become the <strong>de facto standard for enterprise LLM applications</strong> because it solves three critical problems simultaneously: hallucination (the model can cite real documents), freshness (the knowledge base can be updated in real-time), and privacy (proprietary data stays in your database, never in the model's weights).</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <div class="section-label">🎯 Motivation</div>
+            <h2>Why It Matters</h2>
+            <p>RAG is one of the most practically impactful patterns in modern AI. It transforms LLMs from impressive but unreliable conversationalists into <strong>trustworthy, source-grounded knowledge systems</strong>.</p>
+            <ul class="key-points">
+                <li><span class="point-icon">🎯</span> <strong>Reduces hallucination.</strong> By grounding generation in retrieved documents, the model has real source material to draw from rather than confabulating plausible-sounding but false information. Responses can be traced back to specific passages.</li>
+                <li><span class="point-icon">📅</span> <strong>Solves the knowledge cutoff problem.</strong> LLMs have a training cutoff date — they don't know about events after their training. RAG lets you point the model at up-to-the-minute data sources, keeping responses current without retraining.</li>
+                <li><span class="point-icon">🔐</span> <strong>Enables private knowledge access.</strong> Enterprise data, internal documentation, medical records, legal contracts — none of this is in public training data. RAG lets models answer questions about private corpora without fine-tuning.</li>
+                <li><span class="point-icon">💡</span> <strong>Cost-effective alternative to fine-tuning.</strong> Instead of expensive fine-tuning to inject knowledge, you can simply add documents to a vector database. This is faster, cheaper, and doesn't risk degrading the model's general capabilities.</li>
+                <li><span class="point-icon">✅</span> <strong>Enables verifiability.</strong> When the model cites its sources, users can verify the information. This is critical in high-stakes domains like healthcare, law, and finance where trust and auditability are non-negotiable.</li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <div class="section-label">⚙️ Process</div>
+            <h2>How It Works</h2>
+            <p>The RAG pipeline has two main phases: an offline <strong>indexing phase</strong> (preparing your documents for fast retrieval) and an online <strong>query phase</strong> (retrieving relevant context and generating an answer for each user query).</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">❓</div>
+                        <span class="step-label">User<br>Query</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔢</div>
+                        <span class="step-label">Embed<br>Query</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔍</div>
+                        <span class="step-label">Search<br>Vector DB</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">📄</div>
+                        <span class="step-label">Retrieve<br>Top-K Docs</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">📝</div>
+                        <span class="step-label">Augment<br>Prompt</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🤖</div>
+                        <span class="step-label">Generate<br>Answer</span>
+                    </div>
+                </div>
+            </div>
+            <p>During indexing, documents are split into chunks, each chunk is converted to a vector embedding, and these embeddings are stored in a vector database (like Pinecone, Weaviate, or ChromaDB). At query time, the user's question is also embedded, and the most similar document chunks are retrieved using approximate nearest-neighbor search. These chunks are then injected into the LLM's prompt as context, and the model generates an answer grounded in that context.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <div class="section-label">🔧 Techniques</div>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>🎯 Dense Passage Retrieval (DPR)</h4>
+                    <p>Uses dual-encoder neural networks to embed both queries and documents into a shared vector space. Retrieval becomes a nearest-neighbor search in this space. Superior to keyword matching for semantic similarity — it understands that "car" and "automobile" are related.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>🔀 Hybrid Search (BM25 + Dense)</h4>
+                    <p>Combines traditional keyword search (BM25) with dense retrieval. BM25 excels at exact term matching while dense retrieval captures semantic meaning. Hybrid approaches consistently outperform either method alone by covering both lexical and semantic relevance.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>✂️ Chunking Strategies</h4>
+                    <p>How you split documents dramatically affects retrieval quality. Options include fixed-size chunks, sentence-based splitting, recursive character splitting, semantic chunking (split at topic boundaries), and parent-child chunking (retrieve small chunks, return parent context).</p>
+                </div>
+                <div class="technique-card">
+                    <h4>🏆 Re-Ranking</h4>
+                    <p>After initial retrieval returns top-K candidates, a cross-encoder re-ranker scores each candidate against the query more carefully. This two-stage approach combines the speed of bi-encoder retrieval with the accuracy of cross-encoder scoring.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>🕸️ GraphRAG</h4>
+                    <p>Augments traditional RAG with knowledge graphs that capture relationships between entities. Instead of just retrieving text chunks, GraphRAG traverses entity relationships to find connected information, enabling multi-hop reasoning across documents.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>🔗 Multi-Hop Retrieval</h4>
+                    <p>For complex questions requiring information from multiple documents, multi-hop retrieval iteratively retrieves and reasons. The first retrieval informs a refined query, which retrieves additional context, building up a comprehensive picture step by step.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>🔍 Query Decomposition</h4>
+                    <p>Breaks complex queries into simpler sub-queries, retrieves documents for each, and synthesizes the results. "Compare X and Y on dimensions A, B, C" becomes three focused retrievals, each returning more relevant chunks than a single monolithic query.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>🪞 Self-RAG</h4>
+                    <p>The model decides when to retrieve, critiques the relevance of retrieved passages, and evaluates its own generated response for factual grounding. This self-reflective approach reduces unnecessary retrievals and improves output quality by adding internal quality checks.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <div class="section-label">⚠️ Challenges</div>
+            <h2>Open Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">🎯</div>
+                    <h4>Retrieval Quality</h4>
+                    <p>Garbage in, garbage out. If the retriever returns irrelevant or low-quality chunks, the generator will either ignore them (wasting tokens) or incorporate misleading information. Retrieval is the bottleneck of most RAG systems.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">✂️</div>
+                    <h4>Chunk Size Optimization</h4>
+                    <p>Too small and chunks lack context; too large and they dilute relevance. The optimal chunk size varies by document type, query type, and embedding model. There's no universal answer — it requires domain-specific tuning.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📏</div>
+                    <h4>Context Window Limits</h4>
+                    <p>Even with 128K token windows, stuffing too many retrieved chunks degrades performance. Models struggle to find the relevant needle in a haystack of context. Selective, high-quality retrieval beats quantity every time.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">⏱️</div>
+                    <h4>Latency</h4>
+                    <p>The retrieval step adds latency to every query — embedding the query, searching the vector DB, and potentially re-ranking all take time. For real-time applications, keeping total latency under 1-2 seconds is a constant engineering challenge.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">⚔️</div>
+                    <h4>Contradictory Sources</h4>
+                    <p>When retrieved documents contain conflicting information, the model must decide which to trust. Without explicit handling, it may arbitrarily choose one version or awkwardly blend contradictions into an incoherent response.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📊</div>
+                    <h4>Evaluation</h4>
+                    <p>Measuring RAG quality requires evaluating both retrieval relevance and generation faithfulness. Metrics like context precision, answer relevancy, and faithfulness (via RAGAS framework) help but are imperfect proxies for true quality.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <div class="section-label">📄 Research</div>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks</div>
+                        <div class="paper-meta">Lewis et al. · 2020 · The original RAG paper from Meta AI. Introduced the paradigm of combining a pre-trained retriever (DPR) with a pre-trained generator (BART), training them end-to-end. Established the foundation for all subsequent RAG research.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Dense Passage Retrieval for Open-Domain Question Answering (DPR)</div>
+                        <div class="paper-meta">Karpukhin et al. · 2020 · Showed that simple dual-encoder models trained with contrastive learning dramatically outperform BM25 for open-domain QA retrieval. Became the standard dense retriever that powers most RAG systems.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction</div>
+                        <div class="paper-meta">Khattab & Zaharia · 2020 · Proposed a late-interaction architecture that preserves fine-grained token-level matching while remaining scalable. Achieves BERT-level accuracy at a fraction of the cost, making high-quality retrieval practical at scale.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection</div>
+                        <div class="paper-meta">Asai et al. · 2023 · Trained models to emit special reflection tokens that decide when to retrieve, assess passage relevance, and evaluate response quality. A major step toward making RAG adaptive and self-correcting.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">GraphRAG: From Local to Global Text Understanding with Graph-Based RAG</div>
+                        <div class="paper-meta">Microsoft · 2024 · Introduced using LLM-generated knowledge graphs to enable community-level summarization and global query answering. Showed that graph-based indexing captures relationships that flat chunk retrieval misses entirely.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <div class="section-label">🔮 Future</div>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Agentic RAG</strong> — RAG systems that don't just retrieve once and generate, but iteratively decide what to search for, evaluate retrieved results, reformulate queries, and even choose different retrieval strategies based on the question type. The agent loop meets retrieval augmentation.</li>
+                <li><strong>Multimodal RAG</strong> — Extending RAG beyond text to retrieve and reason over images, tables, charts, videos, and audio. A question about a product could retrieve the user manual PDF, product images, tutorial videos, and customer reviews, all fed to a multimodal model.</li>
+                <li><strong>Real-Time RAG</strong> — Systems that index and retrieve from live data streams — news feeds, social media, sensor data, stock prices. This enables LLMs to answer questions about events happening right now, not just what's in a static document store.</li>
+                <li><strong>RAG Without Vector DBs</strong> — Emerging approaches that bypass traditional vector databases entirely, using techniques like memory-augmented transformers, learned indexing, or direct attention over document stores. Could simplify the RAG stack significantly.</li>
+                <li><strong>Learned Retrieval Strategies</strong> — Instead of hard-coded retrieval pipelines, training models to learn optimal retrieval strategies for different query types. The system automatically decides chunk sizes, retrieval depth, re-ranking thresholds, and whether to do multi-hop based on query complexity.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <div class="section-label">🔗 Related</div>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="07-agentic-ai.html" class="related-link">🤖 Agentic AI <span class="link-arrow">→</span></a>
+                <a href="#" class="related-link">🧠 LLM Reasoning <span class="link-arrow">→</span></a>
+                <a href="#" class="related-link">🎓 Knowledge Distillation <span class="link-arrow">→</span></a>
+                <a href="#" class="related-link">📚 Long-Context Models <span class="link-arrow">→</span></a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="07-agentic-ai.html">← Prev: Agentic AI</a>
+            <a href="09-llm-alignment-safety.html">Next: LLM Alignment & Safety →</a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
