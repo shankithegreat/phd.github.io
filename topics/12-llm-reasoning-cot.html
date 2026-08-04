@@ -1,1 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Reasoning & Chain-of-Thought - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root {
+            --page-accent: #eab308;
+        }
+        .section-label {
+            background: rgba(234, 179, 8, 0.08);
+            border-color: rgba(234, 179, 8, 0.15);
+        }
+        .topic-number {
+            background: rgba(234, 179, 8, 0.1);
+            border-color: rgba(234, 179, 8, 0.2);
+        }
+        .analogy-box {
+            background: rgba(234, 179, 8, 0.05);
+            border-color: rgba(234, 179, 8, 0.15);
+        }
+        .analogy-box .analogy-title {
+            color: #eab308;
+        }
+        .key-points li .point-icon {
+            background: rgba(234, 179, 8, 0.1);
+        }
+        .flow-step .step-icon {
+            background: rgba(234, 179, 8, 0.1);
+            border-color: rgba(234, 179, 8, 0.2);
+        }
+        .flow-step:hover .step-icon {
+            background: rgba(234, 179, 8, 0.15);
+        }
+        .future-list li::before {
+            color: #eab308;
+        }
+    </style>
+</head>
+<body>
 
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #eab308, #ca8a04);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #facc15, #d97706);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #fde68a, #eab308);"></div>
+    </div>
+
+    <div class="grain-overlay"></div>
+
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">LLM Reasoning & Chain-of-Thought</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">Topic 12</span>
+            <h1>LLM Reasoning &<br>Chain-of-Thought</h1>
+            <p class="subtitle">Teaching AI to think step by step — enabling complex multi-step reasoning that transforms LLMs from pattern matchers into genuine problem solvers.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <div class="section-label">📖 Definition</div>
+            <h2>What Is LLM Reasoning & Chain-of-Thought?</h2>
+            <p>LLM Reasoning and Chain-of-Thought (CoT) encompasses a family of techniques that enable large language models to <strong>perform complex multi-step reasoning by generating intermediate thinking steps</strong> before arriving at a final answer. Rather than jumping directly from question to answer in a single forward pass, CoT models decompose problems into a sequence of logical steps — much like a student showing their work on an exam.</p>
+            <p>The breakthrough discovery was surprisingly simple: <strong>adding the phrase "Let's think step by step" to a prompt</strong> could dramatically improve an LLM's performance on math, logic, and common-sense reasoning tasks. This phenomenon, first demonstrated by Wei et al. in 2022, revealed that LLMs possessed latent reasoning capabilities that were unlocked simply by asking the model to articulate its thought process. The act of generating intermediate steps allows the model to break complex problems into manageable sub-problems, carry intermediate results forward, and catch potential errors along the way.</p>
+            <p>Modern reasoning systems go far beyond simple prompting. <strong>o1-style reasoning models</strong> are trained with reinforcement learning to generate long internal reasoning chains before responding. <strong>Tree-of-Thoughts</strong> explores multiple reasoning paths in parallel and selects the most promising one. <strong>Process Reward Models</strong> evaluate the quality of each reasoning step, not just the final answer. Together, these advances are transforming LLMs from sophisticated autocomplete systems into machines capable of genuine multi-step problem solving — tackling mathematical proofs, complex coding challenges, and scientific reasoning that were previously thought impossible for neural networks.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <div class="section-label">🎯 Importance</div>
+            <h2>Why It Matters</h2>
+            <p>Reasoning is arguably the most important capability gap between current AI and human-level intelligence. Closing this gap doesn't just improve benchmark scores — it fundamentally expands the types of problems AI can reliably solve.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">📐</span>
+                    <span><strong>Massive accuracy improvements:</strong> Chain-of-Thought prompting improves accuracy 2-5x on complex reasoning tasks like math word problems, multi-hop question answering, and logical deduction. On the GSM8K math benchmark, CoT boosted GPT-3's accuracy from 18% to 57% — without any retraining.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🧩</span>
+                    <span><strong>Unlocking new problem classes:</strong> Without explicit reasoning, LLMs fail at problems requiring more than ~2 logical steps. CoT and its successors enable tackling competition mathematics, formal logic, multi-step planning, and complex code debugging — problem classes previously thought impossible for neural networks.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔍</span>
+                    <span><strong>Interpretability and trust:</strong> When a model shows its reasoning steps, users can understand why it reached a particular conclusion, identify flawed logic, and build appropriate trust. This transparency is essential for high-stakes applications in medicine, law, and engineering where blind trust in AI outputs is unacceptable.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔄</span>
+                    <span><strong>Self-correction capability:</strong> Models that reason step-by-step can catch their own errors mid-reasoning. By verifying each step against the problem constraints, they can backtrack from incorrect paths — a capability that one-shot answering fundamentally lacks.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🏗️</span>
+                    <span><strong>Foundation for agentic AI:</strong> Complex AI agents that plan, execute, and adapt require multi-step reasoning as a core capability. Every agentic system — from coding assistants to research agents — depends on the model's ability to decompose goals into sub-goals and reason about action sequences.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Analogy -->
+        <div class="topic-section">
+            <div class="analogy-box">
+                <div class="analogy-title">Real-World Analogy</div>
+                <p>Chain-of-Thought reasoning is exactly like showing your work in a math exam. Imagine two students taking a calculus test. Student A glances at each problem and writes down a final answer immediately — sometimes getting it right through intuition, but often making errors on multi-step problems with no way to catch them. Student B writes down each step: identifying the formula needed, substituting values, simplifying the expression, checking units, and arriving at the answer methodically. Student B not only gets more answers right, but when they do make an error, they (or their teacher) can pinpoint exactly where the reasoning went wrong and correct it. The exam paper itself becomes a debugging tool. That's precisely what CoT does for LLMs — the generated reasoning trace serves as both a computation scaffold and an error-checking mechanism.</p>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <div class="section-label">⚙️ Process</div>
+            <h2>How It Works</h2>
+            <p>Modern reasoning systems combine explicit step generation, verification, and search strategies to solve complex problems with high reliability.</p>
+
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">❓</div>
+                        <div class="step-label">Problem<br>Input</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">💭</div>
+                        <div class="step-label">Generate<br>Steps</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">✅</div>
+                        <div class="step-label">Verify<br>Each Step</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">🌳</div>
+                        <div class="step-label">Branch<br>If Needed</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">🔢</div>
+                        <div class="step-label">Aggregate</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-step">
+                        <div class="step-icon">🎯</div>
+                        <div class="step-label">Final<br>Answer</div>
+                    </div>
+                </div>
+            </div>
+
+            <p>The reasoning pipeline starts with the <strong>problem input</strong> and an implicit or explicit instruction to think step by step. The model then <strong>generates reasoning steps</strong> — a sequence of intermediate computations, observations, and conclusions that form a logical chain from question to answer. Each step builds on previous ones, carrying forward intermediate results and narrowing the solution space.</p>
+            <p><strong>Step verification</strong> is where modern systems diverge from naive CoT. Process Reward Models (PRMs) evaluate each reasoning step independently, scoring its correctness and relevance. Unlike Outcome Reward Models that only judge the final answer, PRMs can catch errors early — identifying the specific step where reasoning went wrong. This mirrors how a math teacher checks each line of a proof, not just the final result.</p>
+            <p>When a problem has multiple valid approaches, the system can <strong>branch into parallel reasoning paths</strong> — this is the core idea of Tree-of-Thoughts. Different paths explore different strategies (algebraic vs. geometric, brute force vs. elegant), and the system evaluates which branches are most promising. <strong>Self-Consistency</strong> takes a simpler approach: generate multiple independent reasoning chains and take a majority vote on the final answer, leveraging the statistical insight that correct reasoning paths are more likely to agree.</p>
+            <p>Finally, the results are <strong>aggregated</strong> — through voting, reward-weighted selection, or learned aggregation — to produce a high-confidence <strong>final answer</strong>. The entire reasoning trace is available for inspection, making the process transparent and debuggable.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <div class="section-label">🔧 Techniques</div>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Chain-of-Thought Prompting</h4>
+                    <p>The foundational technique: providing few-shot examples with explicit reasoning steps, or simply adding "Let's think step by step." Unlocks latent reasoning in LLMs with zero additional training cost.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Tree-of-Thoughts</h4>
+                    <p>Extends linear CoT into a branching tree structure where the model explores multiple reasoning paths, evaluates intermediate states, and uses search algorithms (BFS/DFS) to navigate the reasoning space systematically.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Self-Consistency</h4>
+                    <p>Generates multiple independent reasoning chains for the same problem and selects the most common final answer through majority voting. Simple yet remarkably effective — the wisdom of crowds, applied to reasoning traces.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Process Reward Models</h4>
+                    <p>Trained to evaluate the correctness of each individual reasoning step rather than just the final answer. Enables fine-grained credit assignment and early error detection, dramatically improving reliability on complex problems.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>STaR (Self-Taught Reasoner)</h4>
+                    <p>A self-improvement loop where the model generates rationales, keeps those that lead to correct answers, and fine-tunes on its own successful reasoning traces. Bootstraps reasoning capability without human-written rationales.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Verification Chains</h4>
+                    <p>After generating a solution, the model generates a separate verification chain that checks each step of the original reasoning. This dual-process approach mimics human deliberative thinking — solving, then double-checking.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>o1-Style Reasoning</h4>
+                    <p>Models trained with RL to generate long internal reasoning traces (hidden from the user) before responding. Trades inference compute for accuracy by "thinking longer" on harder problems, achieving breakthrough results on math and coding.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Scratchpad Reasoning</h4>
+                    <p>Providing the model with an explicit "scratchpad" workspace to perform intermediate computations. Particularly effective for arithmetic, symbolic manipulation, and tasks requiring working memory beyond the model's implicit capacity.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <div class="section-label">🚧 Challenges</div>
+            <h2>Open Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">🎭</div>
+                    <h4>Faithfulness of Reasoning</h4>
+                    <p>Models may generate plausible-looking reasoning that doesn't actually reflect their internal computation. The chain-of-thought may be a post-hoc rationalization rather than genuine reasoning — the model "knew" the answer and fabricated justification.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">💸</div>
+                    <h4>Computational Cost</h4>
+                    <p>Extended reasoning chains consume significant compute at inference time. o1-style models may generate thousands of reasoning tokens for a single question, making them 10-100x more expensive than direct answering. The cost-accuracy tradeoff is steep.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📏</div>
+                    <h4>Evaluation Quality</h4>
+                    <p>Evaluating reasoning quality is fundamentally harder than evaluating final answers. Two different valid reasoning paths can both be correct. Process reward models themselves can have biases — rewarding verbose reasoning or familiar patterns over genuinely novel approaches.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">⚡</div>
+                    <h4>Reasoning Shortcuts</h4>
+                    <p>Models sometimes learn superficial shortcuts that look like reasoning but aren't. Matching patterns in the problem structure rather than genuinely computing — performing well on benchmarks while failing on novel problem formats that require the same underlying logic.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📈</div>
+                    <h4>Scaling Inference Compute</h4>
+                    <p>While training compute scaling is well-studied (Chinchilla laws), optimal scaling of inference compute for reasoning is poorly understood. When should a model think longer? How do you decide when to stop reasoning? These questions lack principled answers.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔀</div>
+                    <h4>Compositionality</h4>
+                    <p>Reasoning about novel combinations of known concepts remains fragile. Models can solve familiar problem types but struggle when multiple reasoning skills must be composed in new ways — the "compositional generalization" problem that has plagued AI for decades.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <div class="section-label">📄 Research</div>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Chain-of-Thought Prompting Elicits Reasoning in Large Language Models</div>
+                        <div class="paper-meta">Wei et al., 2022 — The landmark paper that demonstrated how including reasoning steps in few-shot examples dramatically improves LLM performance on math, commonsense, and symbolic reasoning tasks.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Tree of Thoughts: Deliberate Problem Solving with Large Language Models</div>
+                        <div class="paper-meta">Yao et al., 2023 — Generalized CoT from linear chains to tree-structured exploration, enabling systematic search through reasoning spaces with evaluation and backtracking.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Self-Consistency Improves Chain of Thought Reasoning in Language Models</div>
+                        <div class="paper-meta">Wang et al., 2023 — Introduced majority voting over multiple sampled reasoning paths, showing that diversity in reasoning approaches leads to more reliable final answers.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Let's Verify Step by Step</div>
+                        <div class="paper-meta">Lightman et al., 2023 — Demonstrated that process supervision (rewarding correct reasoning steps) dramatically outperforms outcome supervision (rewarding correct final answers) for mathematical reasoning.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">STaR: Bootstrapping Reasoning With Reasoning</div>
+                        <div class="paper-meta">Zelikman et al., 2022 — Showed that models can iteratively improve their own reasoning by generating rationales, filtering for correctness, and training on successful reasoning traces.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <div class="section-label">🔮 Future</div>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Learned reasoning strategies</strong> — Moving beyond fixed prompting strategies toward models that learn when and how to reason. Adaptive systems that recognize problem difficulty and automatically select the appropriate reasoning depth — quick intuition for easy questions, deep deliberation for hard ones — without human-specified strategies.</li>
+                <li><strong>Infinite reasoning time</strong> — Developing architectures where models can "think" for arbitrary amounts of time, scaling inference compute dynamically based on problem difficulty. This includes recurrent reasoning loops, iterative refinement, and reasoning time budgets that allocate compute where it's most needed.</li>
+                <li><strong>Formal verification of chains</strong> — Connecting natural language reasoning with formal verification systems (proof checkers, SMT solvers, symbolic math engines) to mathematically guarantee the correctness of each reasoning step. Hybrid neuro-symbolic systems that combine the flexibility of LLMs with the rigor of formal methods.</li>
+                <li><strong>Multimodal reasoning</strong> — Extending chain-of-thought to visual, spatial, and temporal reasoning. Models that can reason about geometric diagrams, physics simulations, chemical structures, and video sequences — thinking step-by-step through visual and physical problems, not just linguistic ones.</li>
+                <li><strong>Reasoning distillation</strong> — Transferring the reasoning capabilities of large, expensive models (like o1) into smaller, faster models. Can a 7B model learn to reason like a 405B model by training on its reasoning traces? Early results are promising but achieving full transfer remains an open challenge.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <div class="section-label">🔗 Related</div>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="#" class="related-link">
+                    <span>🤖</span> Agentic AI
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>🧮</span> Neurosymbolic AI
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>🧠</span> Self-Improving AI
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>📊</span> LLM Evaluation
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to All Topics
+            </a>
+            <a href="13-knowledge-distillation.html">
+                Next: Knowledge Distillation
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.topic-section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+
+</body>
+</html>
