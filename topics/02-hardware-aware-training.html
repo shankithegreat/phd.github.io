@@ -1,1 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hardware-Aware Training | PhD Kickstart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root {
+            --page-accent: #06b6d4;
+        }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #06b6d4, #0891b2);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #22d3ee, #06b6d4);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #0e7490, #155e75);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Hardware-Aware Training</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">TOPIC 02</span>
+            <h1>Hardware-Aware Training</h1>
+            <p class="subtitle">Training neural networks with explicit knowledge of target hardware constraints — bridging the gap between algorithmic design and silicon reality.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p><strong>Hardware-Aware Training</strong> encompasses methodologies that account for target hardware characteristics — memory bandwidth, compute throughput, precision support, cache hierarchies — during the training process itself, rather than as an afterthought during deployment.</p>
+            <p>Traditional deep learning treats hardware as invisible: you design a model, train it on GPUs, and hope it runs well on your deployment target. Hardware-aware training flips this script. It bakes hardware knowledge directly into the optimization process so the resulting model is inherently efficient on its target platform — whether that's a data center GPU, a mobile phone, or an embedded sensor.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Imagine designing a race car without knowing which track it will race on. You might build the fastest car possible, but it could be terrible on tight corners or rough terrain. Hardware-aware training is like designing a car specifically for its track — knowing every curve, elevation change, and surface condition — resulting in a vehicle that's actually fastest in practice, even if it doesn't look the fastest on paper.</p>
+            </div>
+            <p>This approach has become essential as the gap between theoretical FLOPs and actual inference speed has widened. A model with fewer FLOPs can actually run slower if its operations don't map well to the hardware's execution units. Hardware-aware training ensures that the model's computational patterns align with what the hardware does best.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>The hardware landscape is more diverse than ever — from NVIDIA's Hopper GPUs to Apple's Neural Engine, from Qualcomm's AI accelerators to custom TPUs. Models optimized for specific hardware can achieve dramatic speedups.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">🚀</span>
+                    <span><strong>2-10x speedup:</strong> Models trained with hardware awareness run significantly faster on target devices. FlashAttention, for example, achieves 2-4x speedup purely through memory-aware algorithm design.</span>
+                </li>
+                <li>
+                    <span class="point-icon">💵</span>
+                    <span><strong>Massive cost reduction:</strong> At scale, even 20% inference speedup saves millions in cloud computing costs. Companies serving billions of requests per day save enormous sums from hardware-aware optimization.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔋</span>
+                    <span><strong>Energy efficiency:</strong> Hardware-aware models consume less energy per inference, critical for battery-powered devices and for reducing the environmental footprint of AI at scale.</span>
+                </li>
+                <li>
+                    <span class="point-icon">📱</span>
+                    <span><strong>Edge deployment:</strong> Enables sophisticated AI on resource-constrained devices — smartphones, IoT sensors, drones — by ensuring models fit within tight memory and latency budgets.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🎯</span>
+                    <span><strong>Closing the accuracy gap:</strong> Quantization-aware training and structured pruning maintain model accuracy even under aggressive compression, whereas post-training methods often degrade quality.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>Hardware-aware training follows a systematic pipeline that starts with understanding the target hardware and ends with a model optimized for deployment. The key insight is that hardware constraints become part of the training objective rather than post-hoc constraints.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">🔬</div>
+                        <span class="step-label">Hardware<br>Profiling</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🎯</div>
+                        <span class="step-label">Co-Design<br>Objectives</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">⚙️</div>
+                        <span class="step-label">Sparsity/Quant<br>Aware Training</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🚀</div>
+                        <span class="step-label">Deployment<br>Optimization</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Hardware Profiling</strong> characterizes the target device: measuring memory bandwidth, compute throughput at different precisions, cache sizes, supported sparsity patterns, and operator fusion capabilities. This creates a performance model that predicts how different network patterns will execute.</p>
+            <p><strong>Co-Design Training Objectives</strong> augments the standard loss function with hardware-aware penalties. Rather than just minimizing cross-entropy, the model also minimizes a latency proxy, memory footprint, or energy estimate derived from the hardware profile.</p>
+            <p><strong>Sparsity/Quantization-Aware Training</strong> introduces hardware-compatible compression during training. For instance, N:M structured sparsity (supported by NVIDIA Ampere GPUs) is learned during training with straight-through estimators, so the model adapts its weights to work well in sparse form.</p>
+            <p><strong>Deployment Optimization</strong> applies final transformations: kernel fusion, memory layout optimization, and precision calibration to squeeze out the last percentage points of performance.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Mixed-Precision Training (FP16/BF16)</h4>
+                    <p>Uses 16-bit floating point for most operations while maintaining a 32-bit master copy of weights for stability. BFloat16 preserves the dynamic range of FP32 while halving memory, enabling 2x throughput on supported hardware with minimal accuracy loss.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Quantization-Aware Training (QAT)</h4>
+                    <p>Simulates low-precision arithmetic (INT8, INT4) during training using fake quantization nodes. The model learns to be robust to quantization noise, resulting in significantly better accuracy than post-training quantization — often within 1% of full precision.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Structured Pruning</h4>
+                    <p>Removes entire neurons, channels, or attention heads rather than individual weights. This creates genuinely smaller networks that run faster without requiring sparse hardware support. Importance scores guide which structures to remove during training.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>GPU Sparsity Patterns (N:M)</h4>
+                    <p>NVIDIA's Ampere architecture supports 2:4 structured sparsity natively — exactly 2 zeros in every group of 4 weights. Training with this constraint from the start lets the model naturally adapt, achieving 2x speedup with less than 1% accuracy loss.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Memory Hierarchy Awareness</h4>
+                    <p>Algorithms like FlashAttention redesign operations to minimize data movement between GPU HBM and SRAM. By tiling computations to fit in fast on-chip memory, they achieve wall-clock speedups despite not reducing FLOPs.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Operator Fusion</h4>
+                    <p>Combines multiple sequential operations (like LayerNorm + Linear + GELU) into single GPU kernels, eliminating intermediate memory reads/writes. Training with fusion-friendly patterns ensures the model structure aligns with fusible operation sequences.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔀</div>
+                    <h4>Hardware Diversity</h4>
+                    <p>The target hardware landscape is fragmented — GPUs, TPUs, NPUs, FPGAs, custom ASICs. Training a model that's optimal for one platform may be suboptimal for another, complicating multi-target deployment.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📏</div>
+                    <h4>Training-Deployment Gap</h4>
+                    <p>Training happens on powerful GPUs while deployment targets may be edge devices. Simulating deployment constraints during training requires accurate hardware models that may drift as firmware and compilers evolve.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">⚖️</div>
+                    <h4>Accuracy Under Constraints</h4>
+                    <p>Aggressive quantization or pruning can degrade model quality on edge cases. Maintaining robustness and fairness while compressing models requires careful evaluation beyond just top-line accuracy metrics.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🏃</div>
+                    <h4>Rapid Hardware Evolution</h4>
+                    <p>Hardware architectures change every 1-2 years. Models trained for current hardware may not leverage next-generation features (e.g., new sparsity patterns, wider vector units), requiring retraining.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Mixed Precision Training</div>
+                        <div class="paper-meta">Micikevicius et al., 2018 — Established the foundations for FP16 training with loss scaling, enabling 2x throughput with minimal accuracy impact.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference</div>
+                        <div class="paper-meta">Jacob et al., 2018 — Google's seminal work on quantization-aware training, enabling INT8 deployment of MobileNets with minimal loss.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Accelerating Sparse Deep Neural Networks (N:M Sparsity)</div>
+                        <div class="paper-meta">NVIDIA, 2021 — Introduced 2:4 structured sparsity with native hardware acceleration on Ampere GPUs.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">FlashAttention: Fast and Memory-Efficient Exact Attention</div>
+                        <div class="paper-meta">Dao et al., 2022 — Revolutionized transformer inference by redesigning attention for GPU memory hierarchies, achieving 2-4x speedup.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Compiler-ML Co-Design:</strong> Tighter integration between ML frameworks and hardware compilers — training models that are inherently compiler-friendly, where the model structure aligns with what compilers can optimize most aggressively.</li>
+                <li><strong>Chiplet-Aware Training:</strong> As processors move to chiplet architectures (multiple dies on one package), training methods that account for inter-chiplet communication costs and data placement across compute tiles.</li>
+                <li><strong>Photonic and Quantum-Aware Design:</strong> As photonic computing and quantum co-processors emerge, developing training methods that prepare models for fundamentally different computational substrates with unique strengths and constraints.</li>
+                <li><strong>Universal Hardware Abstractions:</strong> Creating hardware-agnostic training frameworks that automatically adapt models to any target platform through learned hardware embeddings, eliminating the need for platform-specific optimization recipes.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="01-neural-architecture-search.html" class="related-link">
+                    <span>Neural Architecture Search</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>Small Language Models</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>LLM Infrastructure</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>PEFT Methods</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="01-neural-architecture-search.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Prev: Neural Architecture Search
+            </a>
+            <a href="03-federated-learning.html">
+                Next: Federated Learning
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.topic-section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
