@@ -1,1 +1,1592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhD Research Explorer - AI & LLM Research Areas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-shadow: rgba(0, 0, 0, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.45);
+            --accent-purple: #a855f7;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+            --accent-amber: #f59e0b;
+            --accent-indigo: #6366f1;
+            --accent-pink: #ec4899;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0f0f1a;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        /* Animated Mesh Gradient Background */
+        .mesh-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .mesh-bg .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: blobMove 20s ease-in-out infinite;
+        }
+
+        .mesh-bg .blob:nth-child(1) {
+            width: 600px;
+            height: 600px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            top: -10%;
+            left: -10%;
+            animation-duration: 25s;
+        }
+
+        .mesh-bg .blob:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            top: 50%;
+            right: -10%;
+            animation-duration: 20s;
+            animation-delay: -5s;
+        }
+
+        .mesh-bg .blob:nth-child(3) {
+            width: 450px;
+            height: 450px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            bottom: -10%;
+            left: 30%;
+            animation-duration: 22s;
+            animation-delay: -10s;
+        }
+
+        .mesh-bg .blob:nth-child(4) {
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            top: 30%;
+            left: 50%;
+            animation-duration: 18s;
+            animation-delay: -7s;
+        }
+
+        .mesh-bg .blob:nth-child(5) {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #fa709a, #fee140);
+            bottom: 20%;
+            right: 20%;
+            animation-duration: 23s;
+            animation-delay: -12s;
+        }
+
+        @keyframes blobMove {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -80px) scale(1.1); }
+            50% { transform: translate(-30px, 60px) scale(0.9); }
+            75% { transform: translate(40px, 30px) scale(1.05); }
+        }
+
+        /* Grain overlay for texture */
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* Content wrapper */
+        .content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(15, 15, 26, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 100px;
+            width: min(900px, 90%);
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo {
+            font-weight: 700;
+            font-size: 1rem;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .hero-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 22px;
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.25);
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--accent-purple);
+            margin-bottom: 2.5rem;
+            animation: slideDown 0.8s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-chip .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-emerald);
+            border-radius: 50%;
+            animation: livePulse 2s infinite;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: slideUp 1s ease 0.2s both;
+            letter-spacing: -3px;
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, #a855f7 0%, #6366f1 25%, #3b82f6 50%, #06b6d4 75%, #10b981 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s linear infinite;
+        }
+
+        .hero-description {
+            font-size: clamp(1rem, 1.8vw, 1.2rem);
+            color: var(--text-secondary);
+            max-width: 650px;
+            font-weight: 300;
+            animation: slideUp 1s ease 0.4s both;
+            margin-bottom: 3rem;
+        }
+
+        .hero-metrics {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1px;
+            max-width: 100%;
+            background: var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            animation: slideUp 1s ease 0.6s both;
+        }
+
+        .metric {
+            padding: 1.4rem 1.85rem;
+            flex: 1 1 auto;
+            background: rgba(15, 15, 26, 0.7);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 4px;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .scroll-hint span {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .scroll-hint .arrow {
+            width: 20px;
+            height: 20px;
+            border-right: 2px solid var(--text-muted);
+            border-bottom: 2px solid var(--text-muted);
+            transform: rotate(45deg);
+        }
+
+        /* Sections */
+        .section {
+            padding: 8rem 2rem;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            border: 1px solid;
+        }
+
+        .section-label.green {
+            color: var(--accent-emerald);
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .section-label.rose {
+            color: var(--accent-rose);
+            background: rgba(244, 63, 94, 0.08);
+            border-color: rgba(244, 63, 94, 0.2);
+        }
+
+        .section-label.amber {
+            color: var(--accent-amber);
+            background: rgba(245, 158, 11, 0.08);
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        .section-label.violet {
+            color: var(--accent-indigo);
+            background: rgba(99, 102, 241, 0.08);
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .section-title {
+            font-size: clamp(2.2rem, 4vw, 3.2rem);
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin-bottom: 1rem;
+        }
+
+        .section-desc {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 550px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        /* Glass Card Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Glass Card */
+        .glass-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 2.5rem;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            opacity: 0;
+            transform: translateY(50px) scale(0.95);
+        }
+
+        .glass-card.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .glass-card::after {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, var(--card-color) 0%, transparent 40%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        .glass-card {
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            color: inherit;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-6px) scale(1.01);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 30px 80px -20px var(--glass-shadow),
+                0 0 40px -20px var(--card-color);
+        }
+
+        .glass-card:hover::after {
+            opacity: 0.15;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon-wrap {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-icon-wrap::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--card-color);
+            opacity: 0.1;
+        }
+
+        .card-num {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.5px;
+        }
+
+        .card-category {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--card-color);
+            margin-bottom: 1.2rem;
+            opacity: 0.8;
+        }
+
+        .card-text {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 1.2rem;
+        }
+
+        .pill {
+            padding: 5px 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .pill:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--card-color);
+            color: var(--text-primary);
+        }
+
+        .card-footer {
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-footer-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .card-footer-text {
+            font-size: 0.82rem;
+            color: var(--accent-cyan);
+            font-weight: 400;
+        }
+
+        /* Emerging Grid */
+        .emerging-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.2rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .emerging-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            opacity: 0;
+            transform: translateY(30px);
+            cursor: default;
+        }
+
+        .emerging-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .emerging-card {
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .emerging-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-explore {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .glass-card:hover .card-explore {
+            color: var(--card-color);
+        }
+
+        .card-explore .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .glass-card:hover .card-explore .arrow {
+            transform: translateX(4px);
+        }
+
+        .emerging-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: gentleBounce 3s ease-in-out infinite;
+        }
+
+        .emerging-card:nth-child(2) .emerging-icon { animation-delay: -0.5s; }
+        .emerging-card:nth-child(3) .emerging-icon { animation-delay: -1s; }
+        .emerging-card:nth-child(4) .emerging-icon { animation-delay: -1.5s; }
+        .emerging-card:nth-child(5) .emerging-icon { animation-delay: -2s; }
+        .emerging-card:nth-child(6) .emerging-icon { animation-delay: -2.5s; }
+        .emerging-card:nth-child(7) .emerging-icon { animation-delay: -3s; }
+        .emerging-card:nth-child(8) .emerging-icon { animation-delay: -3.5s; }
+        .emerging-card:nth-child(9) .emerging-icon { animation-delay: -0.75s; }
+        .emerging-card:nth-child(10) .emerging-icon { animation-delay: -1.25s; }
+        .emerging-card:nth-child(11) .emerging-icon { animation-delay: -1.75s; }
+        .emerging-card:nth-child(12) .emerging-icon { animation-delay: -2.25s; }
+        .emerging-card:nth-child(13) .emerging-icon { animation-delay: -2.75s; }
+        .emerging-card:nth-child(14) .emerging-icon { animation-delay: -3.25s; }
+
+        .emerging-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+            letter-spacing: -0.3px;
+        }
+
+        .emerging-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 5rem 2rem;
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 300;
+        }
+
+        .footer-text .highlight {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .footer-sub {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(16, 185, 129, 0.6); }
+            50% { opacity: 0.4; box-shadow: 0 0 16px rgba(16, 185, 129, 0.8); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes gentleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 868px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .hero-metrics {
+                flex-direction: column;
+                border-radius: 16px;
+            }
+            .nav-links {
+                display: none;
+            }
+            .nav {
+                width: 85%;
+                justify-content: center;
+            }
+            .emerging-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .emerging-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(168, 85, 247, 0.3);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(168, 85, 247, 0.5);
+        }
+
+        /* Section connector lines */
+        .connector {
+            width: 1px;
+            height: 80px;
+            margin: 0 auto;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Mesh Background -->
+    <div class="mesh-bg">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+    <div class="grain-overlay"></div>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-logo">PhD Explorer</div>
+            <ul class="nav-links">
+                <li><a href="#current">Core Topics</a></li>
+                <li><a href="#suggested">Suggested</a></li>
+                <li><a href="#emerging">Emerging</a></li>
+                <li><a href="#advanced">Advanced</a></li>
+            </ul>
+        </nav>
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-chip">
+                <span class="live-dot"></span>
+                Research Landscape 2025 — 2030
+            </div>
+            <h1>
+                PhD Research Areas<br>
+                <span class="gradient-text">in AI & LLMs</span>
+            </h1>
+            <p class="hero-description">A comprehensive guide to cutting-edge research topics in Generative AI, Large Language Models, Agentic AI, and beyond — curated for your doctoral journey.</p>
+            <div class="hero-metrics">
+                <div class="metric">
+                    <div class="metric-value">45</div>
+                    <div class="metric-label">Research Areas</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">6</div>
+                    <div class="metric-label">Core Topics</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">14</div>
+                    <div class="metric-label">Suggestions</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">14</div>
+                    <div class="metric-label">Emerging</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">11</div>
+                    <div class="metric-label">Advanced</div>
+                </div>
+            </div>
+            <div class="scroll-hint">
+                <span>Scroll</span>
+                <div class="arrow"></div>
+            </div>
+        </section>
+
+        <div class="connector"></div>
+
+        <!-- Current Research Areas -->
+        <section class="section" id="current">
+            <div class="section-header">
+                <div class="section-label green">Your Selected Topics</div>
+                <h2 class="section-title">Current Research Areas</h2>
+                <p class="section-desc">The six research topics you've already identified — each with tremendous PhD potential.</p>
+            </div>
+
+            <div class="grid">
+                <a href="topics/01-neural-architecture-search.html" class="glass-card" style="--card-color: #a855f7;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🔍</div>
+                        <span class="card-num">#01</span>
+                    </div>
+                    <h3 class="card-title">Neural Architecture Search (NAS)</h3>
+                    <div class="card-category">automated_design / efficiency</div>
+                    <p class="card-text">Imagine having a robot architect that designs neural networks for you. NAS uses algorithms (like evolutionary strategies or reinforcement learning) to automatically discover the best model architecture — one that's fast, small, and accurate. Instead of humans manually designing layers, NAS explores thousands of possibilities and picks the winner.</p>
+                    <div class="card-pills">
+                        <span class="pill">AutoML</span>
+                        <span class="pill">Efficiency</span>
+                        <span class="pill">Search Algorithms</span>
+                        <span class="pill">Model Design</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/02-hardware-aware-training.html" class="glass-card" style="--card-color: #06b6d4;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">⚡</div>
+                        <span class="card-num">#02</span>
+                    </div>
+                    <h3 class="card-title">Hardware-Aware Training</h3>
+                    <div class="card-category">hardware_optimization / deployment</div>
+                    <p class="card-text">Think of this as tailoring a suit — but instead of fitting clothes to a body, you're fitting AI models to specific chips. Hardware-aware training designs the training process so the final model runs efficiently on target hardware (GPUs, TPUs, edge devices), exploiting features like sparsity, quantization, and memory hierarchies.</p>
+                    <div class="card-pills">
+                        <span class="pill">GPU Optimization</span>
+                        <span class="pill">Sparsity</span>
+                        <span class="pill">Quantization</span>
+                        <span class="pill">Edge AI</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/03-federated-learning.html" class="glass-card" style="--card-color: #f43f5e;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🔒</div>
+                        <span class="card-num">#03</span>
+                    </div>
+                    <h3 class="card-title">Federated Learning</h3>
+                    <div class="card-category">privacy_preserving / decentralized</div>
+                    <p class="card-text">Instead of bringing all data to one place (risky for privacy), federated learning brings the model to the data. Each device (phone, hospital server) trains locally and only shares model updates — never raw data. It's like a group study where everyone learns at home and only shares their notes.</p>
+                    <div class="card-pills">
+                        <span class="pill">Privacy</span>
+                        <span class="pill">Decentralized</span>
+                        <span class="pill">On-Device</span>
+                        <span class="pill">Healthcare</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/04-mixture-of-experts.html" class="glass-card" style="--card-color: #f59e0b;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🧠</div>
+                        <span class="card-num">#04</span>
+                    </div>
+                    <h3 class="card-title">Mixture-of-Experts (MoE)</h3>
+                    <div class="card-category">conditional_computation / scale</div>
+                    <p class="card-text">Imagine a hospital with specialist doctors. Instead of one doctor knowing everything, you route each patient to the right specialist. MoE works the same way — it has multiple "expert" sub-networks and a router that decides which experts handle each input. This allows trillion-parameter models while only activating a fraction per query.</p>
+                    <div class="card-pills">
+                        <span class="pill">Sparse Models</span>
+                        <span class="pill">Routing</span>
+                        <span class="pill">Scalability</span>
+                        <span class="pill">Efficiency</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/05-continual-learning.html" class="glass-card" style="--card-color: #3b82f6;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🔄</div>
+                        <span class="card-num">#05</span>
+                    </div>
+                    <h3 class="card-title">Continual Learning</h3>
+                    <div class="card-category">lifelong_learning / adaptation</div>
+                    <p class="card-text">Humans learn new things without forgetting old ones — but AI models suffer from "catastrophic forgetting." Continual learning solves this by enabling models to keep learning new tasks over time while retaining previous knowledge. Think of it as upgrading your phone's OS without losing your photos.</p>
+                    <div class="card-pills">
+                        <span class="pill">Catastrophic Forgetting</span>
+                        <span class="pill">Replay</span>
+                        <span class="pill">Elastic Weights</span>
+                        <span class="pill">Adaptation</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/06-prompt-engineering-efficiency.html" class="glass-card" style="--card-color: #ec4899;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">✍️</div>
+                        <span class="card-num">#06</span>
+                    </div>
+                    <h3 class="card-title">Prompt Engineering for Efficiency</h3>
+                    <div class="card-category">token_optimization / cost_reduction</div>
+                    <p class="card-text">Every token costs compute and money. Prompt engineering for efficiency is about crafting the perfect instructions that get the best results with the fewest tokens. It's like writing a telegram — you need to convey maximum meaning in minimum words. This includes prompt compression and automatic prompt optimization.</p>
+                    <div class="card-pills">
+                        <span class="pill">Token Reduction</span>
+                        <span class="pill">Cost Optimization</span>
+                        <span class="pill">Prompt Compression</span>
+                        <span class="pill">AutoPrompt</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+            </div>
+        </section>
+
+        <div class="connector"></div>
+
+        <!-- Suggested Research Areas -->
+        <section class="section" id="suggested">
+            <div class="section-header">
+                <div class="section-label rose">New Recommendations</div>
+                <h2 class="section-title">Suggested Research Areas</h2>
+                <p class="section-desc">High-impact topics aligned with your AI/ML background — spanning GenAI, LLMs, and Agentic AI.</p>
+            </div>
+
+            <div class="grid">
+                <a href="topics/07-agentic-ai.html" class="glass-card" style="--card-color: #ef4444;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🤖</div>
+                        <span class="card-num">#07</span>
+                    </div>
+                    <h3 class="card-title">Agentic AI & Autonomous Tool Use</h3>
+                    <div class="card-category">autonomous_agents / planning</div>
+                    <p class="card-text">Agentic AI refers to LLMs that can plan, reason, and take actions autonomously. Instead of just answering questions, these agents browse the web, write code, call APIs, and complete multi-step tasks. They decompose complex goals into sub-tasks, use tools, and self-correct.</p>
+                    <div class="card-pills">
+                        <span class="pill">Planning</span>
+                        <span class="pill">Tool Use</span>
+                        <span class="pill">ReAct</span>
+                        <span class="pill">Multi-Agent</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/08-retrieval-augmented-generation.html" class="glass-card" style="--card-color: #10b981;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">📚</div>
+                        <span class="card-num">#08</span>
+                    </div>
+                    <h3 class="card-title">Retrieval-Augmented Generation (RAG)</h3>
+                    <div class="card-category">knowledge_grounding / factuality</div>
+                    <p class="card-text">LLMs have a knowledge cutoff and can hallucinate. RAG solves this by retrieving relevant documents from an external database, then feeding them to the LLM as context. Think of it as giving the AI an open-book exam instead of relying purely on memory.</p>
+                    <div class="card-pills">
+                        <span class="pill">Vector DBs</span>
+                        <span class="pill">Embeddings</span>
+                        <span class="pill">Hallucination</span>
+                        <span class="pill">Knowledge</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/09-llm-alignment-safety.html" class="glass-card" style="--card-color: #f97316;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🛡️</div>
+                        <span class="card-num">#09</span>
+                    </div>
+                    <h3 class="card-title">LLM Alignment & Safety</h3>
+                    <div class="card-category">responsible_ai / human_values</div>
+                    <p class="card-text">How do we ensure AI does what we actually want? Alignment research focuses on making LLMs helpful, harmless, and honest. This includes RLHF, constitutional AI, red-teaming, and jailbreak prevention.</p>
+                    <div class="card-pills">
+                        <span class="pill">RLHF</span>
+                        <span class="pill">DPO</span>
+                        <span class="pill">Red-Teaming</span>
+                        <span class="pill">Constitutional AI</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/10-multimodal-foundation-models.html" class="glass-card" style="--card-color: #d946ef;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🎨</div>
+                        <span class="card-num">#10</span>
+                    </div>
+                    <h3 class="card-title">Multimodal Foundation Models</h3>
+                    <div class="card-category">unified_perception / cross_modal</div>
+                    <p class="card-text">Humans understand the world through multiple senses simultaneously. Multimodal models process text, images, audio, and video in a unified architecture — enabling AI that sees, hears, and reads.</p>
+                    <div class="card-pills">
+                        <span class="pill">Vision-Language</span>
+                        <span class="pill">Audio</span>
+                        <span class="pill">Video</span>
+                        <span class="pill">Cross-Modal</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/11-parameter-efficient-finetuning.html" class="glass-card" style="--card-color: #14b8a6;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🎯</div>
+                        <span class="card-num">#11</span>
+                    </div>
+                    <h3 class="card-title">Parameter-Efficient Fine-Tuning (PEFT)</h3>
+                    <div class="card-category">efficient_adaptation / low_cost</div>
+                    <p class="card-text">PEFT methods like LoRA and QLoRA fine-tune only 0.1-1% of parameters while achieving near-full performance. It's like teaching a professor a new subject with a handbook instead of re-educating them from kindergarten.</p>
+                    <div class="card-pills">
+                        <span class="pill">LoRA</span>
+                        <span class="pill">QLoRA</span>
+                        <span class="pill">Adapters</span>
+                        <span class="pill">Prefix Tuning</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/12-llm-reasoning-cot.html" class="glass-card" style="--card-color: #eab308;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">💡</div>
+                        <span class="card-num">#12</span>
+                    </div>
+                    <h3 class="card-title">LLM Reasoning & Chain-of-Thought</h3>
+                    <div class="card-category">structured_thinking / logic</div>
+                    <p class="card-text">Chain-of-Thought prompting makes models "think step by step," dramatically improving accuracy on complex reasoning. Research explores tree-of-thought, self-consistency, and how to make models genuinely reason.</p>
+                    <div class="card-pills">
+                        <span class="pill">CoT</span>
+                        <span class="pill">Tree-of-Thought</span>
+                        <span class="pill">Self-Consistency</span>
+                        <span class="pill">Math Reasoning</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/13-knowledge-distillation.html" class="glass-card" style="--card-color: #22c55e;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">📦</div>
+                        <span class="card-num">#13</span>
+                    </div>
+                    <h3 class="card-title">Knowledge Distillation for LLMs</h3>
+                    <div class="card-category">model_compression / teacher_student</div>
+                    <p class="card-text">A large "teacher" model transfers knowledge to a smaller "student" model. The student achieves surprisingly good performance at a fraction of the cost — like a PhD student learning from a professor.</p>
+                    <div class="card-pills">
+                        <span class="pill">Teacher-Student</span>
+                        <span class="pill">Compression</span>
+                        <span class="pill">Small Models</span>
+                        <span class="pill">Deployment</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/14-synthetic-data-generation.html" class="glass-card" style="--card-color: #ec4899;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🏭</div>
+                        <span class="card-num">#14</span>
+                    </div>
+                    <h3 class="card-title">Synthetic Data Generation</h3>
+                    <div class="card-category">data_manufacturing / augmentation</div>
+                    <p class="card-text">AI generates realistic training data — creating a virtuous cycle where AI trains better AI. Research focuses on quality, diversity, avoiding model collapse, and when synthetic data helps vs. hurts.</p>
+                    <div class="card-pills">
+                        <span class="pill">Self-Instruct</span>
+                        <span class="pill">Data Augmentation</span>
+                        <span class="pill">Model Collapse</span>
+                        <span class="pill">Quality Filters</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/15-ai-scientific-discovery.html" class="glass-card" style="--card-color: #06b6d4;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🔬</div>
+                        <span class="card-num">#15</span>
+                    </div>
+                    <h3 class="card-title">AI for Scientific Discovery</h3>
+                    <div class="card-category">ai_science / research_acceleration</div>
+                    <p class="card-text">From predicting protein structures to discovering new materials, AI is becoming a research partner — hypothesis generation, literature synthesis, experimental design, and automated reasoning.</p>
+                    <div class="card-pills">
+                        <span class="pill">Drug Discovery</span>
+                        <span class="pill">Materials</span>
+                        <span class="pill">Protein Folding</span>
+                        <span class="pill">Math Proofs</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/16-mechanistic-interpretability.html" class="glass-card" style="--card-color: #8b5cf6;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🔎</div>
+                        <span class="card-num">#16</span>
+                    </div>
+                    <h3 class="card-title">Mechanistic Interpretability</h3>
+                    <div class="card-category">understanding_models / transparency</div>
+                    <p class="card-text">Reverse-engineering LLMs to understand their internal circuits, features, and algorithms. Opening the black box and mapping every wire — critical for trust, safety, and debugging.</p>
+                    <div class="card-pills">
+                        <span class="pill">Circuits</span>
+                        <span class="pill">Sparse Autoencoders</span>
+                        <span class="pill">Probing</span>
+                        <span class="pill">Feature Viz</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/17-small-language-models.html" class="glass-card" style="--card-color: #10b981;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">📱</div>
+                        <span class="card-num">#17</span>
+                    </div>
+                    <h3 class="card-title">Small Language Models (SLMs)</h3>
+                    <div class="card-category">edge_deployment / efficient_ai</div>
+                    <p class="card-text">SLMs (1-7B parameters) run on phones and edge devices. Research focuses on making small models surprisingly capable through data curation and architecture innovations. Goal: 90% capability at 1% cost.</p>
+                    <div class="card-pills">
+                        <span class="pill">On-Device</span>
+                        <span class="pill">Phi</span>
+                        <span class="pill">Gemma</span>
+                        <span class="pill">Efficient</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/18-llm-code-generation.html" class="glass-card" style="--card-color: #6366f1;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">💻</div>
+                        <span class="card-num">#18</span>
+                    </div>
+                    <h3 class="card-title">LLM-Based Code Generation & SE</h3>
+                    <div class="card-category">ai_programming / software_engineering</div>
+                    <p class="card-text">AI that writes, debugs, and reviews code is transforming software engineering. Research explores reliability, complex repos, autonomous bug fixing, and AI-assisted program verification.</p>
+                    <div class="card-pills">
+                        <span class="pill">Code LLMs</span>
+                        <span class="pill">Bug Fixing</span>
+                        <span class="pill">Verification</span>
+                        <span class="pill">Repo-Level</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/19-neurosymbolic-ai.html" class="glass-card" style="--card-color: #f59e0b;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">⚙️</div>
+                        <span class="card-num">#19</span>
+                    </div>
+                    <h3 class="card-title">Neurosymbolic AI</h3>
+                    <div class="card-category">hybrid_reasoning / logic_neural</div>
+                    <p class="card-text">Combining neural networks (pattern recognition) with symbolic AI (logic, rules) — using neural nets for perception and symbolic systems for structured reasoning. Intuition AND rigorous logic together.</p>
+                    <div class="card-pills">
+                        <span class="pill">Logic + Neural</span>
+                        <span class="pill">Knowledge Graphs</span>
+                        <span class="pill">Formal Reasoning</span>
+                        <span class="pill">Hybrid</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/20-self-improving-ai.html" class="glass-card" style="--card-color: #ef4444;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🚀</div>
+                        <span class="card-num">#20</span>
+                    </div>
+                    <h3 class="card-title">Self-Improving AI Systems</h3>
+                    <div class="card-category">recursive_improvement / bootstrap</div>
+                    <p class="card-text">AI that makes itself better through self-play, self-reflection, and iterative refinement — models critique their own outputs, generate better training data, and progressively improve toward a positive feedback loop.</p>
+                    <div class="card-pills">
+                        <span class="pill">Self-Play</span>
+                        <span class="pill">Reflexion</span>
+                        <span class="pill">Self-Reward</span>
+                        <span class="pill">Bootstrapping</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+            </div>
+        </section>
+
+        <div class="connector"></div>
+
+        <!-- Emerging Areas -->
+        <section class="section" id="emerging">
+            <div class="section-header">
+                <div class="section-label amber">Emerging Frontiers</div>
+                <h2 class="section-title">Bonus Emerging Areas</h2>
+                <p class="section-desc">Rapidly growing fields that could define the next decade of AI research.</p>
+            </div>
+
+            <div class="emerging-grid">
+                <a href="topics/21-world-models.html" class="emerging-card">
+                    <div class="emerging-icon">🌐</div>
+                    <div class="emerging-title">World Models</div>
+                    <div class="emerging-desc">AI that builds internal simulations of the world to predict and plan — like mental models humans use.</div>
+                </a>
+                <a href="topics/22-llms-for-biology.html" class="emerging-card">
+                    <div class="emerging-icon">🧬</div>
+                    <div class="emerging-title">LLMs for Biology</div>
+                    <div class="emerging-desc">Protein language models, genomic foundation models, and AI-driven drug design pipelines.</div>
+                </a>
+                <a href="topics/23-ai-governance-ethics.html" class="emerging-card">
+                    <div class="emerging-icon">⚖️</div>
+                    <div class="emerging-title">AI Governance & Ethics</div>
+                    <div class="emerging-desc">Building frameworks for responsible AI deployment, bias mitigation, and regulatory compliance.</div>
+                </a>
+                <a href="topics/24-ai-game-environments.html" class="emerging-card">
+                    <div class="emerging-icon">🎮</div>
+                    <div class="emerging-title">AI in Game Environments</div>
+                    <div class="emerging-desc">Using games as testbeds for complex reasoning, planning, and multi-agent coordination.</div>
+                </a>
+                <a href="topics/25-long-context-models.html" class="emerging-card">
+                    <div class="emerging-icon">🔗</div>
+                    <div class="emerging-title">Long-Context Models</div>
+                    <div class="emerging-desc">Extending context windows to millions of tokens — enabling book-level understanding and reasoning.</div>
+                </a>
+                <a href="topics/26-generative-audio-music.html" class="emerging-card">
+                    <div class="emerging-icon">🎵</div>
+                    <div class="emerging-title">Generative Audio & Music</div>
+                    <div class="emerging-desc">AI-generated speech, music, and sound effects with control over style, emotion, and structure.</div>
+                </a>
+                <a href="topics/27-llm-infrastructure-serving.html" class="emerging-card">
+                    <div class="emerging-icon">🏗️</div>
+                    <div class="emerging-title">LLM Infrastructure & Serving</div>
+                    <div class="emerging-desc">Efficient inference engines, speculative decoding, KV-cache optimization, and serving at scale.</div>
+                </a>
+                <a href="topics/28-llm-evaluation-benchmarks.html" class="emerging-card">
+                    <div class="emerging-icon">🧪</div>
+                    <div class="emerging-title">LLM Evaluation & Benchmarks</div>
+                    <div class="emerging-desc">Creating better ways to measure AI capabilities — beyond accuracy to reasoning, safety, and real-world utility.</div>
+                </a>
+                <a href="topics/29-machine-unlearning-privacy.html" class="emerging-card">
+                    <div class="emerging-icon">🧹</div>
+                    <div class="emerging-title">Machine Unlearning & Privacy</div>
+                    <div class="emerging-desc">Making models selectively forget data — differential privacy, the right to be forgotten, and provable deletion.</div>
+                </a>
+                <a href="topics/30-time-series-foundation-models.html" class="emerging-card">
+                    <div class="emerging-icon">📊</div>
+                    <div class="emerging-title">Time-Series Foundation Models</div>
+                    <div class="emerging-desc">Pre-trained models for forecasting across domains — zero-shot prediction for demand, energy, and sensor data.</div>
+                </a>
+                <a href="topics/31-uncertainty-quantification.html" class="emerging-card">
+                    <div class="emerging-icon">🎚️</div>
+                    <div class="emerging-title">Uncertainty Quantification</div>
+                    <div class="emerging-desc">Teaching models to know what they don't know — calibration, conformal prediction, and reliable confidence.</div>
+                </a>
+                <a href="topics/32-multilingual-low-resource-nlp.html" class="emerging-card">
+                    <div class="emerging-icon">🌍</div>
+                    <div class="emerging-title">Multilingual & Low-Resource NLP</div>
+                    <div class="emerging-desc">Extending LLM quality to the 7,000+ languages left behind — transfer, tokenization, and data scarcity.</div>
+                </a>
+                <a href="topics/33-green-sustainable-ai.html" class="emerging-card">
+                    <div class="emerging-icon">🌱</div>
+                    <div class="emerging-title">Green AI & Sustainable Computing</div>
+                    <div class="emerging-desc">Measuring and reducing the energy, carbon, and water footprint of training and serving large models.</div>
+                </a>
+                <a href="topics/34-human-ai-interaction.html" class="emerging-card">
+                    <div class="emerging-icon">🤝</div>
+                    <div class="emerging-title">Human-AI Interaction</div>
+                    <div class="emerging-desc">Designing collaboration, trust calibration, and control so people and models work better together than either alone.</div>
+                </a>
+            </div>
+        </section>
+
+        <div class="connector"></div>
+
+        <!-- Advanced Technical Frontiers -->
+        <section class="section" id="advanced">
+            <div class="section-header">
+                <div class="section-label violet">Gap Coverage</div>
+                <h2 class="section-title">Advanced Technical Frontiers</h2>
+                <p class="section-desc">Foundational areas that complete the landscape — generative architectures, efficiency, security, causality, and scaling science.</p>
+            </div>
+
+            <div class="grid">
+                <a href="topics/35-diffusion-generative-vision.html" class="glass-card" style="--card-color: #a855f7;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🌫️</div>
+                        <span class="card-num">#35</span>
+                    </div>
+                    <h3 class="card-title">Diffusion Models & Generative Vision</h3>
+                    <div class="card-category">generative_modeling / image_video</div>
+                    <p class="card-text">Diffusion models learn to create images by reversing a noise process — start with static, then denoise step by step until a picture emerges. They power Stable Diffusion, Midjourney, and Sora. Research spans faster sampling, better controllability, consistency models, and flow matching.</p>
+                    <div class="card-pills">
+                        <span class="pill">Denoising</span>
+                        <span class="pill">Latent Diffusion</span>
+                        <span class="pill">Flow Matching</span>
+                        <span class="pill">ControlNet</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/36-efficient-attention-ssm.html" class="glass-card" style="--card-color: #06b6d4;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🌊</div>
+                        <span class="card-num">#36</span>
+                    </div>
+                    <h3 class="card-title">Efficient Attention & State Space Models</h3>
+                    <div class="card-category">architecture / sub_quadratic</div>
+                    <p class="card-text">Transformer attention costs grow quadratically with sequence length — doubling the input quadruples the compute. State space models like Mamba, linear attention, and hybrid designs achieve near-linear scaling, challenging the transformer's dominance for long sequences.</p>
+                    <div class="card-pills">
+                        <span class="pill">Mamba</span>
+                        <span class="pill">Linear Attention</span>
+                        <span class="pill">FlashAttention</span>
+                        <span class="pill">Hybrid Models</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/37-test-time-compute-scaling.html" class="glass-card" style="--card-color: #f59e0b;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">⏱️</div>
+                        <span class="card-num">#37</span>
+                    </div>
+                    <h3 class="card-title">Test-Time Compute & Inference Scaling</h3>
+                    <div class="card-category">reasoning_models / thinking_budget</div>
+                    <p class="card-text">Instead of building bigger models, let them think longer. Reasoning models like o1 and R1 spend more compute at inference — searching, verifying, and revising — trading seconds of latency for large accuracy gains. A new scaling axis with its own laws.</p>
+                    <div class="card-pills">
+                        <span class="pill">Long CoT</span>
+                        <span class="pill">RLVR</span>
+                        <span class="pill">Verifiers</span>
+                        <span class="pill">Best-of-N</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/38-quantization-low-bit-inference.html" class="glass-card" style="--card-color: #10b981;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🔢</div>
+                        <span class="card-num">#38</span>
+                    </div>
+                    <h3 class="card-title">Quantization & Low-Bit Inference</h3>
+                    <div class="card-category">numerical_precision / compression</div>
+                    <p class="card-text">Model weights are usually 16-bit floats, but most of that precision is wasted. Quantization squeezes them to 8, 4, or even 1.58 bits — shrinking memory 4-10x with minimal quality loss. It's the reason a 70B model can run on a single consumer GPU.</p>
+                    <div class="card-pills">
+                        <span class="pill">GPTQ / AWQ</span>
+                        <span class="pill">Post-Training</span>
+                        <span class="pill">1-Bit LLMs</span>
+                        <span class="pill">KV-Cache</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/39-embodied-ai-robotics.html" class="glass-card" style="--card-color: #ef4444;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🦾</div>
+                        <span class="card-num">#39</span>
+                    </div>
+                    <h3 class="card-title">Embodied AI & Robot Foundation Models</h3>
+                    <div class="card-category">physical_intelligence / vla</div>
+                    <p class="card-text">Language models live in text; embodied AI has to act in the physical world. Vision-Language-Action models map camera input and instructions directly to motor commands, bringing foundation-model generality to robots that grasp, navigate, and manipulate.</p>
+                    <div class="card-pills">
+                        <span class="pill">VLA Models</span>
+                        <span class="pill">Sim-to-Real</span>
+                        <span class="pill">Manipulation</span>
+                        <span class="pill">RT-X</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/40-llm-memory-personalization.html" class="glass-card" style="--card-color: #6366f1;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🗂️</div>
+                        <span class="card-num">#40</span>
+                    </div>
+                    <h3 class="card-title">LLM Memory & Personalization</h3>
+                    <div class="card-category">persistent_state / user_adaptation</div>
+                    <p class="card-text">Today's assistants forget you the moment the chat ends. Memory research gives models persistent, editable, privacy-respecting recall — deciding what to store, when to retrieve, how to forget, and how to adapt to an individual without retraining.</p>
+                    <div class="card-pills">
+                        <span class="pill">Episodic Memory</span>
+                        <span class="pill">Model Editing</span>
+                        <span class="pill">User Modeling</span>
+                        <span class="pill">Consolidation</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/41-multi-agent-systems.html" class="glass-card" style="--card-color: #eab308;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🐝</div>
+                        <span class="card-num">#41</span>
+                    </div>
+                    <h3 class="card-title">Multi-Agent Systems & Coordination</h3>
+                    <div class="card-category">agent_societies / protocols</div>
+                    <p class="card-text">One agent is useful; many agents that argue, negotiate, and divide labour can be far stronger — or collapse into expensive chaos. This studies communication protocols, role specialization, emergent behaviour, and how to keep collective errors from compounding.</p>
+                    <div class="card-pills">
+                        <span class="pill">Orchestration</span>
+                        <span class="pill">Debate</span>
+                        <span class="pill">MCP / A2A</span>
+                        <span class="pill">Emergence</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/42-ai-security-adversarial.html" class="glass-card" style="--card-color: #f43f5e;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🔐</div>
+                        <span class="card-num">#42</span>
+                    </div>
+                    <h3 class="card-title">AI Security & Adversarial Robustness</h3>
+                    <div class="card-category">threat_models / defense</div>
+                    <p class="card-text">Once a model reads untrusted text or calls real tools, it becomes an attack surface. Prompt injection, data poisoning, model extraction, and backdoors are live threats — and defending an agent that acts on your behalf is a genuinely open problem.</p>
+                    <div class="card-pills">
+                        <span class="pill">Prompt Injection</span>
+                        <span class="pill">Data Poisoning</span>
+                        <span class="pill">Backdoors</span>
+                        <span class="pill">Model Stealing</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/43-causal-inference-ml.html" class="glass-card" style="--card-color: #14b8a6;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🔀</div>
+                        <span class="card-num">#43</span>
+                    </div>
+                    <h3 class="card-title">Causal Inference & Representation Learning</h3>
+                    <div class="card-category">cause_effect / intervention</div>
+                    <p class="card-text">Correlation is cheap; causation is what you need for decisions. Causal ML asks what would happen if we intervened — separating genuine mechanisms from spurious shortcuts, and giving models the structure to generalize under distribution shift.</p>
+                    <div class="card-pills">
+                        <span class="pill">Do-Calculus</span>
+                        <span class="pill">Counterfactuals</span>
+                        <span class="pill">Confounding</span>
+                        <span class="pill">Invariance</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/44-graph-neural-networks.html" class="glass-card" style="--card-color: #8b5cf6;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">🕸️</div>
+                        <span class="card-num">#44</span>
+                    </div>
+                    <h3 class="card-title">Graph Neural Networks & Geometric DL</h3>
+                    <div class="card-category">relational_data / symmetry</div>
+                    <p class="card-text">Molecules, road networks, and social graphs aren't grids or sequences — they're relational. GNNs learn by passing messages between connected nodes, while geometric deep learning builds in the symmetries (rotation, permutation) the data actually obeys.</p>
+                    <div class="card-pills">
+                        <span class="pill">Message Passing</span>
+                        <span class="pill">Equivariance</span>
+                        <span class="pill">Over-Smoothing</span>
+                        <span class="pill">Graph Transformers</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+
+                <a href="topics/45-scaling-laws-data-centric-ai.html" class="glass-card" style="--card-color: #22c55e;">
+                    <div class="card-header">
+                        <div class="card-icon-wrap">📈</div>
+                        <span class="card-num">#45</span>
+                    </div>
+                    <h3 class="card-title">Scaling Laws & Data-Centric AI</h3>
+                    <div class="card-category">empirical_science / data_quality</div>
+                    <p class="card-text">Scaling laws predict how loss falls as you add parameters, data, and compute — letting labs forecast a $100M run from small experiments. The data-centric turn asks the harder question: which tokens are worth training on at all?</p>
+                    <div class="card-pills">
+                        <span class="pill">Chinchilla</span>
+                        <span class="pill">Data Curation</span>
+                        <span class="pill">Deduplication</span>
+                        <span class="pill">Data Mixtures</span>
+                    </div>
+                    <div class="card-explore">Deep dive into this topic <span class="arrow">→</span></div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p class="footer-text">Crafted for your <span class="highlight">PhD Research Journey</span> in AI & Machine Learning</p>
+            <p class="footer-sub">M.Tech (AI & ML) → PhD — Explore, Innovate, Publish</p>
+        </footer>
+    </div>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.08,
+            rootMargin: '0px 0px -60px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    const delay = Array.from(entry.target.parentElement.children).indexOf(entry.target) * 80;
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, delay);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.glass-card, .emerging-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Interactive tilt on glass cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                
+                card.style.transform = `translateY(-6px) scale(1.01) perspective(1000px) rotateX(${y * -4}deg) rotateY(${x * 4}deg)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+
+        // Parallax blobs on scroll
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const scrollY = window.scrollY;
+                    const blobs = document.querySelectorAll('.blob');
+                    blobs.forEach((blob, i) => {
+                        const speed = 0.02 * (i + 1);
+                        blob.style.transform += ` translateY(${scrollY * speed}px)`;
+                    });
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // Navbar background on scroll
+        const nav = document.querySelector('.nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(15, 15, 26, 0.85)';
+                nav.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+            } else {
+                nav.style.background = 'rgba(15, 15, 26, 0.6)';
+                nav.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+            }
+        });
+
+        // Mouse-follow glow on hero
+        const hero = document.querySelector('.hero');
+        hero.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            hero.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(168, 85, 247, 0.04), transparent 60%)`;
+        });
+
+        // Smooth reveal for hero elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const heroElements = document.querySelectorAll('.hero-chip, .hero h1, .hero-description, .hero-metrics');
+            heroElements.forEach((el, i) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    el.style.transition = 'all 0.8s cubic-bezier(0.23, 1, 0.32, 1)';
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 200 + i * 150);
+            });
+        });
+    </script>
+</body>
+</html>
