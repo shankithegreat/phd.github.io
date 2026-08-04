@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Infrastructure & Serving - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #64748b; }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #64748b, #475569);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #94a3b8, #64748b);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #475569, #334155);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">LLM Infrastructure & Serving</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#27 — Emerging Frontier</span>
+            <h1>LLM Infrastructure & Serving</h1>
+            <p class="subtitle">Systems engineering for deploying, scaling, and serving LLMs in production — making inference fast, cheap, and reliable at scale.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>LLM infrastructure and serving encompasses the <strong>systems engineering required to deploy large language models in production</strong> — making them respond quickly, handle millions of concurrent users, and operate cost-effectively. While model research focuses on capabilities, infrastructure research focuses on making those capabilities accessible and affordable.</p>
+            <p>Serving a 70B-parameter model requires careful orchestration: the model may span multiple GPUs, each request generates a growing key-value cache that consumes precious GPU memory, and users expect responses in real-time. The field combines distributed systems, compiler optimization, hardware architecture, and scheduling algorithms to solve these challenges.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Like building the highway system for a city — the LLM is the car, but without efficient roads (infrastructure), even the fastest car sits in traffic. Infrastructure engineers design the highways, traffic signals, and routing systems that let millions of "cars" (requests) flow smoothly, minimizing wait times while maximizing throughput.</p>
+            </div>
+            <p>The economic impact is enormous: inference costs dominate LLM deployment budgets. A 2x improvement in serving efficiency can save millions of dollars annually and make previously uneconomical applications viable. This has driven an explosion of innovation in inference optimization, from hardware-software co-design to algorithmic breakthroughs like PagedAttention.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>The gap between training a state-of-the-art model and serving it to millions of users at acceptable cost and latency is vast. Infrastructure is the bridge that determines whether AI breakthroughs reach real users.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">💰</span>
+                    <span><strong>Cost reduction:</strong> Serving LLMs is expensive — a single GPU generating tokens for GPT-4-class models costs $1-4 per hour. Efficient infrastructure can reduce per-token costs by 5-10x, making AI products economically viable.</span>
+                </li>
+                <li>
+                    <span class="point-icon">⚡</span>
+                    <span><strong>Latency optimization:</strong> Users expect real-time responses. Time-to-first-token and tokens-per-second directly impact user experience. Infrastructure techniques like speculative decoding can halve response latency.</span>
+                </li>
+                <li>
+                    <span class="point-icon">📈</span>
+                    <span><strong>Scalability:</strong> Production LLM services must handle unpredictable traffic patterns — from quiet periods to viral spikes. Elastic scaling, efficient batching, and load balancing are essential for reliability.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🌍</span>
+                    <span><strong>Democratization:</strong> Better infrastructure enables smaller companies and researchers to serve powerful models without massive GPU clusters, democratizing access to AI capabilities.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔋</span>
+                    <span><strong>Energy efficiency:</strong> AI inference already consumes significant global electricity. More efficient serving directly reduces carbon footprint and makes AI more sustainable at scale.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>LLM serving involves a pipeline that routes requests, manages GPU memory, schedules computation across devices, and streams tokens back to users. The key insight is that LLM inference is fundamentally memory-bandwidth bound (not compute bound), making memory management the critical optimization target.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">📥</div>
+                        <span class="step-label">Request<br>Routing</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">💾</div>
+                        <span class="step-label">KV-Cache<br>Management</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">⚙️</div>
+                        <span class="step-label">Batched<br>Execution</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔄</div>
+                        <span class="step-label">Token<br>Streaming</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>KV-Cache Management:</strong> During autoregressive generation, each token requires access to key-value pairs from all previous tokens. PagedAttention (from vLLM) manages this cache like virtual memory — using paging to eliminate fragmentation and enable memory sharing across requests with common prefixes.</p>
+            <p><strong>Continuous Batching:</strong> Unlike static batching (waiting for a batch to fill before processing), continuous batching dynamically adds new requests to an in-flight batch as soon as other requests complete. This maximizes GPU utilization by ensuring the hardware is never idle while requests are waiting.</p>
+            <p><strong>Model Parallelism:</strong> Large models are split across multiple GPUs using tensor parallelism (splitting individual layers across devices) and pipeline parallelism (assigning different layers to different devices). Expert parallelism further distributes MoE models. The communication overhead between devices is a primary engineering challenge.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>PagedAttention (vLLM)</h4>
+                    <p>Manages KV-cache using virtual memory paging, storing key-value blocks in non-contiguous GPU memory. Eliminates up to 90% of memory waste from fragmentation, enabling 2-4x higher throughput with the same hardware.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Speculative Decoding</h4>
+                    <p>A small "draft" model generates several candidate tokens quickly, then the large model verifies them in a single forward pass. When the draft is correct (often 70-80% of tokens), generation is 2-3x faster with identical output quality.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Continuous Batching</h4>
+                    <p>Dynamically inserts new requests into running batches at the iteration level, rather than waiting for all requests in a batch to complete. This maximizes GPU utilization and dramatically reduces queuing latency under load.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>FlashAttention</h4>
+                    <p>Fuses attention computation into a single GPU kernel using tiling to keep data in fast SRAM. Reduces memory reads/writes by orders of magnitude, achieving 2-4x speedup and enabling longer sequences without memory overflow.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Quantized Inference</h4>
+                    <p>Runs models in lower precision (INT8, INT4, FP8) with minimal accuracy loss. GPTQ, AWQ, and GGUF formats enable 70B models to run on consumer GPUs. Mixed-precision strategies quantize less-sensitive layers more aggressively.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Prefix Caching</h4>
+                    <p>Caches and reuses KV-cache for common prompt prefixes (system prompts, shared context) across requests. When many users share the same system prompt, this avoids redundant computation and speeds up time-to-first-token.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">📊</div>
+                    <h4>Memory Wall</h4>
+                    <p>GPU memory is the primary bottleneck — KV-caches for long-context requests can consume tens of gigabytes per request. Balancing model weights, activations, and KV-cache within limited GPU memory requires careful orchestration.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔄</div>
+                    <h4>Variable-Length Requests</h4>
+                    <p>LLM requests vary dramatically in input/output length (10 tokens to 100K+). Efficient scheduling must handle this heterogeneity without penalizing short requests or starving long ones.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🏗️</div>
+                    <h4>Hardware Heterogeneity</h4>
+                    <p>Deploying across diverse GPU generations (A100, H100, consumer GPUs), cloud providers, and edge devices requires adaptive optimization — kernels and memory strategies that work well on one architecture may not transfer.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔒</div>
+                    <h4>Reliability & Safety</h4>
+                    <p>Production serving requires graceful handling of GPU failures, request timeouts, and adversarial inputs. At scale, hardware failures are inevitable and systems must recover without dropping user requests.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Efficient Memory Management for LLM Serving with PagedAttention (vLLM)</div>
+                        <div class="paper-meta">Kwon et al., 2023 — Introduced PagedAttention for virtual memory management of KV-cache, achieving near-zero waste and enabling practical large-scale LLM serving.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">FlashAttention: Fast and Memory-Efficient Exact Attention</div>
+                        <div class="paper-meta">Dao et al., 2022 — IO-aware attention algorithm using tiling for GPU SRAM, achieving 2-4x speedup and enabling longer sequences. Now a standard component in most serving stacks.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Fast Inference from Transformers via Speculative Decoding</div>
+                        <div class="paper-meta">Leviathan et al., 2023 — Proposed using a small draft model to generate candidate tokens verified by the target model, achieving lossless 2-3x speedup.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">TensorRT-LLM</div>
+                        <div class="paper-meta">Nvidia, 2023 — Production inference library combining kernel fusion, quantization, and parallelism strategies optimized for Nvidia hardware, widely used in commercial deployments.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">SGLang: Efficient Execution of Structured Language Model Programs</div>
+                        <div class="paper-meta">2024 — Framework for efficient execution of complex LLM programs with RadixAttention for automatic KV-cache reuse, achieving up to 5x speedup on multi-call workloads.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Disaggregated Serving:</strong> Separating prefill (prompt processing) and decode (token generation) onto different hardware optimized for each phase — compute-intensive prefill on dense GPUs and memory-bandwidth-bound decode on specialized chips.</li>
+                <li><strong>On-Device LLM Inference:</strong> Running capable models directly on phones, laptops, and edge devices through extreme quantization, architecture search for efficiency, and hardware-software co-design for consumer silicon.</li>
+                <li><strong>Learned Serving Policies:</strong> Using ML to optimize serving itself — learned schedulers that predict request lengths, adaptive batching strategies, and automatic system configuration based on workload patterns.</li>
+                <li><strong>Custom AI Accelerators:</strong> Purpose-built hardware (Groq, Cerebras, custom ASICs) designed specifically for LLM inference, breaking free from general-purpose GPU constraints to achieve order-of-magnitude efficiency gains.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="02-hardware-aware-training.html" class="related-link">
+                    <span>Hardware-Aware Training</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="25-long-context-models.html" class="related-link">
+                    <span>Long-Context Models</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="28-llm-evaluation-benchmarks.html" class="related-link">
+                    <span>LLM Evaluation & Benchmarks</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="01-neural-architecture-search.html" class="related-link">
+                    <span>Neural Architecture Search</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="28-llm-evaluation-benchmarks.html">
+                Next: LLM Evaluation & Benchmarks
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
