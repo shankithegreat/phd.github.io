@@ -1,1 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Federated Learning | PhD Kickstart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root {
+            --page-accent: #f43f5e;
+        }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #f43f5e, #e11d48);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #fb7185, #f43f5e);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #be123c, #9f1239);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Federated Learning</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">TOPIC 03</span>
+            <h1>Federated Learning</h1>
+            <p class="subtitle">Training AI models across decentralized devices while keeping data private — learning together without ever sharing secrets.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p><strong>Federated Learning (FL)</strong> is a distributed machine learning paradigm where models are trained across multiple decentralized devices or servers holding local data samples, without exchanging the raw data itself. Instead of centralizing all data in one place, the model travels to the data.</p>
+            <p>In traditional ML, you collect all data into a central server and train there. Federated learning inverts this: each participant trains a local copy of the model on their private data, then shares only the model updates (gradients or weight differences) with a central server that aggregates these updates into an improved global model. The raw data never leaves the device.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Imagine 100 hospitals each have patient records they can't share due to privacy laws. Instead of trying to collect all records in one place (illegal and dangerous), a teacher sends each hospital a textbook (the model). Each hospital studies their own patients and writes notes in the margins (local training). The hospitals send back only their annotated notes (model updates), and the teacher creates an improved textbook that benefits from everyone's experience — without ever seeing a single patient record.</p>
+            </div>
+            <p>First proposed by Google in 2016, federated learning has since been deployed in production systems including Google's keyboard predictions (Gboard), Apple's Siri improvements, and healthcare consortiums. It represents a fundamental shift in how we think about the relationship between data, privacy, and machine learning.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>As data privacy regulations tighten globally and data becomes increasingly siloed within organizations, federated learning offers a path to train powerful models without compromising privacy.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">🔒</span>
+                    <span><strong>Privacy compliance:</strong> GDPR, HIPAA, and other regulations restrict data movement. FL enables ML on sensitive data (medical records, financial transactions, personal messages) without violating privacy laws.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🏥</span>
+                    <span><strong>Sensitive domains:</strong> Healthcare, finance, and defense hold vast amounts of useful data that simply cannot be centralized. FL unlocks the AI potential of data that would otherwise remain siloed and unused.</span>
+                </li>
+                <li>
+                    <span class="point-icon">📡</span>
+                    <span><strong>Communication efficiency:</strong> With billions of edge devices generating data, sending all raw data to the cloud is impractical. FL sends only compact model updates instead of massive raw datasets.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🌐</span>
+                    <span><strong>Data sovereignty:</strong> Organizations retain full control over their data. No third party ever accesses the raw information, preserving competitive advantages and regulatory compliance.</span>
+                </li>
+                <li>
+                    <span class="point-icon">📊</span>
+                    <span><strong>Learning from the long tail:</strong> FL can learn from rare edge cases distributed across many devices that no single entity would have enough of to learn from effectively.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>Federated learning follows an iterative communication protocol between a central server and distributed participants. Each round produces an improved global model that benefits from all participants' data without any raw data leaving local devices.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">📤</div>
+                        <span class="step-label">Server Sends<br>Global Model</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🏋️</div>
+                        <span class="step-label">Local Training<br>on Device Data</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">📊</div>
+                        <span class="step-label">Send Gradients<br>/ Updates Only</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔄</div>
+                        <span class="step-label">Server<br>Aggregates</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Model Distribution:</strong> The central server initializes a model and broadcasts it to a selected subset of participants (not all at once — this helps with scalability and stragglers). Each participant receives an identical copy of the current global model.</p>
+            <p><strong>Local Training:</strong> Each participant trains the model on their local dataset for several epochs. This is standard gradient descent, but only on the participant's own data. The local training produces updated model weights that reflect patterns in the local data.</p>
+            <p><strong>Update Communication:</strong> Participants send only their model updates (the difference between the new weights and the original weights, or compressed gradients) back to the server. Raw data never moves — only mathematical summaries of what was learned.</p>
+            <p><strong>Secure Aggregation:</strong> The server combines all updates, typically by weighted averaging (FedAvg). Advanced protocols use secure aggregation so the server cannot see individual updates — only the combined result. The aggregated model becomes the new global model for the next round.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>FedAvg (Federated Averaging)</h4>
+                    <p>The foundational algorithm: each client runs SGD locally for multiple epochs, then the server averages the resulting models weighted by dataset size. Simple, effective, and communication-efficient — the workhorse of production FL systems.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>FedProx</h4>
+                    <p>Adds a proximal term that penalizes local models from drifting too far from the global model. This stabilizes training when data is highly heterogeneous across participants, preventing any single client from dominating the global model.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Secure Aggregation</h4>
+                    <p>Cryptographic protocols that allow the server to compute the aggregate of client updates without seeing any individual update. Uses techniques like secret sharing and homomorphic encryption to guarantee that no single party can reconstruct private information.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Differential Privacy in FL</h4>
+                    <p>Adds calibrated noise to model updates before sharing, providing mathematical guarantees that individual data points cannot be inferred from the updates. Offers a formal privacy budget (epsilon) that quantifies information leakage.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Personalized Federated Learning</h4>
+                    <p>Rather than one global model for all, learns personalized models for each participant. Techniques include local fine-tuning, meta-learning (MAML-style), mixture of global and local models, and clustering clients with similar data distributions.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Communication Compression</h4>
+                    <p>Reduces the bandwidth required for FL by compressing model updates — quantizing gradients to low precision, using sparsification (sending only top-K gradients), or applying learned compression. Critical for mobile devices with limited connectivity.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">📊</div>
+                    <h4>Non-IID Data</h4>
+                    <p>Real-world data across participants is rarely identically distributed. A hospital in rural India sees different diseases than one in urban Germany. This heterogeneity makes convergence difficult and can bias the global model.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📡</div>
+                    <h4>Communication Overhead</h4>
+                    <p>Even sending model updates is expensive when models have billions of parameters and participants number in the millions. Each round requires all participating devices to upload megabytes of data.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🐢</div>
+                    <h4>Stragglers & Dropouts</h4>
+                    <p>Mobile devices go offline, run out of battery, or have slow connections. The system must handle participants that never respond or respond late, without blocking training progress indefinitely.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">☠️</div>
+                    <h4>Poisoning Attacks</h4>
+                    <p>Malicious participants can send corrupted updates designed to degrade the global model or insert backdoors. Without seeing raw data, detecting such attacks is significantly harder than in centralized settings.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔐</div>
+                    <h4>Privacy Guarantees</h4>
+                    <p>Even without sharing raw data, model updates can leak information (gradient inversion attacks). Achieving strong formal privacy guarantees (differential privacy) often comes at a significant accuracy cost.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🖥️</div>
+                    <h4>System Heterogeneity</h4>
+                    <p>Participants have vastly different compute capabilities — from flagship phones to low-end IoT devices. The system must accommodate this diversity without leaving slower devices behind or wasting fast devices' capacity.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Communication-Efficient Learning of Deep Networks from Decentralized Data</div>
+                        <div class="paper-meta">McMahan et al., 2017 — The paper that introduced FedAvg and formalized federated learning as a research field.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Federated Optimization in Heterogeneous Networks (FedProx)</div>
+                        <div class="paper-meta">Li et al., 2020 — Addressed data and systems heterogeneity with a proximal term, significantly improving convergence on non-IID data.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Advances and Open Problems in Federated Learning</div>
+                        <div class="paper-meta">Kairouz et al., 2019 — A comprehensive 60+ page survey by 50+ researchers, mapping the entire FL landscape and open research questions.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Federated Learning for Large Language Models</div>
+                        <div class="paper-meta">2024 — Explores how FL can be applied to pre-training and fine-tuning LLMs while preserving data privacy across organizations.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>FL for Foundation Models:</strong> Applying federated learning to pre-train and fine-tune large language models across organizations, enabling collaborative LLM development without sharing proprietary training data — a trillion-dollar opportunity for industries with siloed data.</li>
+                <li><strong>Cross-Silo FL for Enterprises:</strong> Mature frameworks for inter-organization FL with formal data governance, audit trails, and business models. Banks collaborating on fraud detection, pharma companies on drug discovery — without revealing competitive data.</li>
+                <li><strong>FL + Differential Privacy at Scale:</strong> Making the privacy-utility tradeoff practical for production systems. Techniques like privacy amplification by subsampling, Rényi DP, and adaptive clipping are making formal guarantees achievable without destroying model quality.</li>
+                <li><strong>FL for Autonomous Vehicles:</strong> Fleets of self-driving cars training collaboratively from their driving experiences across different cities, weather conditions, and edge cases — without uploading sensitive dashcam footage to central servers.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="#" class="related-link">
+                    <span>LLM Alignment & Safety</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>AI Governance</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="02-hardware-aware-training.html" class="related-link">
+                    <span>Hardware-Aware Training</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>Continual Learning</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="02-hardware-aware-training.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Prev: Hardware-Aware Training
+            </a>
+            <a href="04-mixture-of-experts.html">
+                Next: Mixture of Experts
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.topic-section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
