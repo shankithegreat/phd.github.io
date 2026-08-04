@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scaling Laws & Data-Centric AI - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #22c55e; }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #22c55e, #15803d);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #4ade80, #16a34a);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #15803d, #14532d);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Scaling Laws & Data-Centric AI</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#45 — Advanced Frontier</span>
+            <h1>Scaling Laws & Data-Centric AI</h1>
+            <p class="subtitle">The empirical power laws that let labs predict a model's loss before training it — and the growing realisation that data curation, not architecture, is the binding constraint.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>Scaling laws are the empirical finding that language-model loss falls as a <strong>smooth power law in model parameters, training tokens, and compute</strong>, over many orders of magnitude and with remarkably little dependence on architectural detail. Kaplan et al. established this in 2020: fit a curve on small runs, and you can predict the loss of a run a hundred times larger to within a few percent. That single fact changed how frontier AI is done. Training a large model stopped being a gamble and became an extrapolation, which is precisely what made it possible to justify spending nine figures on a single run.</p>
+            <p>The most consequential correction came from Hoffmann et al. in 2022. The Chinchilla study argued that the earlier work had under-trained its models by holding learning-rate schedules fixed inappropriately, and that at a fixed compute budget parameters and tokens should be scaled in roughly equal proportion — a rule of thumb of about twenty training tokens per parameter. Their 70-billion-parameter Chinchilla, trained on roughly 1.4 trillion tokens, outperformed the 175-billion-parameter GPT-3 and the 280-billion-parameter Gopher while using comparable training compute. Overnight the field stopped racing for parameter count and started racing for tokens.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Compute-optimal training is like choosing between a bigger engine and more fuel for a fixed budget. Kaplan's recipe suggested spending most of it on the engine; Chinchilla showed the fuel had been badly underweighted. But the analogy has a twist that explains modern practice: if you plan to drive the car every day for years, you should buy a smaller, more efficient engine than the one that would win a single race — because the fuel you burn after the race is bought is what actually dominates the lifetime bill.</p>
+            </div>
+            <p>That twist is inference economics, and it is why compute-optimal is no longer what labs actually target. Chinchilla optimises total cost to reach a given loss during training only. A model served to millions of users incurs inference cost proportional to its size for years afterwards, so it pays to over-train a smaller model far past the compute-optimal point — hundreds or even thousands of tokens per parameter — accepting a worse training-efficiency ratio in exchange for a permanently cheaper, faster model. Most competitive open-weight models released since 2023 sit well beyond twenty tokens per parameter for exactly this reason.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>Scaling laws are simultaneously the field's most useful planning tool and its most over-interpreted result. The data-centric turn is the practical response to the fact that the token side of the equation has become the scarce one.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">📐</span>
+                    <span><strong>Predictable capital allocation:</strong> Fitting a scaling curve on cheap small runs lets a lab choose model size, token count, and hardware before committing the budget, converting research risk into an engineering forecast.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🧹</span>
+                    <span><strong>Curation beats architecture:</strong> Repeated experience has been that deduplicating, filtering, and rebalancing the corpus moves benchmarks more than swapping attention variants, which is the core claim of the data-centric movement.</span>
+                </li>
+                <li>
+                    <span class="point-icon">💰</span>
+                    <span><strong>Inference dominates lifetime cost:</strong> Understanding the training-inference trade-off is what justifies over-training small models, distillation, and the entire small-language-model product category.</span>
+                </li>
+                <li>
+                    <span class="point-icon">⏳</span>
+                    <span><strong>Data is becoming the bottleneck:</strong> Projections suggest the stock of high-quality public text will be substantially consumed within this decade at current growth rates, making efficiency per token a strategic concern rather than an academic one.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🧭</span>
+                    <span><strong>Grounds capability forecasting:</strong> Arguments about when particular abilities will appear rest almost entirely on how scaling curves are read, so methodological care here has direct consequences for policy and safety planning.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>Deriving and using a scaling law is a concrete experimental procedure, and the data-centric loop that follows it is equally concrete. Both are more error-prone than the tidy log-log plots suggest.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">🔬</div>
+                        <span class="step-label">Run Small<br>Sweeps</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">📈</div>
+                        <span class="step-label">Fit Power<br>Law</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🧺</div>
+                        <span class="step-label">Curate Data<br>Mixture</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🚀</div>
+                        <span class="step-label">Scale &<br>Validate</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Fitting the law:</strong> You train a grid of models spanning perhaps three orders of magnitude in size and token count, record the loss on a held-out set, and fit a parametric form in which loss decomposes into an irreducible entropy term plus power-law terms in parameters and data. The fit then yields the compute-optimal frontier by differentiating under a fixed FLOP constraint. The subtleties are severe: learning-rate schedules must be tuned per run rather than held constant, tokenisation and evaluation-set composition shift the exponents, and the fitted coefficients are corpus-specific, so a law measured on one data distribution does not transfer cleanly to another.</p>
+            <p><strong>Curating the corpus:</strong> The data-centric loop treats the dataset as the object under optimisation while holding the architecture fixed. Exact and near-duplicate removal is the highest-value single intervention — Lee et al. showed in 2022 that deduplicating training data reduces memorised regurgitation, cuts required training steps, and improves perplexity. Quality filtering with classifiers, heuristic rules, and perplexity thresholds follows. Openly documented corpora such as RefinedWeb (Penedo et al., 2023) and the FineWeb corpus released in 2024 demonstrated that carefully filtered web text alone can match or beat curated mixtures that include books and academic sources, which was a genuine surprise. In a different direction, the Phi models of Gunasekar et al. argued from 2023 onward that synthetic "textbook-quality" data lets a model several times smaller reach comparable reasoning performance, trading data volume for data density.</p>
+            <p><strong>Mixture optimisation and pruning:</strong> Beyond filtering, the proportions matter. Domain reweighting methods learn how much code, web text, and academic prose to include, often by training small proxy models to estimate each domain's marginal contribution, and the resulting mixtures can shift downstream benchmarks by several points at identical compute. More radically, Sorscher et al. argued in 2022 that intelligent data pruning — keeping the most informative examples rather than sampling uniformly — can beat power-law scaling entirely, turning the exponent itself into something you optimise rather than accept. This is the most theoretically interesting thread in the area, because it suggests the observed power laws describe naive data collection rather than a fundamental limit on learning.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Compute-Optimal Fitting</h4>
+                    <p>Sweep model size against token count at several FLOP budgets and read off the frontier. Chinchilla's roughly twenty-tokens-per-parameter guidance is the best-known result, though the exact ratio depends on the corpus and the fitting methodology.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Over-Training for Inference</h4>
+                    <p>Deliberately train a smaller model far past compute-optimal so that serving cost, latency, and memory footprint fall permanently. Standard practice for models intended for wide deployment or on-device inference.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Deduplication</h4>
+                    <p>Remove exact and near-duplicate documents with suffix arrays or MinHash. Lee et al., 2022 showed this reduces verbatim memorisation, shortens training, and improves held-out loss — one of the few interventions that helps on every axis at once.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Quality Filtering & Synthetic Curation</h4>
+                    <p>Classifier-based and heuristic filtering to approximate curated prose, plus deliberately generated instructional data. The textbook-quality thesis behind Phi (Gunasekar et al., 2023) pushed this from a preprocessing step to a central design choice.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Domain Reweighting</h4>
+                    <p>Optimise the sampling proportions across sources using small proxy models or group-robust objectives, rather than accepting whatever mixture the crawl happened to produce. Cheap relative to pre-training and reliably worth several benchmark points.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Data Pruning</h4>
+                    <p>Score examples by difficulty, influence, or prototypicality and discard the redundant majority. Sorscher et al., 2022 argued that good pruning metrics can improve on power-law scaling rather than merely moving along the curve.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">📉</div>
+                    <h4>Extrapolating Too Far</h4>
+                    <p>A law fitted between one and ten billion parameters is evidence about that regime, not a law of nature. Break-points, saturation, and changes in the data distribution can all invalidate a projection well before the predicted budget is spent.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🎭</div>
+                    <h4>Loss Is Not Capability</h4>
+                    <p>Upstream perplexity improves smoothly while downstream task performance moves erratically. Two models with the same loss can differ substantially on reasoning, instruction following, and calibration, so the metric labs optimise is not the one users experience.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🧫</div>
+                    <h4>Benchmark Contamination</h4>
+                    <p>Web-scale corpora absorb the test sets used to evaluate them. Detecting leakage is hard, decontamination is imperfect, and reported gains are therefore systematically optimistic in ways that are difficult to quantify.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">♻️</div>
+                    <h4>Model Collapse</h4>
+                    <p>Training successive generations largely on generated text narrows the distribution, erasing tails and rare knowledge. As the open web fills with model output, maintaining a clean human-authored data supply becomes a real infrastructural problem.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Scaling Laws for Neural Language Models</div>
+                        <div class="paper-meta">Kaplan et al., 2020 — Establishes smooth power-law relationships between loss and parameters, data, and compute, making the performance of very large runs predictable in advance.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Training Compute-Optimal Large Language Models</div>
+                        <div class="paper-meta">Hoffmann et al., 2022 — The Chinchilla result, showing that parameters and tokens should scale together at roughly twenty tokens per parameter and that prior models were badly under-trained.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Emergent Abilities of Large Language Models</div>
+                        <div class="paper-meta">Wei et al., 2022 — Documents tasks on which performance stays near chance until a scale threshold and then rises sharply, framing emergence as a qualitative feature of scaling.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Are Emergent Abilities of Large Language Models a Mirage?</div>
+                        <div class="paper-meta">Schaeffer et al., 2023 — Argues that apparent emergence is largely an artefact of discontinuous metrics such as exact-match accuracy, and that smooth metrics reveal continuous improvement.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">AI Models Collapse When Trained on Recursively Generated Data</div>
+                        <div class="paper-meta">Shumailov et al., 2024 — Demonstrates that iteratively training on the previous generation's outputs progressively erases distribution tails and degrades models across architectures.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Scaling laws for capabilities, not loss:</strong> Deriving predictable relationships between compute and the things people actually care about — reasoning, tool use, factual reliability — rather than only next-token loss. This requires metrics that are continuous and comparable across scales, which is exactly what the emergence debate between Wei et al. and Schaeffer et al. exposed as missing.</li>
+                <li><strong>Data-constrained scaling theory:</strong> As the projections of Villalobos et al. on exhausting high-quality public text bite, the important question becomes how much value remains in repeating data, in multilingual and multimodal sources, and in licensed private corpora, and how the fitted exponents change when tokens rather than compute are scarce.</li>
+                <li><strong>Safe synthetic-data pipelines:</strong> Reconciling the demonstrated value of curated synthetic data with the collapse dynamics documented by Shumailov et al. — probably through provenance tracking, verifier-filtered generation, and a guaranteed fraction of human-authored data in each generation's mixture.</li>
+                <li><strong>Trading train-time for test-time compute:</strong> Joint scaling laws that treat pre-training compute and inference-time search or reasoning tokens as substitutable resources, letting practitioners decide whether the next unit of budget is better spent on a bigger model or on letting a smaller one think for longer.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="14-synthetic-data-generation.html" class="related-link">
+                    <span>Synthetic Data Generation</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="17-small-language-models.html" class="related-link">
+                    <span>Small Language Models</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="28-llm-evaluation-benchmarks.html" class="related-link">
+                    <span>LLM Evaluation & Benchmarks</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="37-test-time-compute-scaling.html" class="related-link">
+                    <span>Test-Time Compute Scaling</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="01-neural-architecture-search.html">
+                Next: Neural Architecture Search
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
