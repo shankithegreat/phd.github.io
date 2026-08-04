@@ -1,1 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mixture-of-Experts (MoE) | PhD Kickstart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root {
+            --page-accent: #f59e0b;
+        }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #f59e0b, #d97706);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #b45309, #92400e);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Mixture-of-Experts</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">TOPIC 04</span>
+            <h1>Mixture-of-Experts (MoE)</h1>
+            <p class="subtitle">Scaling model capacity to trillions of parameters while keeping compute tractable — the architecture that makes impossible models possible.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p><strong>Mixture-of-Experts (MoE)</strong> is a neural network architecture where multiple specialized sub-networks — called "experts" — are selectively activated for each input through a learned routing mechanism. Instead of passing every input through the entire model, a lightweight gating network decides which experts are most relevant, activating only a subset (typically 1-2 out of many).</p>
+            <p>This creates a powerful decoupling: the model's total capacity (determined by the number of experts) can be enormous, while the computational cost per input remains fixed (determined by how many experts are activated). A model with 1 trillion parameters might only use 100 billion per token — giving you the knowledge of a massive model at a fraction of the compute cost.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Think of a large hospital with 50 specialist doctors. When a patient arrives, the reception desk (the router) looks at their symptoms and sends them to just 2-3 relevant specialists — not all 50. The hospital has the combined knowledge of all specialists (huge capacity), but any single patient visit only requires a few doctors' time (low compute). MoE works the same way: huge knowledge, selective activation.</p>
+            </div>
+            <p>MoE has powered some of the most capable AI systems including Google's Switch Transformer, Mistral's Mixtral 8x7B, and DeepSeek's models. It represents the dominant approach for scaling language models beyond what dense architectures can achieve economically.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>Dense scaling (making every layer bigger) hits diminishing returns — doubling parameters roughly doubles compute cost. MoE breaks this relationship, enabling models that would be computationally impossible as dense networks.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">📈</span>
+                    <span><strong>Sublinear scaling:</strong> MoE models can have 8-64x more parameters than dense models of equivalent compute cost. Mixtral 8x7B matches GPT-3.5 quality while being far cheaper to serve because only 2 of 8 experts activate per token.</span>
+                </li>
+                <li>
+                    <span class="point-icon">💡</span>
+                    <span><strong>Specialization:</strong> Individual experts can specialize in different domains, languages, or reasoning types. This emergent specialization means the model doesn't waste capacity — each parameter is useful for specific inputs.</span>
+                </li>
+                <li>
+                    <span class="point-icon">💰</span>
+                    <span><strong>Training efficiency:</strong> MoE models achieve the same quality as dense models with 2-4x less training compute. The increased capacity allows faster learning without proportional compute increase.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🏗️</span>
+                    <span><strong>Modular expansion:</strong> Adding new experts to an existing MoE is easier than scaling a dense model. This enables incremental improvements — adding domain expertise without retraining the entire system.</span>
+                </li>
+                <li>
+                    <span class="point-icon">⚡</span>
+                    <span><strong>Inference speed:</strong> Since only K experts activate per token, inference is K/N times cheaper than if the full model ran. This makes serving trillion-parameter models feasible on existing hardware.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>MoE replaces the standard feed-forward network (FFN) in each transformer layer with multiple expert FFNs and a router. For each token, the router selects which experts to use and how to weight their outputs.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">📥</div>
+                        <span class="step-label">Input<br>Token</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🚦</div>
+                        <span class="step-label">Router/Gate<br>Network</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🎯</div>
+                        <span class="step-label">Top-K Expert<br>Selection</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🧮</div>
+                        <span class="step-label">Weighted<br>Combination</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>The Router/Gate Network</strong> is typically a simple linear layer that takes the input token's hidden state and produces a probability distribution over all experts. It answers: "Which experts should handle this input?" The router must make fast decisions — it's evaluated for every token at every MoE layer.</p>
+            <p><strong>Top-K Expert Selection</strong> picks the K experts with the highest router probabilities. Most modern systems use K=1 (Switch Transformer) or K=2 (Mixtral). The router probabilities for the selected experts serve as weights for combining their outputs.</p>
+            <p><strong>Expert Computation</strong> proceeds in parallel across the selected experts. Each expert is a standard FFN (typically two linear layers with an activation function). Only the selected experts perform computation — the others remain idle, saving all their compute.</p>
+            <p><strong>Weighted Combination</strong> multiplies each expert's output by its router probability and sums them. This produces the final output for the MoE layer, which then passes to the next attention layer as in a standard transformer.</p>
+            <p>A critical component is the <strong>load balancing loss</strong> — an auxiliary objective that encourages the router to distribute tokens evenly across experts. Without it, the router often collapses to always selecting the same few experts, wasting the others' capacity entirely.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Top-K Routing</h4>
+                    <p>The standard approach: for each token, select the top-K scoring experts (K=1 or K=2) and combine their outputs weighted by softmax-normalized router scores. Simple and effective, though requires careful load balancing to prevent expert collapse.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Expert Parallelism</h4>
+                    <p>Distributes different experts across different GPUs. Tokens are routed via all-to-all communication to the GPU holding their assigned expert, processed, and routed back. Enables models too large for a single device while maintaining reasonable throughput.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Load Balancing Losses</h4>
+                    <p>Auxiliary losses that penalize uneven expert utilization. The "importance loss" penalizes high variance in total routing probability per expert, while the "load loss" penalizes variance in the number of tokens assigned. Together they prevent expert collapse.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Switch Transformers</h4>
+                    <p>Google's simplified MoE design using K=1 routing (each token goes to exactly one expert). This reduces communication overhead, simplifies implementation, and achieves 4-7x training speedups over dense models at the same compute budget.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Hash Routing</h4>
+                    <p>Deterministically assigns tokens to experts using hash functions, eliminating the learned router entirely. Surprisingly competitive with learned routing while being simpler, faster, and avoiding load balancing issues entirely.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Soft MoE</h4>
+                    <p>Instead of hard token-to-expert assignment, computes soft combinations of tokens for each expert. All experts process weighted mixtures of all tokens, avoiding discrete routing and its associated gradient estimation problems.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Expert Choice Routing</h4>
+                    <p>Inverts the routing paradigm: instead of tokens choosing experts, experts choose their top-K tokens. This guarantees perfect load balance by construction and often achieves better performance than token-choice alternatives.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">⚖️</div>
+                    <h4>Load Balancing</h4>
+                    <p>Ensuring all experts receive roughly equal traffic is crucial but difficult. Imbalanced routing wastes capacity and creates memory hotspots. The load balancing loss must be carefully weighted — too high hurts quality, too low causes collapse.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">💀</div>
+                    <h4>Expert Collapse</h4>
+                    <p>A failure mode where the router learns to send all tokens to a few "winner" experts while others receive no training signal and become useless. Once collapsed, recovery is very difficult without restarting training.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🎲</div>
+                    <h4>Routing Instability</h4>
+                    <p>Early in training, the router makes nearly random decisions. Small perturbations can cause wildly different expert assignments, making training unstable. Techniques like router z-loss and auxiliary losses help stabilize the process.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🧩</div>
+                    <h4>Training Complexity</h4>
+                    <p>MoE training requires sophisticated distributed systems — expert parallelism, all-to-all communication, capacity factors, and overflow handling. The engineering complexity is significantly higher than dense model training.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">💾</div>
+                    <h4>Memory Requirements</h4>
+                    <p>While compute is sparse, all expert parameters must be stored in memory. A model with 8 experts uses 8x the FFN memory of a dense model, even though only 1-2 experts compute per token. This limits deployment flexibility.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🎓</div>
+                    <h4>Expert Specialization</h4>
+                    <p>Understanding what each expert has learned and encouraging meaningful specialization remains an open challenge. Experts sometimes learn redundant representations, or specialize in ways that don't align with human-interpretable domains.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer</div>
+                        <div class="paper-meta">Shazeer et al., 2017 — The paper that modernized MoE for deep learning, introducing sparsely-gated MoE layers into LSTMs with up to 137B parameters.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Switch Transformers: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity</div>
+                        <div class="paper-meta">Fedus et al., 2022 — Simplified MoE with K=1 routing and demonstrated scaling to 1.6 trillion parameters with superior training efficiency.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Mixtral of Experts</div>
+                        <div class="paper-meta">Mistral AI, 2024 — Demonstrated that open-source MoE (8x7B) can match or exceed GPT-3.5 performance at a fraction of the inference cost, catalyzing the open MoE revolution.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">DeepSeek-MoE: Towards Ultimate Expert Specialization</div>
+                        <div class="paper-meta">DeepSeek AI, 2024 — Explored fine-grained expert segmentation and shared expert isolation, pushing expert specialization to new levels of efficiency.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">From Sparse to Soft Mixtures of Experts</div>
+                        <div class="paper-meta">Puigcerver et al., 2024 — Proposed fully differentiable MoE without discrete token routing, achieving competitive results while avoiding load balancing issues entirely.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Dynamic Expert Count:</strong> Models that can grow or shrink their expert count based on task complexity — spawning new experts when encountering novel domains and pruning redundant ones. This enables lifelong learning without unbounded memory growth.</li>
+                <li><strong>Hierarchical MoE:</strong> Multi-level routing where a coarse router selects an expert group, then a fine router selects specific experts within that group. This enables efficient scaling to thousands of experts with logarithmic routing decisions.</li>
+                <li><strong>MoE for Multimodal Models:</strong> Routing different modalities (text, images, audio, video) to modality-specialized experts while sharing cross-modal experts for alignment. This creates naturally modular multimodal architectures.</li>
+                <li><strong>MoE Distillation:</strong> Compressing large MoE models into smaller dense models that capture the combined knowledge of all experts. This bridges the gap between MoE's training efficiency and dense models' deployment simplicity.</li>
+                <li><strong>Hardware-Optimized MoE:</strong> Designing MoE architectures specifically for emerging hardware — expert placement on chiplets, communication-aware routing, and sparsity patterns that align with hardware accelerator capabilities.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="01-neural-architecture-search.html" class="related-link">
+                    <span>Neural Architecture Search</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>Knowledge Distillation</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>LLM Infrastructure</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="#" class="related-link">
+                    <span>Small Language Models</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="03-federated-learning.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Prev: Federated Learning
+            </a>
+            <a href="05-continual-learning.html">
+                Next: Continual Learning
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.topic-section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
