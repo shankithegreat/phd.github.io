@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uncertainty Quantification & Calibration - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #f97316; }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #f97316, #c2410c);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #fb923c, #ea580c);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #c2410c, #7c2d12);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Uncertainty Quantification & Calibration</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#31 — Emerging Frontier</span>
+            <h1>Uncertainty Quantification & Calibration</h1>
+            <p class="subtitle">Teaching models to know what they do not know — and to report it in numbers that can be trusted when a decision depends on them.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>Every classifier already outputs numbers that look like probabilities. The problem is that they usually are not. If you gather every prediction a network made with 90% confidence and check how often it was right, a well-calibrated model gets roughly 90% of them correct. Modern deep networks routinely get far fewer — they are <strong>systematically overconfident</strong>. Uncertainty quantification is the study of producing confidence estimates that mean what they say, and of separating the different reasons a model might be unsure.</p>
+            <p>The standard decomposition distinguishes <strong>aleatoric</strong> from <strong>epistemic</strong> uncertainty. Aleatoric uncertainty is noise inherent in the data: a blurry X-ray, an ambiguous sentence, a coin flip. More training data will not reduce it, because the label genuinely is not determined by the input. Epistemic uncertainty is ignorance in the model: the input falls in a region where training examples were sparse, or several parameter settings fit the data equally well. This kind <strong>does</strong> shrink with more data, and it is the kind that matters for detecting inputs a model has no business predicting on. Kendall & Gal (2017) made this split operational in deep learning by modelling both terms jointly in vision tasks.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Think of a weather forecaster who says "70% chance of rain." Over a season, if it rains on roughly seven of every ten such days, the forecaster is calibrated and you can plan around them. If it rains on three, the number is decoration. Now separate two reasons for hedging: the atmosphere is genuinely chaotic tomorrow (aleatoric), versus the forecaster has never worked in this region and does not know the local microclimate (epistemic). The first calls for an honest wide interval; the second calls for admitting you are the wrong person to ask.</p>
+            </div>
+            <p>Guo et al. (2017) documented the modern failure clearly: as networks grew deeper and wider, accuracy improved while calibration got worse, largely because models trained with cross-entropy to near-zero training loss push their softmax outputs toward one. Their remedy — temperature scaling, dividing the logits by a single scalar tuned on a validation set — is one line of code, fixes much of the miscalibration on in-distribution data, and remains the baseline every new method must beat. It is also the honest starting point for a research programme: much of the field's value lies in the cases temperature scaling does not fix, namely distribution shift, structured outputs, and free-form generation.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>A prediction without a trustworthy confidence estimate cannot be safely composed into a decision system. Wherever a model hands off to a human, an actuator, or another model, the handoff logic depends on knowing when to trust the output.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">🏥</span>
+                    <span><strong>High-stakes deferral:</strong> In clinical triage, credit decisions, and industrial control, the right behaviour on a hard case is to abstain and escalate. Abstention requires a confidence score that actually tracks correctness.</span>
+                </li>
+                <li>
+                    <span class="point-icon">💬</span>
+                    <span><strong>Hallucination detection:</strong> Language models fabricate fluently and confidently. Reliable uncertainty estimates are one of the few mechanisms that flag a fabricated answer without an external knowledge source.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🚧</span>
+                    <span><strong>Distribution shift detection:</strong> Deployed models silently degrade when inputs drift. Rising epistemic uncertainty is an early warning signal that arrives before labelled outcomes do.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🎯</span>
+                    <span><strong>Active learning and exploration:</strong> Choosing which examples to label, or which action to try, depends on quantifying what the model does not yet know. Bad uncertainty means wasted annotation budget.</span>
+                </li>
+                <li>
+                    <span class="point-icon">📜</span>
+                    <span><strong>Regulatory pressure:</strong> Emerging AI regulation and medical device guidance increasingly expect stated performance bounds, and distribution-free coverage guarantees are the most defensible way to supply them.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>Practical uncertainty pipelines have three stages: get a raw signal of uncertainty out of the model, correct it against held-out data, and turn the corrected number into an action such as accepting, abstaining, or emitting a set of plausible answers.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">🎲</div>
+                        <span class="step-label">Estimate<br>Uncertainty</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🌡️</div>
+                        <span class="step-label">Calibrate on<br>Held-Out Data</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">📐</div>
+                        <span class="step-label">Measure<br>Coverage</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🛑</div>
+                        <span class="step-label">Predict or<br>Abstain</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Estimating uncertainty:</strong> The softmax entropy of a single deterministic network conflates the two uncertainty types and is badly biased. Better signals come from averaging over models. Deep ensembles (Lakshminarayanan et al., 2017) train several networks from different random initialisations and treat their disagreement as epistemic uncertainty; typically five members capture most of the benefit, and the method remains the strongest general-purpose baseline despite being embarrassingly simple. MC dropout (Gal & Ghahramani, 2016) approximates the same idea cheaply by leaving dropout active at inference and sampling multiple forward passes, which they interpret as approximate variational inference in a deep Gaussian process. Fully Bayesian neural networks place a distribution over weights directly; because exact inference is intractable, practitioners use variational schemes or a Laplace approximation, fitting a Gaussian around the trained optimum from the curvature of the loss — a post-hoc method that requires no retraining.</p>
+            <p><strong>Calibrating and measuring:</strong> Expected calibration error bins predictions by confidence and averages the gap between confidence and accuracy per bin. It is the field's default metric and it is flawed: the value depends on the binning scheme, it is a biased estimator, it ignores all non-maximum class probabilities, and a model can achieve near-zero ECE while being useless if it predicts the base rate on everything. Proper scoring rules such as negative log-likelihood and the Brier score, reported alongside reliability diagrams and accuracy-versus-rejection curves, give a more complete picture.</p>
+            <p><strong>Guaranteeing coverage:</strong> Conformal prediction sidesteps calibrating a probability at all and instead outputs a <strong>set</strong> of labels — or an interval — guaranteed to contain the truth with a chosen probability. Given a nonconformity score, one takes the appropriate quantile of that score on a held-out calibration set and includes every candidate below it. The guarantee is distribution-free, model-agnostic, and finite-sample, requiring only that calibration and test data be exchangeable. The tutorial by Angelopoulos & Bates (2021) made the machinery accessible to the deep learning community and triggered its current popularity. The catch is that coverage is marginal, averaged over the population: a conformal set can hold at 90% overall while systematically under-covering a minority subgroup, which is why group-conditional and Mondrian variants exist.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Temperature Scaling</h4>
+                    <p>Divide logits by one scalar fitted on validation data. Preserves the ranking of predictions and therefore accuracy, costs almost nothing, and repairs most in-distribution miscalibration — but it does not survive distribution shift.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Deep Ensembles</h4>
+                    <p>Train several independently initialised networks and average their predictive distributions. Consistently the strongest baseline for both calibration and OOD detection, at a linear multiple of training and inference cost.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>MC Dropout</h4>
+                    <p>Keep dropout enabled at test time and average many stochastic forward passes. A cheap approximation to Bayesian inference requiring no architectural change, though its uncertainty is typically less well separated than an ensemble's.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Laplace Approximation</h4>
+                    <p>Fit a Gaussian posterior around the trained weights using a curvature estimate such as the generalised Gauss-Newton or K-FAC. Post-hoc, applicable to an already trained model, and often restricted to the last layer for tractability.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Conformal Prediction</h4>
+                    <p>Convert any score into prediction sets with finite-sample marginal coverage under exchangeability. Wraps any model unchanged; set size becomes the quality metric, since a guarantee met by returning every label is worthless.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Semantic Entropy</h4>
+                    <p>Sample multiple generations, cluster them by meaning using bidirectional entailment, and compute entropy over meaning clusters rather than token sequences. Separates genuine uncertainty from mere paraphrase variation in language models.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">📉</div>
+                    <h4>Shift Breaks Everything</h4>
+                    <p>Calibration fitted on in-distribution validation data degrades sharply as inputs drift, and the degradation grows with shift severity. Methods that look interchangeable on clean test sets separate dramatically under corruption.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🎭</div>
+                    <h4>RLHF Hurts Calibration</h4>
+                    <p>Base language models are often reasonably calibrated on multiple-choice questions; preference tuning tends to sharpen outputs toward confident, agreeable answers, trading honest uncertainty for a more assertive conversational style.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🧾</div>
+                    <h4>Free-Form Outputs</h4>
+                    <p>Calibration is well defined over a label set. For an open-ended paragraph there is no finite outcome space, no single correctness bit, and no agreed way to attach one probability to a claim that is partly right.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">💸</div>
+                    <h4>Compute Overhead</h4>
+                    <p>Ensembles multiply training and serving cost; sampling-based estimates multiply latency. At frontier model scale these overheads are prohibitive, so cheap single-pass uncertainty remains an open and valuable target.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">On Calibration of Modern Neural Networks</div>
+                        <div class="paper-meta">Guo et al., 2017 — Documented that deeper, more accurate networks are systematically overconfident and showed that single-parameter temperature scaling fixes much of it.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles</div>
+                        <div class="paper-meta">Lakshminarayanan et al., 2017 — Established that independently trained ensembles give high-quality, non-Bayesian uncertainty that still outperforms most sophisticated alternatives.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Dropout as a Bayesian Approximation</div>
+                        <div class="paper-meta">Gal & Ghahramani, 2016 — Reinterpreted test-time dropout as approximate variational inference, giving practitioners Bayesian-flavoured uncertainty with no change to the architecture.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification</div>
+                        <div class="paper-meta">Angelopoulos & Bates, 2021 — The tutorial that brought conformal methods into mainstream deep learning, with practical recipes for classification, regression, and structured outputs.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Can You Trust Your Model's Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift</div>
+                        <div class="paper-meta">Ovadia et al., 2019 — A large empirical comparison showing that every method degrades under shift and that ensembles degrade most gracefully.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Single-pass uncertainty at scale:</strong> Getting ensemble-quality epistemic uncertainty from one forward pass through distance-aware output layers, evidential heads, or lightweight last-layer posteriors, so that frontier-scale models can report confidence without multiplying serving cost.</li>
+                <li><strong>Uncertainty for generation:</strong> Extending calibration from label sets to claims within free-form text, so a long answer can carry per-statement confidence rather than one global score — the practical prerequisite for trustworthy retrieval and agentic pipelines.</li>
+                <li><strong>Conformal beyond exchangeability:</strong> Extending distribution-free guarantees to time series, covariate shift, and online settings where the exchangeability assumption fails, which is where deployed systems actually live.</li>
+                <li><strong>Calibration-preserving alignment:</strong> Designing preference-tuning objectives that reward honest hedging instead of confident assertion, so that instruction tuning stops eroding the calibration the base model already had.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="09-llm-alignment-safety.html" class="related-link">
+                    <span>LLM Alignment & Safety</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="16-mechanistic-interpretability.html" class="related-link">
+                    <span>Mechanistic Interpretability</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="28-llm-evaluation-benchmarks.html" class="related-link">
+                    <span>LLM Evaluation & Benchmarks</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="30-time-series-foundation-models.html" class="related-link">
+                    <span>Time-Series Foundation Models</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="32-multilingual-low-resource-nlp.html">
+                Next: Multilingual & Low-Resource NLP
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
