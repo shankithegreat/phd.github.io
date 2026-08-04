@@ -1,1 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic AI & Autonomous Tool Use - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #ef4444; }
+        .mesh-bg .blob:nth-child(1) { background: radial-gradient(circle, #ef4444, #dc2626); }
+        .mesh-bg .blob:nth-child(2) { background: radial-gradient(circle, #f87171, #ef4444); }
+        .mesh-bg .blob:nth-child(3) { background: radial-gradient(circle, #fca5a5, #f87171); }
+        .section-label { color: var(--page-accent); background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.15); }
+        .page-hero .topic-number { color: var(--page-accent); background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); }
+        .analogy-box { background: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.15); }
+        .analogy-box .analogy-title { color: var(--page-accent); }
+        .key-points li .point-icon { background: rgba(239, 68, 68, 0.1); }
+        .flow-step .step-icon { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); }
+        .future-list li::before { color: var(--page-accent); }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg"><div class="blob"></div><div class="blob"></div><div class="blob"></div></div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn"><svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Home</a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Agentic AI & Autonomous Tool Use</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#07 — Autonomous Systems</span>
+            <h1>Agentic AI &<br>Autonomous Tool Use</h1>
+            <p class="subtitle">AI systems that can autonomously plan, reason, take actions, use tools, and complete complex multi-step tasks with minimal human oversight.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <div class="section-label">📘 Foundation</div>
+            <h2>What Is Agentic AI?</h2>
+            <p>Agentic AI refers to systems that go beyond passive question-answering to become <strong>active problem solvers</strong>. An AI agent receives a high-level goal, breaks it down into sub-tasks, decides which tools to use, executes actions in the real world (browsing the web, writing code, querying databases), observes the results, and <strong>iteratively refines its approach</strong> until the goal is achieved.</p>
+            <p>The key distinction from traditional LLM usage is the <strong>action loop</strong>. A chatbot responds to one message at a time. An agent operates in a sustained cycle of <strong>thinking → acting → observing → reflecting</strong>, maintaining state across many steps and adapting its strategy based on what it discovers along the way.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Think of it like…</div>
+                <p>A regular LLM is like a brilliant consultant sitting in a room — you ask questions, they give answers, but they can't actually do anything. An AI agent is like hiring that consultant and giving them a laptop, phone, access to your company's systems, and a credit card. Now they can actually execute plans, not just suggest them. The challenge is making sure they do it reliably and safely.</p>
+            </div>
+            <p>Agents can be <strong>single-agent</strong> (one LLM orchestrating tools) or <strong>multi-agent</strong> (multiple specialized LLMs collaborating). They may have access to short-term memory (conversation history), long-term memory (vector databases of past experiences), and a toolkit of APIs, code interpreters, web browsers, and file systems.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <div class="section-label">🎯 Motivation</div>
+            <h2>Why It Matters</h2>
+            <p>Agentic AI represents arguably the most transformative application of large language models — moving AI from a tool you query to an <strong>autonomous collaborator</strong> that can handle complex, multi-step workflows end-to-end.</p>
+            <ul class="key-points">
+                <li><span class="point-icon">🚀</span> <strong>From Q&A to execution.</strong> The leap from "tell me how to fix this bug" to "fix this bug for me" is enormous. Agentic systems bridge the gap between knowledge and action, automating workflows that previously required human operators.</li>
+                <li><span class="point-icon">🔗</span> <strong>Complex workflow automation.</strong> Tasks like "research this topic, write a report, create visualizations, and email it to the team" involve multiple tools and decision points. Agents can orchestrate these seamlessly.</li>
+                <li><span class="point-icon">💻</span> <strong>Software engineering revolution.</strong> Coding agents like SWE-Agent can read codebases, understand issues, write fixes, run tests, and submit pull requests. This is reshaping how software is built and maintained.</li>
+                <li><span class="point-icon">🏢</span> <strong>Enterprise transformation.</strong> Customer support, data analysis, report generation, compliance checks — agents can handle entire business processes that currently require teams of people.</li>
+                <li><span class="point-icon">🔬</span> <strong>Scientific discovery.</strong> Research agents can formulate hypotheses, design experiments, analyze data, and iterate — potentially accelerating the pace of scientific progress across fields.</li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <div class="section-label">⚙️ Process</div>
+            <h2>How It Works</h2>
+            <p>An agentic system operates through a loop. It receives a goal, decomposes it into manageable sub-goals, plans which tools and actions are needed, executes them one by one, observes the outcomes, reflects on whether it's making progress, and iterates until the goal is met or it determines it needs human help.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">🎯</div>
+                        <span class="step-label">Goal<br>Decomposition</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">📋</div>
+                        <span class="step-label">Plan<br>Steps</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔧</div>
+                        <span class="step-label">Select<br>Tool</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">⚡</div>
+                        <span class="step-label">Execute<br>Action</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">👁️</div>
+                        <span class="step-label">Observe<br>Result</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🪞</div>
+                        <span class="step-label">Reflect &<br>Iterate</span>
+                    </div>
+                </div>
+            </div>
+            <p>The most popular framework for this is <strong>ReAct</strong> (Reasoning + Acting), where the model alternates between generating a thought (reasoning about what to do next), taking an action (calling a tool), and processing the observation (the tool's output). This interleaved reasoning makes agent behavior more transparent and debuggable.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <div class="section-label">🔧 Techniques</div>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>🧠 ReAct (Reasoning + Acting)</h4>
+                    <p>Interleaves chain-of-thought reasoning with tool use. The model thinks aloud about what to do, takes an action, observes the result, and reasons again. This makes agent behavior interpretable and reduces hallucination by grounding reasoning in real observations.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>📞 Function Calling</h4>
+                    <p>Models trained to output structured function calls (JSON) that map to real APIs. Instead of generating text describing an action, the model produces a precise, parseable function invocation that can be directly executed by the system.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>👥 Multi-Agent Systems</h4>
+                    <p>Multiple specialized agents collaborate to solve complex problems. A planner agent delegates to a coder agent, a reviewer agent, and a tester agent. Each has its own system prompt, tools, and area of expertise, mimicking a team.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>🧠 Memory Systems</h4>
+                    <p>Short-term memory (conversation buffer), working memory (scratchpad), and long-term memory (vector DB of past experiences). Memory allows agents to learn from previous interactions and maintain context across lengthy, complex tasks.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>🪞 Self-Reflection Loops</h4>
+                    <p>The agent periodically evaluates its own progress: "Am I on track? Did that action work? Should I change strategy?" This meta-cognitive ability lets agents recover from mistakes and avoid getting stuck in repetitive loops.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>🔨 Tool Creation</h4>
+                    <p>Advanced agents can create their own tools — writing and saving code functions that they can reuse later. If no existing API does what the agent needs, it can write a Python script to fill the gap, expanding its own capability on the fly.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <div class="section-label">⚠️ Challenges</div>
+            <h2>Open Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">🎭</div>
+                    <h4>Reliability & Hallucination</h4>
+                    <p>Agents that hallucinate facts might take real-world actions based on false information — booking wrong flights, deleting wrong files, or sending incorrect data. The stakes of hallucination are much higher when the model can act.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🛡️</div>
+                    <h4>Safety of Autonomous Actions</h4>
+                    <p>How do you prevent an agent from taking irreversible harmful actions? Guardrails, human-in-the-loop checkpoints, and sandboxed execution environments are necessary but add friction and complexity.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔄</div>
+                    <h4>Error Recovery</h4>
+                    <p>When an agent's action fails (API error, wrong result, timeout), it needs to gracefully recover. Many agents get stuck in loops, repeating the same failing action, or cascade into increasingly confused states.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📏</div>
+                    <h4>Evaluation</h4>
+                    <p>How do you benchmark agents? Success rate on fixed tasks doesn't capture adaptability, efficiency, or safety. Real-world evaluation requires expensive, time-consuming interactive testing in realistic environments.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">💰</div>
+                    <h4>Cost Management</h4>
+                    <p>Agents can enter expensive loops, calling LLM APIs dozens of times for a single task. Without budget limits and efficiency constraints, a runaway agent can burn through API credits rapidly.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🚧</div>
+                    <h4>Guardrails & Alignment</h4>
+                    <p>Defining and enforcing boundaries for what an agent should and shouldn't do is difficult. Too restrictive and the agent is useless; too permissive and it might take harmful or unintended actions.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <div class="section-label">📄 Research</div>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">ReAct: Synergizing Reasoning and Acting in Language Models</div>
+                        <div class="paper-meta">Yao et al. · 2023 · The foundational paper for modern AI agents. Showed that interleaving chain-of-thought reasoning with tool actions dramatically improves both task success rate and interpretability compared to reasoning or acting alone.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Toolformer: Language Models Can Teach Themselves to Use Tools</div>
+                        <div class="paper-meta">Schick et al. · 2023 · Demonstrated that LLMs can learn when and how to call external tools (calculators, search engines, translators) by self-supervised learning on tool-augmented examples. A key step toward autonomous tool use.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Generative Agents: Interactive Simulacra of Human Behavior</div>
+                        <div class="paper-meta">Park et al. · 2023 · Created a virtual town of 25 AI agents with memory, reflection, and planning capabilities. Agents formed relationships, organized events, and exhibited emergent social behaviors — a landmark in multi-agent simulation.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">AutoGPT</div>
+                        <div class="paper-meta">Significant Gravitas · 2023 · An open-source project that demonstrated autonomous goal-directed agent behavior, sparking massive interest in agentic AI. While limited in reliability, it showed the potential and ignited the agent ecosystem.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📑</span>
+                    <div class="paper-info">
+                        <div class="paper-title">SWE-Agent: Agent-Computer Interfaces Enable Automated Software Engineering</div>
+                        <div class="paper-meta">Yang et al. · 2024 · Built an agent that can autonomously resolve real GitHub issues by navigating codebases, editing files, and running tests. Achieved state-of-the-art on the SWE-bench benchmark, proving agents can do meaningful software engineering.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <div class="section-label">🔮 Future</div>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Self-Improving Agents</strong> — Agents that learn from their successes and failures, building a growing library of strategies and tool-use patterns. Over time, they become more efficient and reliable at the types of tasks they encounter frequently.</li>
+                <li><strong>Multi-Agent Collaboration</strong> — Sophisticated frameworks where specialized agents negotiate, delegate, and peer-review each other's work. Think of it as an AI organization chart with managers, specialists, and quality assurance roles.</li>
+                <li><strong>Agent Marketplaces</strong> — Ecosystems where pre-built, tested agents can be composed like building blocks. Need a "research agent" plus a "writing agent" plus a "formatting agent"? Plug them together from a marketplace.</li>
+                <li><strong>Formal Verification of Agent Actions</strong> — Mathematical guarantees that an agent will never take certain harmful actions, regardless of the input. Borrowing from formal methods in software engineering to make agents provably safe within defined boundaries.</li>
+                <li><strong>Long-Horizon Planning</strong> — Current agents struggle with tasks requiring hundreds of steps or hours of work. Advances in hierarchical planning, checkpointing, and goal decomposition will enable agents to tackle increasingly complex, long-running projects.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <div class="section-label">🔗 Related</div>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="#" class="related-link">🧠 LLM Reasoning <span class="link-arrow">→</span></a>
+                <a href="#" class="related-link">💻 Code Generation <span class="link-arrow">→</span></a>
+                <a href="#" class="related-link">🤖 Self-Improving AI <span class="link-arrow">→</span></a>
+                <a href="08-retrieval-augmented-generation.html" class="related-link">🔍 RAG <span class="link-arrow">→</span></a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="06-prompt-engineering-efficiency.html">← Prev: Prompt Engineering</a>
+            <a href="08-retrieval-augmented-generation.html">Next: RAG →</a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
