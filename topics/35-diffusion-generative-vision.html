@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diffusion Models & Generative Vision - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #a855f7; }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #a855f7, #7e22ce);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #c084fc, #9333ea);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #7e22ce, #4c1d95);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Diffusion Models & Generative Vision</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#35 — Advanced Frontier</span>
+            <h1>Diffusion Models & Generative Vision</h1>
+            <p class="subtitle">Generative models that learn to reverse a noising process step by step — the architecture behind modern text-to-image, video, and 3D synthesis systems.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>A diffusion model generates data by <strong>learning to undo the gradual destruction of data</strong>. The forward process is fixed and requires no learning: take a clean image and add small amounts of Gaussian noise over many steps until nothing remains but noise. The model's only job is to learn the reverse — given a noisy image and a timestep, predict the noise that was added — and once it can do that, you can start from pure noise and denoise your way to a novel sample.</p>
+            <p>This reframing is what made the approach practical. Ho et al. (2020) showed with DDPM that training reduces to a simple noise-prediction regression loss, a weighted variant of the variational bound, and that this alone produces high-fidelity images. Song et al. (2021) then unified the picture: diffusion is a discretisation of a stochastic differential equation, and the network is estimating the score — the gradient of the log data density — which connects denoising diffusion, score matching, and continuous-time generative modelling into one framework with a shared toolbox of numerical solvers.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>Imagine watching a drop of ink disperse in water until the glass is uniformly grey, and filming it. Training a diffusion model is like teaching someone to run that film backwards one frame at a time: from any cloudy frame, predict what the slightly less cloudy frame looked like. Once they can do that reliably, hand them a glass of plain grey water and they can run it backwards all the way to a drop of ink that was never there.</p>
+            </div>
+            <p>Diffusion displaced GANs as the dominant approach to image generation for reasons that are largely about training behaviour rather than peak sample quality. There is no adversarial game to balance, no mode collapse, and the objective is a stable regression that scales predictably with data and compute. The cost is sampling: a GAN needs one forward pass, while a naive diffusion sampler needs hundreds, and most of the engineering progress in the field has been about paying that bill down.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>Within a few years diffusion went from a research curiosity to the substrate of a creative industry, and simultaneously became a general-purpose tool for any problem that can be cast as sampling from a conditional distribution over continuous data.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">🎨</span>
+                    <span><strong>Controllable high-fidelity synthesis:</strong> Text, sketches, depth maps, poses, and masks can all condition generation, giving practitioners fine-grained control that was never achievable with earlier generative families.</span>
+                </li>
+                <li>
+                    <span class="point-icon">📐</span>
+                    <span><strong>A principled probabilistic footing:</strong> The score-based SDE view supplies exact likelihood computation, well-understood solvers, and a clean account of what the model is estimating — a rarity among deep generative methods.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🧬</span>
+                    <span><strong>Reach far beyond images:</strong> The same machinery drives audio and music generation, video, molecular and protein structure design, and robot trajectory planning, because all of these are continuous-domain sampling problems.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🗂️</span>
+                    <span><strong>Synthetic data at scale:</strong> Conditional diffusion produces labelled training data for perception tasks and augments long-tail classes where real examples are scarce, expensive, or legally restricted.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🌍</span>
+                    <span><strong>Foundation for world simulation:</strong> Video diffusion models trained at scale acquire useful approximations of physics and object permanence, positioning them as learned simulators for embodied agents.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>Training and sampling are almost mirror images. Training corrupts real data and learns to predict the corruption; sampling starts from corruption and iteratively removes it. Almost every design decision in the field is about which space to do this in and how few steps it can be done in.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">🖼️</div>
+                        <span class="step-label">Encode to<br>Latent Space</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🌫️</div>
+                        <span class="step-label">Forward<br>Noising</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🔄</div>
+                        <span class="step-label">Learned<br>Denoising</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">✨</div>
+                        <span class="step-label">Decode &<br>Guide</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Forward noising:</strong> A fixed variance schedule defines how much noise is present at each timestep, and a convenient closed form lets you jump straight to any timestep in one operation rather than simulating the chain. Training samples a random timestep, corrupts the example accordingly, and asks the network to predict the added noise. The schedule matters more than it looks: how noise levels are spaced and how the loss is weighted across them strongly affects which frequencies the model learns to get right.</p>
+            <p><strong>Learned reverse process:</strong> The denoiser is conditioned on the timestep and on whatever conditioning signal is used, and it is called repeatedly by a sampler. DDIM reformulates sampling as a deterministic process, which both cuts the number of steps needed by roughly an order of magnitude and gives a reversible mapping between noise and image that makes editing and interpolation possible. Latent diffusion (Rombach et al., 2022) moves the entire process into the compressed latent space of a pretrained autoencoder, cutting the spatial resolution the denoiser must handle by a large factor — the change that made Stable Diffusion trainable and runnable on consumer hardware.</p>
+            <p><strong>Guidance and conditioning:</strong> Classifier-free guidance (Ho & Salimans, 2022) trains one network to handle both conditional and unconditional prediction by randomly dropping the condition, then at sampling time extrapolates away from the unconditional prediction. A single guidance scale then trades diversity for prompt adherence: low values give varied but loosely matched samples, high values give sharp, on-prompt, and increasingly homogeneous ones, with visible saturation artefacts at the extreme. Nearly every deployed text-to-image system relies on this one trick.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Latent Diffusion</h4>
+                    <p>Run diffusion in a perceptually compressed autoencoder latent instead of pixels. Reduces compute per step dramatically while preserving quality, at the cost of an autoencoder whose reconstruction limits become the model's ceiling on fine detail and text rendering.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Diffusion Transformers</h4>
+                    <p>Peebles & Xie (2023) replaced the U-Net with a transformer over latent patches, showing quality improves smoothly with model FLOPs. This shifted the field toward transformer backbones and made diffusion inherit the scaling playbook developed for language models.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Flow Matching & Rectified Flow</h4>
+                    <p>Reformulates generation as learning a velocity field that transports noise to data along near-straight paths, trained by regressing to a conditional target. Simpler to state than the SDE view, empirically robust, and straighter paths mean fewer solver steps.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Consistency & Step Distillation</h4>
+                    <p>Consistency models and progressive or adversarial distillation train a student to map any point on a sampling trajectory directly to its endpoint, collapsing hundreds of steps into one to four. This is what makes real-time and interactive generation feasible.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Structural Control</h4>
+                    <p>ControlNet (Zhang et al., 2023) clones and freezes the backbone, adding a trainable branch driven by edge maps, depth, segmentation, or pose. Related adapter methods add conditioning or style without retraining, making control a cheap, composable add-on.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Video & 3D Diffusion</h4>
+                    <p>Extends denoising over space and time with spatiotemporal attention for video, or optimises a 3D representation through score distillation from a 2D model. Both push against the field's hardest constraints: temporal coherence and multi-view consistency.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">🐌</div>
+                    <h4>Sampling Cost</h4>
+                    <p>Iterative refinement is inherently expensive, and aggressive distillation to very few steps still tends to cost diversity and fine detail. Video multiplies the problem by the frame count, keeping high-resolution generation firmly in datacenter territory.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">📏</div>
+                    <h4>Broken Evaluation</h4>
+                    <p>FID depends on a dated Inception feature space, is biased by sample count, correlates poorly with human judgement at high quality, and says nothing about prompt faithfulness or compositional correctness. The field lacks a metric it trusts.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔍</div>
+                    <h4>Memorisation & Copyright</h4>
+                    <p>Duplicated training examples can be reproduced near-verbatim, as extraction studies have demonstrated. Combined with web-scraped datasets and style imitation, this creates unresolved legal exposure and drives demand for provenance and watermarking.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🧩</div>
+                    <h4>Compositional Reasoning</h4>
+                    <p>Models still mishandle counting, spatial relations, attribute binding across multiple objects, and negation. Guidance sharpens images without fixing the underlying failure to represent structured relationships between the things being drawn.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Denoising Diffusion Probabilistic Models</div>
+                        <div class="paper-meta">Ho, Jain & Abbeel, 2020 — Reduces diffusion training to a simple noise-prediction objective and demonstrates image quality competitive with the best GANs of the time.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Score-Based Generative Modeling through Stochastic Differential Equations</div>
+                        <div class="paper-meta">Song et al., 2021 — Unifies score matching and denoising diffusion as an SDE, enabling flexible solvers, controllable generation, and exact likelihood evaluation.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">High-Resolution Image Synthesis with Latent Diffusion Models</div>
+                        <div class="paper-meta">Rombach et al., 2022 — Moves diffusion into an autoencoder latent space, cutting cost by a large factor; the basis of Stable Diffusion and open text-to-image generation.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Classifier-Free Diffusion Guidance</div>
+                        <div class="paper-meta">Ho & Salimans, 2022 — Removes the need for a separate classifier by jointly training conditional and unconditional models, giving a single dial over the fidelity-diversity trade-off.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Scalable Diffusion Models with Transformers</div>
+                        <div class="paper-meta">Peebles & Xie, 2023 — Introduces the DiT architecture and shows that sample quality improves predictably with backbone compute, bringing transformer scaling laws to diffusion.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Few-Step Generation Without Compromise:</strong> Closing the remaining gap between distilled one-to-four-step samplers and full multi-step sampling, so that interactive and on-device generation no longer costs diversity or fine structure.</li>
+                <li><strong>Unified Understanding and Generation:</strong> Architectures that both interpret and synthesise within one model, letting a system reason about a scene in language and then render or edit it consistently — the direction flow-matching-based multimodal models are heading.</li>
+                <li><strong>Long-Horizon Video and 4D:</strong> Maintaining identity, physics, and geometric consistency over minutes rather than seconds, which requires memory mechanisms and 3D-aware representations rather than simply scaling spatiotemporal attention.</li>
+                <li><strong>Provenance, Attribution & Consent:</strong> Robust watermarking, training-data attribution, machine unlearning for removal requests, and dataset licensing frameworks — the infrastructure needed for generative vision to operate on a defensible legal footing.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="10-multimodal-foundation-models.html" class="related-link">
+                    <span>Multimodal Foundation Models</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="26-generative-audio-music.html" class="related-link">
+                    <span>Generative Audio & Music</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="21-world-models.html" class="related-link">
+                    <span>World Models</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="14-synthetic-data-generation.html" class="related-link">
+                    <span>Synthetic Data Generation</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="36-efficient-attention-ssm.html">
+                Next: Efficient Attention & State Space Models
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
