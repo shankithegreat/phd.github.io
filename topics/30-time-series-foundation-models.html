@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time-Series Foundation Models - PhD Research Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        :root { --page-accent: #3b82f6; }
+    </style>
+</head>
+<body>
+    <div class="mesh-bg">
+        <div class="blob" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #60a5fa, #2563eb);"></div>
+        <div class="blob" style="background: linear-gradient(135deg, #1d4ed8, #1e3a8a);"></div>
+    </div>
+    <div class="grain-overlay"></div>
 
+    <a href="../index.html" class="back-btn">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back
+    </a>
+
+    <div class="page-content">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="separator">›</span>
+            <span class="current">Time-Series Foundation Models</span>
+        </nav>
+
+        <header class="page-hero">
+            <span class="topic-number">#30 — Emerging Frontier</span>
+            <h1>Time-Series Foundation Models</h1>
+            <p class="subtitle">Pre-trained forecasters that read a series they have never seen before and predict its future without any task-specific training.</p>
+        </header>
+
+        <!-- What Is It -->
+        <section class="topic-section">
+            <span class="section-label">Foundation</span>
+            <h2>What Is It?</h2>
+            <p>For most of forecasting's history the workflow was one model per series. You took a store's weekly sales, chose ARIMA or exponential smoothing or a gradient-boosted tree, fitted parameters on that series' own history, and predicted forward. Scaling to a retailer with a hundred thousand SKUs meant fitting a hundred thousand models. Time-series foundation models invert this: a single network is pre-trained on billions of observations drawn from thousands of heterogeneous sources — electricity load, web traffic, weather, finance, hospital admissions, machine telemetry — and then applied <strong>zero-shot</strong> to a new series it has never encountered.</p>
+            <p>The bet is that temporal patterns are more universal than they look. Trend, seasonality at multiple periods, level shifts, bursty spikes, mean reversion, and the way an outlier decays all recur across domains, even when the units and sampling rates differ wildly. If a model absorbs enough of that structure, it can perform in-context learning on a time series much as a language model does on text: the history you provide in the context window functions as the training set.</p>
+            <div class="analogy-box">
+                <div class="analogy-title">Simple Analogy</div>
+                <p>An experienced sound engineer can walk into an unfamiliar concert hall, listen for a few seconds, and predict how the room will behave at the next frequency — not because they memorised that hall, but because thousands of previous rooms taught them what reverb, standing waves, and absorption sound like. A time-series foundation model is that engineer: the context window is the few seconds of listening, and the pre-training corpus is the career of prior rooms.</p>
+            </div>
+            <p>Two architectural ideas made this practical. The first is <strong>patching</strong>: rather than feeding one timestep per token, split the series into overlapping or contiguous windows of, say, sixteen to sixty-four points and embed each patch as a token. This shortens the sequence quadratically for attention purposes and gives each token enough local shape to be semantically meaningful. The second is <strong>channel independence</strong>: in a multivariate series, treat each channel as its own univariate sequence sharing one backbone rather than mixing channels at every layer. PatchTST (Nie et al., 2023) combined both and showed that a plain transformer, properly tokenised, beat the elaborate architectures that preceded it.</p>
+        </section>
+
+        <!-- Why It Matters -->
+        <section class="topic-section">
+            <span class="section-label">Motivation</span>
+            <h2>Why It Matters</h2>
+            <p>Forecasting is one of the highest-volume applications of machine learning in industry, and it is also one of the most operationally painful. Foundation models change the deployment story more than they change the accuracy story.</p>
+            <ul class="key-points">
+                <li>
+                    <span class="point-icon">⚡</span>
+                    <span><strong>Zero-shot deployment:</strong> A new product, sensor, or customer has no history to train on. A pre-trained forecaster produces a usable prediction immediately, solving the cold-start problem that per-series fitting cannot.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🏭</span>
+                    <span><strong>Operational simplicity:</strong> One artefact to version, monitor, and serve instead of a fleet of per-series models with their own retraining schedules and failure modes.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🎲</span>
+                    <span><strong>Probabilistic output by default:</strong> Most of these models emit full predictive distributions or quantiles. Inventory, staffing, and grid-balancing decisions all depend on the tails, not the mean.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🔀</span>
+                    <span><strong>Transfer across domains:</strong> Patterns learned from abundant domains such as energy and traffic can support data-poor ones, which is exactly the leverage that made pre-training valuable in vision and language.</span>
+                </li>
+                <li>
+                    <span class="point-icon">🧭</span>
+                    <span><strong>A genuine open question:</strong> Unlike text, it is not yet settled that scale wins here. That makes this an unusually good research area — the negative results are still informative and still publishable.</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- How It Works -->
+        <section class="topic-section">
+            <span class="section-label">Mechanism</span>
+            <h2>How It Works</h2>
+            <p>The pipeline mirrors language modelling with one awkward difference: time series are continuous, unbounded, and arrive on incompatible scales. Turning a stream of floats into something a transformer can consume is where most of the design effort goes.</p>
+            <div class="visual-diagram">
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="step-icon">📊</div>
+                        <span class="step-label">Scale &<br>Normalise</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🧩</div>
+                        <span class="step-label">Patch &<br>Tokenise</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">🌐</div>
+                        <span class="step-label">Pre-train on<br>Mixed Corpora</span>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step">
+                        <div class="step-icon">📈</div>
+                        <span class="step-label">Zero-Shot<br>Forecast</span>
+                    </div>
+                </div>
+            </div>
+            <p><strong>Scaling and tokenisation:</strong> A series measured in megawatts and one measured in page views cannot share an embedding space raw, so each context window is normalised — mean scaling, instance normalisation, or robust standardisation — and the scale is restored at output. From there, approaches diverge. Chronos quantises the scaled values into a fixed vocabulary of bins and treats forecasting as ordinary next-token prediction with a cross-entropy loss, letting an off-the-shelf language architecture be reused unchanged. Others keep values continuous and use a linear projection over patches with a distributional or quantile head. Quantisation buys simplicity and a free predictive distribution over bins; it caps resolution and struggles when a series exits the range seen during scaling.</p>
+            <p><strong>Pre-training:</strong> The objective is usually next-patch prediction or masked reconstruction, run over a mixture of real archives and synthetic series generated from Gaussian processes, composed trend-seasonality kernels, or augmentation schemes that blend real series together. Synthetic data matters more here than in language: publicly available real time series number in the millions of series but are dominated by a few domains, and synthetic generation is how practitioners fill gaps in frequency, seasonality, and noise structure. Representative families include Chronos, TimesFM, Moirai, Lag-Llama, and the commercial TimeGPT, differing mainly in tokenisation, whether they are encoder-decoder or decoder-only, and how they handle multiple frequencies.</p>
+            <p><strong>Inference and conditioning:</strong> At prediction time the model either autoregressively rolls forward one patch at a time or emits the whole horizon in a single forward pass. Direct multi-horizon output avoids error compounding but fixes the horizon; autoregression is flexible but drifts. Probabilistic forecasts come either from sampling many trajectories and taking empirical quantiles, or from a parametric head predicting quantile levels directly. Covariates — promotions, holidays, temperature, upstream demand — remain the least standardised part of the stack: some models accept known-future covariates through additional input channels, others require an external regression layer bolted on afterwards.</p>
+        </section>
+
+        <!-- Key Techniques -->
+        <section class="topic-section">
+            <span class="section-label">Techniques</span>
+            <h2>Key Techniques</h2>
+            <div class="technique-grid">
+                <div class="technique-card">
+                    <h4>Patching</h4>
+                    <p>Group consecutive timesteps into a single token. Cuts attention cost by the square of the patch length, extends the usable lookback window, and gives each token local shape rather than a single scalar with almost no information content.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Channel Independence</h4>
+                    <p>Process each variate as its own sequence through a shared backbone instead of mixing channels early. Empirically more robust and far better at transferring to datasets with a different number of channels, at the cost of ignoring cross-series dependencies.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Value Quantisation</h4>
+                    <p>Bin scaled observations into a discrete vocabulary so the problem becomes language modelling verbatim. Reuses existing architectures and tokenisers, gives a categorical predictive distribution for free, and trades away fine numerical resolution.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Instance Normalisation</h4>
+                    <p>Normalise each context window by its own statistics and reverse the transform on the output. A small trick with outsized effect: it neutralises scale differences across series and absorbs slow distribution drift within a single series.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Probabilistic Heads</h4>
+                    <p>Output quantiles via pinball loss, mixture densities, or sampled trajectories rather than a point estimate. Evaluated with CRPS or weighted quantile loss, which reward honest uncertainty instead of a well-placed conditional mean.</p>
+                </div>
+                <div class="technique-card">
+                    <h4>Multi-Frequency Training</h4>
+                    <p>Condition on the sampling interval, or interleave hourly, daily, weekly, and monthly data during pre-training, so one model learns that daily seasonality has period 24 in one series and period 7 in another.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenges -->
+        <section class="topic-section">
+            <span class="section-label">Challenges</span>
+            <h2>Challenges</h2>
+            <div class="challenges-grid">
+                <div class="challenge-item">
+                    <div class="challenge-icon">📏</div>
+                    <h4>The Honest Baseline Problem</h4>
+                    <p>Seasonal naive, exponential smoothing, and gradient-boosted trees remain hard to beat. Deep forecasters have repeatedly been shown to lose to a properly tuned linear model, so any claimed gain needs strong baselines to be credible.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🌊</div>
+                    <h4>Non-Stationarity</h4>
+                    <p>The generating process changes — a pandemic, a pricing change, a new sensor calibration. Pre-training assumes some stability across time, and no amount of historical data teaches a model about a regime that has never occurred.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🔎</div>
+                    <h4>Evaluation Contamination</h4>
+                    <p>Public archives are small and heavily reused, so a pre-training corpus scraped broadly may already contain the test sets. Clean zero-shot claims require careful provenance auditing that few papers document fully.</p>
+                </div>
+                <div class="challenge-item">
+                    <div class="challenge-icon">🧮</div>
+                    <h4>Irregular & Sparse Data</h4>
+                    <p>Real telemetry has missing values, uneven timestamps, and intermittent zero-inflated demand. Most architectures assume a regular grid, so the messiest and most common practical cases are the least well supported.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Papers -->
+        <section class="topic-section">
+            <span class="section-label">Literature</span>
+            <h2>Key Papers & Resources</h2>
+            <ul class="papers-list">
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">A Time Series is Worth 64 Words (PatchTST)</div>
+                        <div class="paper-meta">Nie et al., 2023 — Established patching plus channel independence as the default recipe, showing a plain transformer outperforms far more complex forecasting architectures.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Chronos: Learning the Language of Time Series</div>
+                        <div class="paper-meta">Ansari et al., 2024 — Quantises scaled values into a token vocabulary so an unmodified language model architecture can be pre-trained for competitive zero-shot probabilistic forecasting.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">A Decoder-Only Foundation Model for Time-Series Forecasting (TimesFM)</div>
+                        <div class="paper-meta">Das et al., 2024 — Demonstrates that a decoder-only model pre-trained on a large mixed corpus approaches supervised per-dataset accuracy without any task-specific fitting.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Monash Time Series Forecasting Archive</div>
+                        <div class="paper-meta">Godahewa et al., 2021 — Aggregated dozens of datasets across domains and frequencies into the standard multi-domain benchmark that most pre-training and evaluation now relies on.</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="paper-icon">📄</span>
+                    <div class="paper-info">
+                        <div class="paper-title">Are Transformers Effective for Time Series Forecasting?</div>
+                        <div class="paper-meta">Zeng et al., 2023 — Showed that a one-layer linear model matched or beat several published transformers, forcing the field to adopt stronger baselines and cleaner protocols.</div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Directions -->
+        <section class="topic-section">
+            <span class="section-label">Looking Ahead</span>
+            <h2>Future Directions</h2>
+            <ul class="future-list">
+                <li><strong>Scaling laws for temporal data:</strong> Establishing whether loss improves predictably with series count, observation count, and domain diversity, and where the returns flatten — the M-competitions and the Monash archive give evaluation, but the equivalent of a compute-optimal recipe does not yet exist.</li>
+                <li><strong>Native covariate conditioning:</strong> Treating promotions, holidays, prices, and weather as first-class inputs rather than post-hoc corrections, so the model can learn interactions between exogenous drivers and the target series during pre-training.</li>
+                <li><strong>Multimodal forecasting:</strong> Fusing numerical history with text — outage reports, news, maintenance logs, clinical notes — so that a model can condition on the reason behind a shift rather than only its numerical signature.</li>
+                <li><strong>Calibrated uncertainty under drift:</strong> Combining these forecasters with conformal methods so that prediction intervals retain their nominal coverage when the underlying process moves, which is precisely when operators depend on them most.</li>
+            </ul>
+        </section>
+
+        <!-- Related Topics -->
+        <section class="topic-section">
+            <span class="section-label">Connections</span>
+            <h2>Related Topics</h2>
+            <div class="related-grid">
+                <a href="25-long-context-models.html" class="related-link">
+                    <span>Long-Context Models</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="10-multimodal-foundation-models.html" class="related-link">
+                    <span>Multimodal Foundation Models</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="31-uncertainty-quantification.html" class="related-link">
+                    <span>Uncertainty Quantification</span>
+                    <span class="link-arrow">→</span>
+                </a>
+                <a href="45-scaling-laws-data-centric-ai.html" class="related-link">
+                    <span>Scaling Laws & Data-Centric AI</span>
+                    <span class="link-arrow">→</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Home
+            </a>
+            <a href="31-uncertainty-quantification.html">
+                Next: Uncertainty Quantification
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.topic-section').forEach(s => observer.observe(s));
+    </script>
+</body>
+</html>
